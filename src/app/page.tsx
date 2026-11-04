@@ -536,32 +536,32 @@ export default function Home() {
         <div className="relative z-20 max-w-7xl w-full mx-auto px-6 sm:px-12 pb-16 sm:pb-24 pt-32">
           
           {/* Badge & Monospace Meta */}
-          <div className="flex flex-wrap items-center gap-3 mb-6 sm:mb-8 text-white/80 font-mono text-xs tracking-widest uppercase">
+          <div className="flex flex-wrap items-center gap-3 mb-6 sm:mb-8 text-white/80 font-mono text-xs tracking-wider">
             <span className="px-3 py-1 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm">
               Monterey Park, CA
             </span>
             <span className="hidden sm:inline-block text-white/40">/</span>
             <span className="text-white/70">
-              {lang === "ja" ? "手かざし（Art of Divine Light）体験所" : "Authentic Japanese Tekazashi Practice"}
+              {lang === "ja" ? "米国政府公認 501(c)(3) 非営利法人" : "US 501(c)(3) Nonprofit Organization"}
             </span>
           </div>
 
           {/* Main Hero Typography */}
           <div className="max-w-4xl space-y-4 sm:space-y-6">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-light text-white tracking-tight leading-[1.12]">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-light text-white tracking-tight leading-[1.16]" style={{ textWrap: "balance" }}>
               {lang === "ja" ? (
                 <>
-                  <span className="block text-2xl sm:text-3xl font-mono tracking-widest text-[#E3A387] mb-2 uppercase font-light">
-                    Back to the Origin
+                  <span className="block text-sm sm:text-base font-mono tracking-widest text-[#E3A387] mb-3 uppercase font-normal">
+                    Los Angeles Divine Light Center
                   </span>
-                  神の大愛の光に包まれ、
-                  <br />
-                  本来の澄んだ自分へ。
+                  <span className="inline-block">神の大愛の光に包まれ、</span>
+                  <br className="hidden sm:inline" />
+                  <span className="inline-block">本来の澄んだ自分へ。</span>
                 </>
               ) : (
                 <>
-                  <span className="block text-xl sm:text-2xl font-mono tracking-widest text-[#E3A387] mb-2 uppercase font-light">
-                    Back to the Origin
+                  <span className="block text-sm sm:text-base font-mono tracking-widest text-[#E3A387] mb-3 uppercase font-normal">
+                    Los Angeles Divine Light Center
                   </span>
                   Wrapped in the Radiant Light
                   <br />
@@ -574,11 +574,23 @@ export default function Home() {
             <div className="w-16 h-px bg-[#DE7356]"></div>
 
             {/* Subcopy */}
-            <p className="max-w-2xl text-sm sm:text-base md:text-lg text-[#D6CFBE] font-light leading-relaxed">
+            <p className="max-w-2xl text-base sm:text-lg text-[#D6CFBE] font-light leading-[1.9] sm:leading-[2.1] tracking-wide" style={{ textWrap: "pretty" }}>
               {lang === "ja" ? (
-                "ロサンゼルスの日常で、知らず知らずのうちに積み重なる心身の重荷。言葉や思考を休め、ただ静かに身を委ねる。天から降り注ぐ神の大愛のみ光を取り次ぐ「手かざし（Art of Divine Light）」が、魂の奥底の曇りをそっと溶かし、本来の穏やかな命の輝きを呼び覚まします。"
+                <>
+                  <span className="inline-block">ロサンゼルスの日常で、</span>
+                  <span className="inline-block">知らず知らずのうちに重なる心身の疲れ。</span>
+                  <br className="hidden sm:inline" />
+                  <span className="inline-block">言葉や考えをいったん休め、</span>
+                  <span className="inline-block">静かに身を委ねてみる。</span>
+                  <br className="hidden sm:inline" />
+                  <span className="inline-block">天から注がれる神様の大愛の光（手かざし）が、</span>
+                  <span className="inline-block">心の奥の曇りをそっと溶かし、</span>
+                  <span className="inline-block">本来の穏やかな命の輝きを呼び覚まします。</span>
+                </>
               ) : (
-                "Beyond the constant rush of the city lies a space to pause. Experience tekazashi—the gentle Art of Divine Light. Not a mere human technique, but the boundless love of God descending as pure, radiant light to dissolve inner burdens and restore your peaceful, unburdened self."
+                <>
+                  Beyond the constant rush of the city lies a space to pause. Experience Tekazashi—the gentle Art of Divine Light. Not a mere human technique, but the boundless love of God descending as pure, radiant light to dissolve inner burdens and restore your peaceful, unburdened self.
+                </>
               )}
             </p>
 
@@ -634,23 +646,27 @@ export default function Home() {
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#35302A]">
             <div>
-              <div className="text-xs font-mono tracking-widest uppercase text-[#DE7356] mb-3">
-                01 / THE PARADOX OF THE METROPOLIS
+              <div className="text-xs font-mono tracking-wider text-[#DE7356] mb-3">
+                {lang === "ja" ? "01 ｜ 静寂への回帰" : "01 ｜ A Quiet Pause"}
               </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-light tracking-tight leading-tight max-w-3xl">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-light tracking-tight leading-snug max-w-3xl" style={{ textWrap: "balance" }}>
                 {lang === "ja" ? (
-                  "情報とスピードに満ちた街で、なぜ心は愛と静けさを求めるのか。"
+                  <>
+                    <span className="inline-block">情報とスピードに満ちた街で、</span>
+                    <br className="hidden sm:inline" />
+                    <span className="inline-block">なぜ心は愛と静けさを求めるのか。</span>
+                  </>
                 ) : (
                   "In a World of Constant Movement, Where Does the Soul Find Rest?"
                 )}
               </h2>
             </div>
-            <div className="text-xs font-mono text-[#A89F94] tracking-widest uppercase">
-              LOS ANGELES CONTEXT
+            <div className="text-xs font-mono text-[#A89F94] tracking-wider">
+              MONTEREY PARK, CALIFORNIA
             </div>
           </div>
 
-          {/* Grid Layout: Framed Sanctuary Nature View (Caption removed) */}
+          {/* Grid Layout: Framed Sanctuary Nature View */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-center pt-14">
             
             {/* Left: Window Frame Photography */}
@@ -671,29 +687,19 @@ export default function Home() {
             {/* Right: Thoughtful Typography and Analysis */}
             <div className="lg:col-span-7 order-1 lg:order-2 space-y-6 sm:space-y-8">
               
-              <div className="space-y-5 text-base sm:text-lg text-[#C8BFB2] leading-relaxed font-light">
+              <div className="space-y-6 text-base sm:text-lg text-[#C8BFB2] leading-[1.9] sm:leading-[2.1] font-light">
                 {lang === "ja" ? (
                   <>
-                    <p className="text-xl sm:text-2xl text-[#F4EFEA] font-serif leading-snug">
-                      車列の途切れないフリーウェイ、絶え間なく鳴る通知、常に成果を求められ続ける日々。
+                    <p className="text-xl sm:text-2xl text-[#F4EFEA] font-serif leading-snug" style={{ textWrap: "pretty" }}>
+                      フリーウェイの車列、絶え間なく鳴る通知、<br className="hidden sm:inline" />
+                      常に成果を求められ続ける日々。
                     </p>
-                    <p>
-                      便利で豊かな暮らしのただ中にありながら、私たちはどこかで拭いきれない「深い重さと孤独」を抱えています。
+                    <p style={{ textWrap: "pretty" }}>
+                      便利で豊かな暮らしのただ中にありながら、私たちはどこかで拭いきれない深い重さや疲れを抱えています。それは単なる肉体の疲労ではなく、日々の摩擦や思考のノイズに追われ、魂の奥にある本来の静けさから離れてしまっているからかもしれません。
                     </p>
-                    <p>
-                      それは単なる肉体の疲労ではありません。大自然のリズムから切り離され、魂の奥底にある本来の美しい神性が、日々の摩擦や思考のノイズ（曇り）に覆われてしまっているからです。
+                    <p style={{ textWrap: "pretty" }}>
+                      人は、テクニックや言葉の慰めだけでは、心の奥の渇きを癒やすことはできません。今私たちに必要なのは、何かを足すことではなく、ただすべてを包み込む神の大愛のみ光に浸り、本来の澄んだ自分へと還る時間です。
                     </p>
-                    <p>
-                      人は、テクニックや言葉の慰めだけでは、心の奥の渇きを癒やすことはできません。
-                    </p>
-                    <div className="p-6 rounded-xl bg-[#23201C] border border-[#3A342D] space-y-2">
-                      <p className="text-sm font-mono uppercase tracking-widest text-[#DE7356]">
-                        Return to the Origin of Love
-                      </p>
-                      <p className="text-[#E6E0D5] font-serif italic text-base">
-                        今、私たちに必要なのは、何かを足すことではなく、ただすべてを包み込む神の大愛のみ光に浸り、本来の澄んだ自分へと還る時間です。
-                      </p>
-                    </div>
                   </>
                 ) : (
                   <>
@@ -703,14 +709,9 @@ export default function Home() {
                     <p>
                       It is more than physical exhaustion—it is the subtle weight of disconnect from natural stillness and the origin of love. Just as water settles when undisturbed, your spirit requires a sacred pause to clarify, breathe, and return to the unconditional love from which we came.
                     </p>
-                    <div className="p-6 rounded-xl bg-[#23201C] border border-[#3A342D] space-y-2">
-                      <p className="text-sm font-mono uppercase tracking-widest text-[#DE7356]">
-                        A Sacred Pause in God’s Boundless Love
-                      </p>
-                      <p className="text-[#E6E0D5] font-serif italic text-base">
-                        We do not need more stimuli; we need the grace to let go and rest in the boundless light of God&apos;s love.
-                      </p>
-                    </div>
+                    <p>
+                      We do not need more stimuli; we need the quiet space to let go and rest in the boundless light of God&apos;s love.
+                    </p>
                   </>
                 )}
               </div>
@@ -718,15 +719,15 @@ export default function Home() {
               {/* Data points */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#35302A] text-xs font-mono">
                 <div className="space-y-1">
-                  <div className="text-[#877E73] uppercase">Practice</div>
+                  <div className="text-[#877E73]">Practice</div>
                   <div className="text-[#F4EFEA] font-medium">Tekazashi (Divine Light)</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[#877E73] uppercase">Environment</div>
+                  <div className="text-[#877E73]">Environment</div>
                   <div className="text-[#F4EFEA] font-medium">Total Quietude</div>
                 </div>
                 <div className="space-y-1 col-span-2 sm:col-span-1">
-                  <div className="text-[#877E73] uppercase">Objective</div>
+                  <div className="text-[#877E73]">Objective</div>
                   <div className="text-[#DE7356] font-medium">Spiritual Harmony</div>
                 </div>
               </div>
@@ -746,16 +747,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
           {/* Eyebrow and Section Heading */}
-          <div className="max-w-3xl mb-16">
-            <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356] block mb-3">
-              02 / THE PRACTICE OF TEKAZASHI
+          <div className="max-w-3xl mb-14">
+            <span className="text-xs font-mono text-[#964731] block mb-2 tracking-wider">
+              {lang === "ja" ? "02 ｜ 手かざしの本質" : "02 ｜ The Practice"}
             </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-6">
+            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4" style={{ textWrap: "balance" }}>
               {lang === "ja" ? (
                 <>
-                  神の大愛が「光」となって、
-                  <br />
-                  <span className="text-[#964731] font-normal">魂の奥底の曇りを静かにほどく。</span>
+                  <span className="inline-block">神の大愛が「光」となって、</span>
+                  <br className="hidden sm:inline" />
+                  <span className="text-[#964731] font-normal inline-block">魂の奥底の曇りを静かにほどく。</span>
                 </>
               ) : (
                 <>
@@ -789,11 +790,11 @@ export default function Home() {
 
               {/* Distinction Statement */}
               <div className="p-6 rounded-2xl bg-[#F4EFEA] border border-[#E5DDD2] space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#964731] font-semibold">
+                <div className="flex items-center gap-2 text-xs font-mono tracking-wider text-[#964731] font-semibold">
                   <Icons.ShieldCheck className="w-4 h-4 text-[#DE7356]" />
                   <span>{lang === "ja" ? "透明性と安心のために" : "Our Ethical Distinction"}</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#665D52] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#665D52] leading-[1.8]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "医療行為でも、催眠術や暗示でもありません。人間が本来宿している「神の子としての澄んだ生命力」へと立ち返るための、純粋で静かなアプローチです。"
                     : "Tekazashi is not medical treatment, nor is it hypnosis or psychological persuasion. It is a sacred, time-tested approach to awakening inner peace and divine vitality."}
@@ -804,19 +805,19 @@ export default function Home() {
             {/* Content & Step Architecture */}
             <div className="lg:col-span-7 space-y-8">
               
-              <div className="prose text-[#4A433A] text-base sm:text-lg leading-relaxed font-light space-y-5">
+              <div className="prose text-[#4A433A] text-base sm:text-lg leading-[1.9] sm:leading-[2.1] font-light space-y-5">
                 {lang === "ja" ? (
                   <>
-                    <p className="text-xl font-serif text-[#1A1816]">
+                    <p className="text-xl font-serif text-[#1A1816] leading-snug" style={{ textWrap: "pretty" }}>
                       「手かざし（Art of Divine Light）」は、人間が自らの念力やエネルギーを加えるものではありません。天地万物を生み出された創造主（元主大神様）の純粋な愛そのものが、目に見える現界において「聖なる光」となって天から降り注がれています。
                     </p>
-                    <p>
-                      施術者はその光を、無私の心で静かにお取り次ぎするパイプに過ぎません。
+                    <p style={{ textWrap: "pretty" }}>
+                      施術者は何かを加えるのではなく、その温かな光を無私の心で静かにお取り次ぎするパイプに過ぎません。
                     </p>
-                    <p>
+                    <p style={{ textWrap: "pretty" }}>
                       椅子に深く腰掛け、そっと目を閉じる。手のひらから注がれる温かな愛の光が、魂の奥底にこびりついた想念の曇りや緊張を優しく溶かし、内側から芯まで満たされるような深い平安をもたらします。
                     </p>
-                    <p className="text-sm sm:text-base text-[#665D52]">
+                    <p className="text-xs sm:text-sm text-[#665D52] leading-relaxed pt-1">
                       医療行為でも、催眠でもありません。神の大愛に包まれることで、人間が本来授かっている「神の子としての澄んだ生命力」へと立ち返るための、最も純粋で静かなアプローチです。
                     </p>
                   </>
@@ -835,36 +836,42 @@ export default function Home() {
               {/* 3 Pillars */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                 
-                <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / PURE LIGHT</span>
+                <div className="p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
+                    {lang === "ja" ? "01 ｜ 神の大愛のみ光" : "01 ｜ PURE LIGHT"}
+                  </span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "神の大愛のみ光" : "Light of Divine Love"}
+                    {lang === "ja" ? "純粋な光のお取り次ぎ" : "Light of Divine Love"}
                   </h3>
-                  <p className="text-xs text-[#6C645A] leading-relaxed">
+                  <p className="text-xs text-[#6C645A] leading-[1.8]" style={{ textWrap: "pretty" }}>
                     {lang === "ja"
-                      ? "天地万物の創造主の純粋な愛が聖なる光となって注がれ、魂の奥底の曇りを優しく溶かします。"
+                      ? "人為の力ではなく、天地万物の創造主の純粋な愛の光が注がれ、心の曇りを優しく溶かします。"
                       : "God's boundless love descends as radiant, purifying light to dissolve inner spiritual burdens."}
                   </p>
                 </div>
 
-                <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">02 / STILLNESS</span>
+                <div className="p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
+                    {lang === "ja" ? "02 ｜ 静寂と休息" : "02 ｜ STILLNESS"}
+                  </span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
                     {lang === "ja" ? "言葉や思考の休息" : "Quiet Mind"}
                   </h3>
-                  <p className="text-xs text-[#6C645A] leading-relaxed">
+                  <p className="text-xs text-[#6C645A] leading-[1.8]" style={{ textWrap: "pretty" }}>
                     {lang === "ja"
-                      ? "無理な瞑想法や呪文などは一切不要。ただ座り、そっと目を閉じるだけです。"
+                      ? "無理な瞑想法や呪文などは一切不要。ただ座り、そっと目を閉じて安らぎに身を委ねます。"
                       : "No complicated meditation techniques. Simply sit, close your eyes, and rest."}
                   </p>
                 </div>
 
-                <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">03 / HARMONY</span>
+                <div className="p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
+                    {lang === "ja" ? "03 ｜ 生命力の調律" : "03 ｜ HARMONY"}
+                  </span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
                     {lang === "ja" ? "自然生命力の調律" : "Vital Alignment"}
                   </h3>
-                  <p className="text-xs text-[#6C645A] leading-relaxed">
+                  <p className="text-xs text-[#6C645A] leading-[1.8]" style={{ textWrap: "pretty" }}>
                     {lang === "ja"
                       ? "心身に溜まった見えない疲労や想念の曇りを優しく浄め、本来備わる澄んだ生命力を回復させます。"
                       : "Clears accumulated subtle burdens and spiritual clouds to awaken your inherent serene vitality."}
@@ -882,23 +889,22 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 04: THREE COMMITMENTS TO INTEGRITY
-          - Purely Donation-Based (Free First Visit removed as requested)
           ==================================================================== */}
       <section id="principles" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
             <div>
-              <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356] block mb-3">
-                03 / OUR PRINCIPLES
+              <span className="text-xs font-mono text-[#DE7356] block mb-2 tracking-wider">
+                {lang === "ja" ? "03 ｜ 私たちの約束" : "03 ｜ OUR PRINCIPLES"}
               </span>
-              <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight">
+              <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight" style={{ textWrap: "balance" }}>
                 {lang === "ja"
                   ? "心から安心してお過ごしいただくための、3つの約束。"
                   : "Built on Sincerity and Universal Love. Three Commitments to Every Guest."}
               </h2>
             </div>
-            <p className="text-xs font-mono uppercase tracking-widest text-[#7C7368] max-w-xs">
+            <p className="text-xs font-mono tracking-wider text-[#7C7368] max-w-xs">
               TRANSPARENCY & PEACE OF MIND
             </p>
           </div>
@@ -911,14 +917,14 @@ export default function Home() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
                   <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">01</span>
-                  <span className="text-[10px] font-mono tracking-widest uppercase px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
+                  <span className="text-[10px] font-mono tracking-wider px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
                     DONATION-BASED
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
                   {lang === "ja" ? "完全な自発性（ドネーション制）" : "Purely Donation-Based"}
                 </h3>
-                <p className="text-sm text-[#5D554B] leading-relaxed">
+                <p className="text-sm text-[#5D554B] leading-[1.9]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "神の大愛に基づく実践だからこそ、営利目的の定額請求や義務的な支払いは一切ありません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
                     : "Rooted in Divine Love, there are no commercial demands, fixed fees, or obligatory charges. All practices are sustained purely through voluntary contributions (donations) based on your personal gratitude."}
@@ -935,14 +941,14 @@ export default function Home() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
                   <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">02</span>
-                  <span className="text-[10px] font-mono tracking-widest uppercase px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
+                  <span className="text-[10px] font-mono tracking-wider px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
                     OPEN SANCTUARY
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
                   {lang === "ja" ? "信仰の自由・入会勧誘の完全排除" : "Absolute Freedom of Belief"}
                 </h3>
-                <p className="text-sm text-[#5D554B] leading-relaxed">
+                <p className="text-sm text-[#5D554B] leading-[1.9]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "神の大愛は、人種や信条、既存の宗教の垣根を越えて、すべての人に等しく注がれています。特定の教義への改宗を求めることは一切なく、どなたにも開かれた場です。"
                     : "God's boundless love descends equally on all people regardless of race, background, or religious creed. We never solicit membership or demand conversion. Our sanctuary is open to all."}
@@ -959,14 +965,14 @@ export default function Home() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
                   <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">03</span>
-                  <span className="text-[10px] font-mono tracking-widest uppercase px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
+                  <span className="text-[10px] font-mono tracking-wider px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
                     LEGAL STATUS
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
                   {lang === "ja" ? "米国政府公認 501(c)(3) 非営利法人" : "Recognized 501(c)(3) Nonprofit"}
                 </h3>
-                <p className="text-sm text-[#5D554B] leading-relaxed">
+                <p className="text-sm text-[#5D554B] leading-[1.9]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "World Divine Light Organization は、米国政府に認められた非営利団体です。見返りを求めない真心のボランティアスタッフによって、誠実に維持されています。"
                     : "World Divine Light Organization is an officially recognized US 501(c)(3) non-profit entity, maintained with sincerity and dedication by selfless volunteer staff."}
@@ -990,16 +996,23 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
           <div className="max-w-3xl mb-16">
-            <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356] block mb-3">
-              04 / WHAT TO EXPECT
+            <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
+              04 ｜ 当日の流れ
             </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4">
+            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4" style={{ textWrap: "balance" }}>
               {lang === "ja" ? "静寂と大愛へ至る、55分間の流れ。" : "A Thoughtful 55-Minute Journey."}
             </h2>
-            <p className="text-sm sm:text-base text-[#6B6358] font-light">
-              {lang === "ja"
-                ? "初めての方でも緊張なさらないよう、事前の流れを透明にお伝えします。合計約55分のゆったりとした時間です。"
-                : "To ensure complete comfort before your visit, here is how a typical session unfolds across 55 serene minutes."}
+            <p className="text-sm sm:text-base text-[#6B6358] font-light leading-relaxed" style={{ textWrap: "pretty" }}>
+              {lang === "ja" ? (
+                <>
+                  <span className="inline-block">初めての方でも安心してお過ごしいただけるよう、</span>
+                  <span className="inline-block">当日の流れをご案内します。</span>
+                  <br className="hidden sm:inline" />
+                  <span className="inline-block">合計約55分、心と体を静かに休めるための時間です。</span>
+                </>
+              ) : (
+                "To ensure complete comfort before your visit, here is how a typical session unfolds across 55 serene minutes."
+              )}
             </p>
           </div>
 
@@ -1033,14 +1046,14 @@ export default function Home() {
                     {lang === "ja" ? "お出迎えと静かなご案内" : "Warm Welcome & Orientation"}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
-                    ? "スタッフが静かに笑顔でお迎えします。お浄めの趣旨を簡潔にお伝えし、静穏な部屋へとご案内します。"
+                    ? "スタッフが静かに笑顔でお迎えします。お浄めの趣旨を簡潔にお伝えし、心落ち着く静穏な部屋へとご案内します。"
                     : "A gentle greeting in a peaceful setting. We explain the simple process so you can feel completely at ease."}
                 </p>
               </div>
               <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※服装：普段着の手ぶらでOK" : "Casual comfortable attire"}
+                {lang === "ja" ? "※服装：普段着の手ぶらでお越しいただけます" : "Casual comfortable attire"}
               </div>
             </div>
 
@@ -1061,7 +1074,7 @@ export default function Home() {
                 <h3 className="text-xl font-serif text-[#1A1816] font-medium">
                   {lang === "ja" ? "光のセッション（手かざし）" : "The Divine Light Session"}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "椅子に腰掛け、目を閉じてリラックスしてください。天から降り注ぐ神の大愛のみ光を静かにお取り次ぎします。途中で眠ってしまっても差し支えありません。"
                     : "Sit comfortably and close your eyes. Experience 30 minutes of deep quietude as the radiant light of God’s love is gently channeled over you."}
@@ -1089,14 +1102,14 @@ export default function Home() {
                 <h3 className="text-xl font-serif text-[#1A1816] font-medium">
                   {lang === "ja" ? "温かいお茶と余白の時間" : "Warm Tea & Reflection"}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "セッション後には温かいお茶をご用意しています。感じたことをお話しいただくことも、ただ静かに余韻を味わうことも自由です。"
                     : "Enjoy a cup of warm tea. Ask any questions freely, or simply savor the lingering peace before re-entering your day."}
                 </p>
               </div>
               <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※無理な次回予約の勧誘なし" : "Zero pressure for follow-ups"}
+                {lang === "ja" ? "※次回予約の催促や勧誘は一切ありません" : "Zero pressure for follow-ups"}
               </div>
             </div>
 
@@ -1108,7 +1121,7 @@ export default function Home() {
                 setSubmitStatus("idle");
                 setIsModalOpen(true);
               }}
-              className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#1A1816] hover:text-[#DE7356] border-b border-current pb-1 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 text-xs font-mono tracking-wider text-[#1A1816] hover:text-[#DE7356] border-b border-current pb-1 transition-colors cursor-pointer"
             >
               <span>{lang === "ja" ? "この流れでセッションを予約する" : "Schedule this 55-minute session"}</span>
               <Icons.ArrowRight className="w-3.5 h-3.5" />
@@ -1129,15 +1142,15 @@ export default function Home() {
             
             {/* Header Badge */}
             <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-6 mb-8">
-              <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356]">
-                05 / MESSAGE
+              <span className="text-xs font-mono tracking-wider text-[#DE7356]">
+                05 ｜ 迎える人の声
               </span>
               <span className="text-xs font-mono text-[#8A8174]">Staff Host: Kevin</span>
             </div>
 
             {/* Letter Content */}
-            <div className="space-y-6 text-base sm:text-xl text-[#3A342D] font-serif leading-relaxed font-light">
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#1A1816] font-normal leading-snug">
+            <div className="space-y-6 text-base sm:text-lg text-[#3A342D] leading-[1.9] sm:leading-[2.1] font-light" style={{ textWrap: "pretty" }}>
+              <h3 className="text-2xl sm:text-3xl font-serif text-[#1A1816] font-normal leading-snug" style={{ textWrap: "balance" }}>
                 {lang === "ja"
                   ? "止まり木のように、静かに羽を休められる場所として。"
                   : "A Gentle Haven in the Metropolis."}
@@ -1148,13 +1161,13 @@ export default function Home() {
               {lang === "ja" ? (
                 <>
                   <p>
-                    「ロサンゼルスで懸命に日々を過ごしていると、いつの間にか呼吸が浅くなり、自分の本質や温もりを見失ってしまうことがあります。
+                    ロサンゼルスで懸命に日々を過ごしていると、知らず知らずのうちに呼吸が浅くなり、自分の心の静けさや温もりを見失ってしまうことがあります。
                   </p>
                   <p>
-                    私たちが大切にしているのは、何かを教え込むことではなく、神様の大愛の光に包まれて、誰もが『ありのままの自分』で安心して魂を休められる場所をお守りすることです。
+                    私たちが大切にしているのは、何かを教え込んだり説得することではありません。神様の大愛のみ光に包まれて、誰もが「本来の自分」に戻り、安心して魂を休められる場所をお守りすることです。
                   </p>
                   <p>
-                    特別な準備も、気負いも要りません。心が温もりを求めたときは、いつでも静かに扉を開けてください。」
+                    特別な準備も、気負いも要りません。静かな安らぎが必要なときは、いつでも扉を開けてください。
                   </p>
                   <p className="text-sm font-mono text-[#8C8276] pt-2">
                     — スタッフ：Kevin
@@ -1163,13 +1176,13 @@ export default function Home() {
               ) : (
                 <>
                   <p>
-                    &ldquo;Living in the vibrant pace of Los Angeles, it is easy to feel overwhelmed and disconnected.
+                    Living in the vibrant pace of Los Angeles, it is easy to feel overwhelmed and disconnected from inner quietude.
                   </p>
                   <p>
-                    Our center does not seek to lecture or persuade; we simply offer a quiet sanctuary where you are held in the pure light of God&apos;s love.
+                    Our center does not seek to lecture or persuade. We simply offer a peaceful sanctuary where you can rest, wrapped in the boundless radiant love of God.
                   </p>
                   <p>
-                    Whenever you feel the need to pause and breathe, our doors are open.&rdquo;
+                    Whenever you feel the need to pause and breathe, our doors are open.
                   </p>
                   <p className="text-xs font-mono text-[#8C8276] pt-2">
                     — Kevin, Staff Host
@@ -1214,14 +1227,14 @@ export default function Home() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
             <div>
-              <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356] block mb-3">
-                06 / ACCESS & VISITING HOURS
+              <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
+                06 ｜ 所在地・開館時間
               </span>
-              <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight">
+              <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight" style={{ textWrap: "balance" }}>
                 {lang === "ja" ? "所在地と開館時間" : "Center Location & Visiting Hours"}
               </h2>
             </div>
-            <div className="text-xs font-mono text-[#7C7368] uppercase tracking-widest">
+            <div className="text-xs font-mono text-[#7C7368] uppercase tracking-wider">
               MONTEREY PARK, CA 91754
             </div>
           </div>
@@ -1320,7 +1333,7 @@ export default function Home() {
                   <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
                   <span>{lang === "ja" ? "ご来訪の準備" : "Attire & Entry"}</span>
                 </div>
-                <p className="text-xs text-[#5D554B] leading-relaxed">
+                <p className="text-xs text-[#5D554B] leading-relaxed" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "カジュアルな普段着でお越しください。室内では靴を脱いでいただきますので、清潔な靴下をご着用ください。"
                     : "Casual everyday attire. Please wear clean socks, as shoes are removed upon entering the sanctuary."}
@@ -1332,13 +1345,13 @@ export default function Home() {
             {/* Policy Banner */}
             <div className="p-6 sm:p-8 bg-[#1A1816] text-[#FBF9F5] border-t border-[#D5CCC0] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-2 max-w-3xl">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#DE7356] uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-mono text-[#DE7356] tracking-wider">
                   <span className="w-2 h-2 rounded-full bg-[#DE7356] animate-pulse"></span>
                   <span>{lang === "ja" ? "ご来訪に関する重要なお願い" : "Visiting Policy — Advance Reservation"}</span>
                 </div>
-                <p className="text-sm sm:text-base font-light text-[#E0D7CC] leading-relaxed">
+                <p className="text-sm sm:text-base font-light text-[#E0D7CC] leading-[1.85]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
-                    ? "当センターでは、訪れるすべての方に静寂で落ち着いた環境をお届けするため、また催事・特別行事等による開館日時の変動に対応するため、【完全事前予約制】とさせていただいております。ご来訪の際は、必ず事前にお問い合わせ・ご予約をお願いいたします。"
+                    ? "当センターでは、訪れるすべての方に静かで落ち着いた環境をお届けするため、また催事等による日時の変動に対応するため、【事前予約制】とさせていただいております。ご来訪の際は、あらかじめお問い合わせ・ご予約をお願いいたします。"
                     : "To maintain a quiet, sanctuary-grade atmosphere and accommodate occasional schedule adjustments for ceremonies, all visits are by advance appointment only. Please contact us prior to visiting."}
                 </p>
               </div>
@@ -1361,19 +1374,19 @@ export default function Home() {
       {/* ====================================================================
           SECTION 08: FREQUENTLY ASKED QUESTIONS
           - Q1: Purely Donation-Based (No "Free" claim)
-          - Q3: Accurate vital-point touch before/after
+          - Q3: Clear, respectful description of tekazashi
           ==================================================================== */}
       <section id="faq" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
         <div className="max-w-4xl mx-auto px-6 sm:px-12">
           
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356] block mb-3">
-              07 / FAQ
+            <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
+              07 ｜ よくあるご質問
             </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight mb-4" style={{ textWrap: "balance" }}>
               {lang === "ja" ? "よくあるご質問" : "Frequently Asked Questions"}
             </h2>
-            <p className="text-xs sm:text-sm text-[#736A5E] font-mono">
+            <p className="text-xs font-mono text-[#736A5E] tracking-wider">
               CLEAR & HONEST ANSWERS TO COMMON INQUIRIES
             </p>
           </div>
@@ -1424,7 +1437,7 @@ export default function Home() {
                   </span>
                 </button>
                 {openFaq === idx && (
-                  <div className="px-6 sm:px-7 pb-6 sm:pb-7 text-sm sm:text-base text-[#5D554B] leading-relaxed border-t border-[#F2ECE2] pt-4 font-light">
+                  <div className="px-6 sm:px-7 pb-6 sm:pb-7 text-sm sm:text-base text-[#5D554B] leading-[1.85] border-t border-[#F2ECE2] pt-4 font-light" style={{ textWrap: "pretty" }}>
                     {lang === "ja" ? faq.a_ja : faq.a_en}
                   </div>
                 )}
@@ -1459,16 +1472,16 @@ export default function Home() {
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 text-center space-y-8">
           
-          <span className="inline-block text-xs font-mono tracking-widest uppercase text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
+          <span className="inline-block text-xs font-mono tracking-wider text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
             {lang === "ja" ? "体験セッションのご案内" : "Introductory Session"}
           </span>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-tight max-w-3xl mx-auto text-[#FAF6F0]">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-[1.2] max-w-3xl mx-auto text-[#FAF6F0]" style={{ textWrap: "balance" }}>
             {lang === "ja" ? (
               <>
-                神の大愛の光に包まれ、
-                <br />
-                本来の澄みわたるあなたへ。
+                <span className="inline-block">神の大愛の光に包まれ、</span>
+                <br className="hidden sm:inline" />
+                <span className="inline-block">本来の澄みわたるあなたへ。</span>
               </>
             ) : (
               <>
@@ -1479,10 +1492,17 @@ export default function Home() {
             )}
           </h2>
 
-          <p className="max-w-2xl mx-auto text-sm sm:text-lg text-[#C8BFB2] font-light leading-relaxed">
-            {lang === "ja"
-              ? "都会の速度から一歩身を引き、心と魂に純粋な静寂と愛の温もりを届ける。静かな空間とお席を整えてお待ちしております。"
-              : "Take a quiet step away from the urban noise. A sanctuary of peace and boundless divine love awaits you in Monterey Park."}
+          <p className="max-w-2xl mx-auto text-base sm:text-lg text-[#C8BFB2] font-light leading-[1.9] sm:leading-[2.1]" style={{ textWrap: "pretty" }}>
+            {lang === "ja" ? (
+              <>
+                <span className="inline-block">都会の速度から一歩身を引き、</span>
+                <span className="inline-block">心と魂に純粋な静寂と愛の温もりを届ける。</span>
+                <br className="hidden sm:inline" />
+                <span className="inline-block">静かな空間とお席を整えてお待ちしております。</span>
+              </>
+            ) : (
+              "Take a quiet step away from the urban noise. A sanctuary of peace and boundless divine love awaits you in Monterey Park."
+            )}
           </p>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1491,7 +1511,7 @@ export default function Home() {
                 setSubmitStatus("idle");
                 setIsModalOpen(true);
               }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-9 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-xl cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-9 py-4 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 shadow-xl cursor-pointer"
             >
               <span>{lang === "ja" ? "体験セッションを予約する" : "Book Your Session"}</span>
               <Icons.ArrowRight className="w-4 h-4" />
@@ -1499,7 +1519,7 @@ export default function Home() {
 
             <a
               href="tel:+16268615069"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/20 hover:border-white/50 text-white/90 px-7 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-colors backdrop-blur-sm"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/20 hover:border-white/50 text-white/90 px-7 py-4 rounded-full font-mono text-xs uppercase tracking-wider transition-colors backdrop-blur-sm"
             >
               <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
               <span>{lang === "ja" ? "事前お問い合わせ（通話・SMS）: +1 (626) 861-5069" : "Direct Call / SMS: +1 (626) 861-5069"}</span>

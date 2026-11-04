@@ -63,6 +63,11 @@ h1, h2, h3, h4 {
   min-width: 0;
 }
 
+p, li {
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-brand-terracotta);
   outline-offset: 2px;
