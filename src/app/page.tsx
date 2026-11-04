@@ -304,7 +304,7 @@ export default function Home() {
               }}
               className="hidden sm:inline-flex items-center gap-2 bg-[#1A1816] hover:bg-[#DE7356] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider px-4 sm:px-5 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer shrink-0"
             >
-              <span>{lang === "ja" ? "無料セッションを予約" : "Reserve Free Session"}</span>
+              <span>{lang === "ja" ? "セッションを予約" : "Reserve a Session"}</span>
               <Icons.ArrowUpRight className="w-3.5 h-3.5" />
             </button>
 
@@ -479,7 +479,7 @@ export default function Home() {
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] text-white py-3.5 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
               >
-                <span>{lang === "ja" ? "無料体験セッションを予約する" : "Reserve a Free Session"}</span>
+                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
                 <Icons.ArrowRight className="w-4 h-4" />
               </button>
 
@@ -493,7 +493,7 @@ export default function Home() {
                   <span>(626) 861-5069</span>
                 </a>
                 <a
-                  href="mailto:info-la@worlddivinelight.org"
+                  href="mailto:losangeles@worlddivinelight.org"
                   className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Icons.Mail className="w-3.5 h-3.5 text-[#DE7356]" />
@@ -591,7 +591,7 @@ export default function Home() {
                 }}
                 className="inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-8 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-xl hover:translate-y-[-1px] cursor-pointer"
               >
-                <span>{lang === "ja" ? "無料体験セッションを予約する" : "Reserve a Free Divine Light Session"}</span>
+                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Divine Light Session"}</span>
                 <Icons.ArrowRight className="w-4 h-4" />
               </button>
 
@@ -906,7 +906,7 @@ export default function Home() {
           {/* 3-Column Card Layout */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#DDD3C4] border border-[#DDD3C4] mt-12 rounded-2xl overflow-hidden shadow-xs">
             
-            {/* Card 01: Purely Donation-Based & Free First Visit */}
+            {/* Card 01: Purely Donation-Based */}
             <div className="bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
@@ -916,17 +916,17 @@ export default function Home() {
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
-                  {lang === "ja" ? "完全な自発性（ドネーション制・初回無料）" : "Donation-Based / Free First Visit"}
+                  {lang === "ja" ? "完全な自発性（ドネーション制）" : "Purely Donation-Based"}
                 </h3>
                 <p className="text-sm text-[#5D554B] leading-relaxed">
                   {lang === "ja"
-                    ? "神の大愛に基づく実践だからこそ、営利の縛りはありません。初回の体験セッションは完全無料です。継続される場合も定額の請求や強制はなく、ご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
-                    : "Rooted in Divine Love, there are no commercial demands. The first introductory session is completely free. Continued practice remains purely voluntary, sustained solely by heartfelt donations."}
+                    ? "神の大愛に基づく実践だからこそ、営利目的の定額請求や義務的な支払いは一切ありません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
+                    : "Rooted in Divine Love, there are no commercial demands, fixed fees, or obligatory charges. All practices are sustained purely through voluntary contributions (donations) based on your personal gratitude."}
                 </p>
               </div>
               <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
                 <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                <span>{lang === "ja" ? "初回無料 ｜ 物品販売・強制請求一切なし" : "Free first visit ｜ Zero sales or fees"}</span>
+                <span>{lang === "ja" ? "完全ドネーション制 ｜ 物品販売・強制請求一切なし" : "Purely donation-based ｜ Zero sales or fees"}</span>
               </div>
             </div>
 
@@ -1110,7 +1110,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 06: WORDS FROM THE CENTER (迎える人の声)
-          - Staff Host: Meia
+          - Staff Host: Kevin
           ==================================================================== */}
       <section className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 sm:px-12">
@@ -1122,7 +1122,7 @@ export default function Home() {
               <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356]">
                 05 / MESSAGE
               </span>
-              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Meia</span>
+              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Kevin</span>
             </div>
 
             {/* Letter Content */}
@@ -1147,7 +1147,7 @@ export default function Home() {
                     特別な準備も、気負いも要りません。心が温もりを求めたときは、いつでも静かに扉を開けてください。」
                   </p>
                   <p className="text-sm font-mono text-[#8C8276] pt-2">
-                    — スタッフ：Meia
+                    — スタッフ：Kevin
                   </p>
                 </>
               ) : (
@@ -1162,20 +1162,20 @@ export default function Home() {
                     Whenever you feel the need to pause and breathe, our doors are open.&rdquo;
                   </p>
                   <p className="text-xs font-mono text-[#8C8276] pt-2">
-                    — Meia, Staff Host
+                    — Kevin, Staff Host
                   </p>
                 </>
               )}
             </div>
 
-            {/* Signature Area: Meia */}
+            {/* Signature Area: Kevin */}
             <div className="mt-10 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#964731] flex items-center justify-center text-white font-serif text-base font-medium">
-                  M
+                  K
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[#1A1816]">Meia</div>
+                  <div className="text-sm font-semibold text-[#1A1816]">Kevin</div>
                   <div className="text-xs font-mono text-[#7A7266]">Staff Host ｜ Los Angeles Divine Light Center</div>
                 </div>
               </div>
@@ -1191,7 +1191,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 07: INFORMATION & VISITING GUIDELINES
-          - Email: info-la@worlddivinelight.org
+          - Email: losangeles@worlddivinelight.org
           ==================================================================== */}
       <section id="access" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
@@ -1289,8 +1289,8 @@ export default function Home() {
                   <a href="tel:+16268615069" className="block hover:text-[#DE7356] transition-colors font-mono">
                     +1 (626) 861-5069
                   </a>
-                  <a href="mailto:info-la@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
-                    info-la@worlddivinelight.org
+                  <a href="mailto:losangeles@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
+                    losangeles@worlddivinelight.org
                   </a>
                   <div className="text-[11px] text-[#7C7368] font-mono">
                     SMS inquiries welcomed
@@ -1366,10 +1366,10 @@ export default function Home() {
           <div className="space-y-4">
             {[
               {
-                q_ja: "本当に無料ですか？ 追加の請求はありませんか？",
-                a_ja: "初めての方の体験セッションは完全無料です。物品の販売や、寄付の強制などは一切ございません。",
-                q_en: "Is the first session truly free?",
-                a_en: "Yes. There is no fee, no hidden cost, and no obligation of any kind.",
+                q_ja: "料金やドネーションはどのようになっていますか？",
+                a_ja: "当センターは定額の料金設定や義務的な請求は一切ございません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）によって支えられております。物品の販売や無理な支払いを求めることは一切ございません。",
+                q_en: "How do fees and donations work?",
+                a_en: "There are no fixed fees or obligatory charges. All sessions and activities are purely donation-based, supported by heartfelt voluntary contributions with zero obligation.",
               },
               {
                 q_ja: "特定の宗教を信じていなくても参加できますか？",
@@ -1444,7 +1444,7 @@ export default function Home() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 text-center space-y-8">
           
           <span className="inline-block text-xs font-mono tracking-widest uppercase text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
-            {lang === "ja" ? "無料体験セッションのご案内" : "Free Introductory Session"}
+            {lang === "ja" ? "体験セッションのご案内" : "Introductory Session"}
           </span>
 
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-tight max-w-3xl mx-auto text-[#FAF6F0]">
@@ -1477,7 +1477,7 @@ export default function Home() {
               }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-9 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-xl cursor-pointer"
             >
-              <span>{lang === "ja" ? "無料体験セッションを予約する" : "Book Your Free Session"}</span>
+              <span>{lang === "ja" ? "体験セッションを予約する" : "Book Your Session"}</span>
               <Icons.ArrowRight className="w-4 h-4" />
             </button>
 
@@ -1548,7 +1548,7 @@ export default function Home() {
                 <div className="mt-2 text-white/80">Tue–Sat 10:00 AM – 6:00 PM</div>
                 <div className="text-white/80">Sun 9:00 AM – 4:00 PM (Closed Mon)</div>
                 <div className="mt-2 text-white">Direct: +1 (626) 861-5069</div>
-                <div>Email: info-la@worlddivinelight.org</div>
+                <div>Email: losangeles@worlddivinelight.org</div>
               </div>
             </div>
 
@@ -1560,7 +1560,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-6">
               <span>501(c)(3) Nonprofit Entity</span>
-              <span>Donation-Based / Free First Visit</span>
+              <span>Purely Donation-Based</span>
             </div>
           </div>
 
@@ -1594,7 +1594,7 @@ export default function Home() {
                 </h3>
                 <p className="text-sm text-[#5D554B] leading-relaxed max-w-sm mx-auto">
                   {lang === "ja"
-                    ? "お問い合わせありがとうございます。当センターのスタッフより、確認のEメールまたはSMSをご連絡いたします。"
+                    ? "お問い合わせありがとうございます。当センターのスタッフ（Kevin）より、確認のEメールまたはSMSをご連絡いたします。"
                     : "Thank you for reaching out. A staff host will confirm your appointment via email or SMS shortly."}
                 </p>
                 <div className="p-4 rounded-xl bg-[#F4EFEA] border border-[#E5DDD2] text-xs font-mono text-[#7C7368] text-left space-y-1">
@@ -1619,12 +1619,12 @@ export default function Home() {
                     SANCTUARY APPOINTMENT
                   </span>
                   <h3 className="text-2xl font-serif font-medium text-[#1A1816]">
-                    {lang === "ja" ? "無料体験セッションの予約" : "Book Your Free Session"}
+                    {lang === "ja" ? "体験セッションの予約" : "Book Your Session"}
                   </h3>
                   <p className="text-xs text-[#7C7368] mt-1">
                     {lang === "ja"
-                      ? "完全事前予約制 ｜ 約55分の静寂と神の大愛に包まれるひととき（初回無料・ドネーション制）"
-                      : "By advance appointment ｜ Approx. 55 minutes of quietude & Divine Light (Free First Visit)"}
+                      ? "完全事前予約制 ｜ 約55分の静寂と神の大愛に包まれるひととき（ドネーション制）"
+                      : "By advance appointment ｜ Approx. 55 minutes of quietude & Divine Light (Donation-based)"}
                   </p>
                 </div>
 
@@ -1741,7 +1741,7 @@ export default function Home() {
                     <span>
                       {isSubmitting
                         ? (lang === "ja" ? "送信中..." : "Submitting...")
-                        : (lang === "ja" ? "無料体験セッションを予約する" : "Submit Free Session Request")}
+                        : (lang === "ja" ? "体験セッションを予約する" : "Submit Reservation Request")}
                     </span>
                     <Icons.ArrowRight className="w-4 h-4" />
                   </button>
@@ -1749,8 +1749,8 @@ export default function Home() {
 
                 <div className="text-[11px] text-[#7C7368] text-center leading-relaxed">
                   {lang === "ja"
-                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。初回の体験セッションは完全無料、無理な勧誘や請求は一切ございません。"
-                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Free first visit with zero obligations or solicitations."}
+                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。完全なドネーション制であり、無理な勧誘や請求は一切ございません。"
+                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Purely donation-based with zero obligations."}
                 </div>
 
               </form>
