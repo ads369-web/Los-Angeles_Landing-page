@@ -37,7 +37,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Los Angeles Divine Light Center | Back to the Origin",
   description:
-    "喧騒を脱ぎ、本来の澄みわたる自分へ。カリフォルニア州モントレーパークの静寂な空間で、手かざし（Art of Divine Light）をご体験いただけます。米国政府公認 501(c)(3) 非営利法人。",
+    "神の大愛の光に包まれ、本来の澄んだ自分へ。カリフォルニア州モントレーパークの静寂な空間で、天から降り注ぐ神の大愛のみ光を取り次ぐ手かざし（Art of Divine Light）をご体験いただけます。米国政府公認 501(c)(3) 非営利法人。",
   keywords: [
     "World Divine Light Organization",
     "Los Angeles Divine Light Center",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Los Angeles Divine Light Center | Back to the Origin",
     description:
-      "喧騒を脱ぎ、本来の澄みわたる自分へ。ロサンゼルス・モントレーパークの静寂な空間で、手かざし（Art of Divine Light）をご体験いただけます。",
+      "神の大愛の光に包まれ、本来の澄んだ自分へ。ロサンゼルス・モントレーパークの静寂な空間で、天から降り注ぐ神の大愛のみ光を取り次ぐ手かざし（Art of Divine Light）をご体験いただけます。",
     type: "website",
     locale: "ja_JP",
   },

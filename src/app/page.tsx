@@ -296,7 +296,7 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Primary Action Button (Purely Donation-Based, desktop) */}
+            {/* Primary Action Button */}
             <button
               onClick={() => {
                 setSubmitStatus("idle");
@@ -304,7 +304,7 @@ export default function Home() {
               }}
               className="hidden sm:inline-flex items-center gap-2 bg-[#1A1816] hover:bg-[#DE7356] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider px-4 sm:px-5 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer shrink-0"
             >
-              <span>{lang === "ja" ? "セッションを予約" : "Reserve a Session"}</span>
+              <span>{lang === "ja" ? "無料セッションを予約" : "Reserve Free Session"}</span>
               <Icons.ArrowUpRight className="w-3.5 h-3.5" />
             </button>
 
@@ -479,21 +479,21 @@ export default function Home() {
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] text-white py-3.5 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
               >
-                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
+                <span>{lang === "ja" ? "無料体験セッションを予約する" : "Reserve a Free Session"}</span>
                 <Icons.ArrowRight className="w-4 h-4" />
               </button>
 
               {/* Direct Tap to Contact */}
               <div className="grid grid-cols-2 gap-2 pt-1 text-center text-xs font-mono text-[#6C645A]">
                 <a
-                  href="tel:6262828437"
+                  href="tel:+16268615069"
                   className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>(626) 282-8437</span>
+                  <span>(626) 861-5069</span>
                 </a>
                 <a
-                  href="mailto:losangeles@worlddivinelight.org"
+                  href="mailto:info-la@worlddivinelight.org"
                   className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Icons.Mail className="w-3.5 h-3.5 text-[#DE7356]" />
@@ -554,18 +554,18 @@ export default function Home() {
                   <span className="block text-2xl sm:text-3xl font-mono tracking-widest text-[#E3A387] mb-2 uppercase font-light">
                     Back to the Origin
                   </span>
-                  喧騒を脱ぎ、
+                  神の大愛の光に包まれ、
                   <br />
-                  本来の澄みわたる自分へ。
+                  本来の澄んだ自分へ。
                 </>
               ) : (
                 <>
                   <span className="block text-xl sm:text-2xl font-mono tracking-widest text-[#E3A387] mb-2 uppercase font-light">
-                    Sanctuary of Light & Stillness
+                    Back to the Origin
                   </span>
-                  Back to the Origin.
+                  Wrapped in the Radiant Light
                   <br />
-                  <span className="italic font-light text-[#E8E2D7]">Return to your unburdened self.</span>
+                  <span className="italic font-light text-[#E8E2D7]">of God’s Boundless Love.</span>
                 </>
               )}
             </h1>
@@ -576,9 +576,9 @@ export default function Home() {
             {/* Subcopy */}
             <p className="max-w-2xl text-sm sm:text-base md:text-lg text-[#D6CFBE] font-light leading-relaxed">
               {lang === "ja" ? (
-                "ロサンゼルスの日常で、知らず知らずのうちに積み重なる心身の重荷。言葉や思考を休め、ただ静かに光に身を委ねる。お浄め（Art of Divine Light）が、魂の奥底にある澄んだ静けさを呼び覚まします。"
+                "ロサンゼルスの日常で、知らず知らずのうちに積み重なる心身の重荷。言葉や思考を休め、ただ静かに身を委ねる。天から降り注ぐ神の大愛のみ光を取り次ぐ「手かざし（Art of Divine Light）」が、魂の奥底の曇りをそっと溶かし、本来の穏やかな命の輝きを呼び覚まします。"
               ) : (
-                "Beyond the constant rush of the city lies a sacred space to pause. Experience tekazashi—the gentle Art of Divine Light. Let go of accumulated fatigue, align with nature’s rhythm, and return to your peaceful, unburdened self."
+                "Beyond the constant rush of the city lies a space to pause. Experience tekazashi—the gentle Art of Divine Light. Not a mere human technique, but the boundless love of God descending as pure, radiant light to dissolve inner burdens and restore your peaceful, unburdened self."
               )}
             </p>
 
@@ -591,7 +591,7 @@ export default function Home() {
                 }}
                 className="inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-8 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-xl hover:translate-y-[-1px] cursor-pointer"
               >
-                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
+                <span>{lang === "ja" ? "無料体験セッションを予約する" : "Reserve a Free Divine Light Session"}</span>
                 <Icons.ArrowRight className="w-4 h-4" />
               </button>
 
@@ -639,7 +639,7 @@ export default function Home() {
               </div>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-light tracking-tight leading-tight max-w-3xl">
                 {lang === "ja" ? (
-                  "情報とスピードに満ちた街で、なぜ心は静けさを求めるのか。"
+                  "情報とスピードに満ちた街で、なぜ心は愛と静けさを求めるのか。"
                 ) : (
                   "In a World of Constant Movement, Where Does the Soul Find Rest?"
                 )}
@@ -675,20 +675,23 @@ export default function Home() {
                 {lang === "ja" ? (
                   <>
                     <p className="text-xl sm:text-2xl text-[#F4EFEA] font-serif leading-snug">
-                      車列の途切れないフリーウェイ、絶え間なく鳴る通知、常に成果を求められる日常。
+                      車列の途切れないフリーウェイ、絶え間なく鳴る通知、常に成果を求められ続ける日々。
                     </p>
                     <p>
-                      便利で豊かな暮らしのただ中にありながら、私たちはどこかで拭いきれない「深い重さ」を抱えています。
+                      便利で豊かな暮らしのただ中にありながら、私たちはどこかで拭いきれない「深い重さと孤独」を抱えています。
                     </p>
                     <p>
-                      それは単なる肉体の疲労ではありません。大自然のリズムから切り離され、見えない澱（おり）のように心と魂に蓄積した「日々の摩擦と過剰なノイズ」です。
+                      それは単なる肉体の疲労ではありません。大自然のリズムから切り離され、魂の奥底にある本来の美しい神性が、日々の摩擦や思考のノイズ（曇り）に覆われてしまっているからです。
+                    </p>
+                    <p>
+                      人は、テクニックや言葉の慰めだけでは、心の奥の渇きを癒やすことはできません。
                     </p>
                     <div className="p-6 rounded-xl bg-[#23201C] border border-[#3A342D] space-y-2">
                       <p className="text-sm font-mono uppercase tracking-widest text-[#DE7356]">
-                        Like Water Settling When Undisturbed
+                        Return to the Origin of Love
                       </p>
                       <p className="text-[#E6E0D5] font-serif italic text-base">
-                        砂が風に撫でられ、水が澄んでいくように。今、私たちに必要なのは、何かを足すことではなく、ただ静かに洗い流し、本来の自分へと還る時間です。
+                        今、私たちに必要なのは、何かを足すことではなく、ただすべてを包み込む神の大愛のみ光に浸り、本来の澄んだ自分へと還る時間です。
                       </p>
                     </div>
                   </>
@@ -698,14 +701,14 @@ export default function Home() {
                       Surrounded by endless highways, digital alerts, and constant demands, we carry an unshakeable inner fatigue.
                     </p>
                     <p>
-                      It is more than physical exhaustion—it is the subtle weight of disconnect from natural stillness. In a metropolis that rarely sleeps, our senses remain perpetually engaged.
+                      It is more than physical exhaustion—it is the subtle weight of disconnect from natural stillness and the origin of love. Just as water settles when undisturbed, your spirit requires a sacred pause to clarify, breathe, and return to the unconditional love from which we came.
                     </p>
                     <div className="p-6 rounded-xl bg-[#23201C] border border-[#3A342D] space-y-2">
                       <p className="text-sm font-mono uppercase tracking-widest text-[#DE7356]">
-                        A Sacred Pause to Clarify
+                        A Sacred Pause in God’s Boundless Love
                       </p>
                       <p className="text-[#E6E0D5] font-serif italic text-base">
-                        Just as water settles when undisturbed, your spirit requires a sacred pause to clarify and breathe. We do not need more stimuli; we need the grace to let go.
+                        We do not need more stimuli; we need the grace to let go and rest in the boundless light of God&apos;s love.
                       </p>
                     </div>
                   </>
@@ -750,15 +753,15 @@ export default function Home() {
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-6">
               {lang === "ja" ? (
                 <>
-                  心身の滞りを解きほぐし、
+                  触れず、語らず。
                   <br />
-                  <span className="text-[#964731] font-normal">光の温もりだけで魂を調律する。</span>
+                  <span className="text-[#964731] font-normal">神の大愛が「光」となって魂をほどく。</span>
                 </>
               ) : (
                 <>
                   The Art of Divine Light.
                   <br />
-                  <span className="text-[#964731] font-normal italic">Attuning the Spirit Through Gentle Radiance.</span>
+                  <span className="text-[#964731] font-normal italic">Pure Divine Love Descending as Radiant Light.</span>
                 </>
               )}
             </h2>
@@ -792,8 +795,8 @@ export default function Home() {
                 </div>
                 <p className="text-xs sm:text-sm text-[#665D52] leading-relaxed">
                   {lang === "ja"
-                    ? "医療行為でも、催眠術や暗示でもありません。人間が本来宿している「澄んだ生命力」へと立ち返るための、純粋で静かな伝統的アプローチです。"
-                    : "Tekazashi is not medical treatment, nor is it hypnosis or psychological persuasion. It is a time-tested spiritual practice to restore human vitality and inner peace."}
+                    ? "医療行為でも、催眠術や暗示でもありません。人間が本来宿している「神の子としての澄んだ生命力」へと立ち返るための、純粋で静かなアプローチです。"
+                    : "Tekazashi is not medical treatment, nor is it hypnosis or psychological persuasion. It is a sacred, time-tested approach to awakening inner peace and divine vitality."}
                 </p>
               </div>
             </div>
@@ -805,19 +808,25 @@ export default function Home() {
                 {lang === "ja" ? (
                   <>
                     <p className="text-xl font-serif text-[#1A1816]">
-                      「手かざし（Art of Divine Light）」は、施術者が自らの力を加えるものではありません。宇宙と自然を貫く根源的な神の光（Divine Light）を、静かに取り次ぐ無私の実践です。
+                      「手かざし（Art of Divine Light）」は、人間が自らの念力やエネルギーを加えるものではありません。天地万物を生み出された創造主（元主大神様）の純粋な愛そのものが、目に見える現界において「聖なる光」となって天から降り注がれています。
                     </p>
                     <p>
-                      椅子に深く腰掛け、そっと目を閉じる。施術の前後に心身の滞りや濁毒（不調の原因）を優しく確認し、約30cm離れた手のひらから穏やかな光を注ぎます。蓄積した想念の曇りや緊張をほどき、内側から澄みわたるような深い安らぎをもたらします。
+                      施術者はその光を、無私の心で静かにお取り次ぎするパイプに過ぎません。
+                    </p>
+                    <p>
+                      椅子に深く腰掛け、そっと目を閉じる。約30cm離れた手のひらから注がれる温かな愛の光が、魂の奥底にこびりついた想念の曇りや緊張を優しく溶かし、内側から芯まで満たされるような深い平安をもたらします。
+                    </p>
+                    <p className="text-sm sm:text-base text-[#665D52]">
+                      医療行為でも、催眠でもありません。神の大愛に包まれることで、人間が本来授かっている「神の子としての澄んだ生命力」へと立ち返るための、最も純粋で静かなアプローチです。
                     </p>
                   </>
                 ) : (
                   <>
                     <p className="text-xl font-serif text-[#1A1816]">
-                      Tekazashi involves no personal force. The practitioner serves solely as a clear conduit for Divine Light—the universal, purifying energy of nature and creation.
+                      Tekazashi involves no physical contact, no personal force, and no human will. The practice is founded on the profound truth that God’s boundless love descends as radiant, purifying light.
                     </p>
                     <p>
-                      Seated comfortably with eyes closed, the practitioner gently assesses subtle stagnation (dakudoku) before and after the session, then focuses Divine Light from approximately 12 inches away. The gentle radiance melts inner tension and restores your spiritual balance.
+                      The practitioner serves solely as a humble, clear conduit. Seated comfortably with eyes closed, you simply receive. The gentle warmth of Divine Light dissolves the spiritual burdens of daily life, awakening the luminous peace within.
                     </p>
                   </>
                 )}
@@ -827,14 +836,14 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                 
                 <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / ATTUNEMENT</span>
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / PURE LIGHT</span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "心身の調律とお浄め" : "Attunement & Radiance"}
+                    {lang === "ja" ? "神の大愛のみ光" : "Light of Divine Love"}
                   </h3>
                   <p className="text-xs text-[#6C645A] leading-relaxed">
                     {lang === "ja"
-                      ? "お浄めの前後に心身の滞りや濁毒を静かに見極め、約30cm離れた手から光を注ぎます。"
-                      : "The practitioner gently assesses areas of stagnation (dakudoku), then radiates Divine Light from approx. 12 inches away."}
+                      ? "天地万物の創造主の純粋な愛が聖なる光となって注がれ、魂の奥底の曇りを優しく溶かします。"
+                      : "God's boundless love descends as radiant, purifying light to dissolve inner spiritual burdens."}
                   </p>
                 </div>
 
@@ -851,14 +860,14 @@ export default function Home() {
                 </div>
 
                 <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">03 / NATURE</span>
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">03 / NON-CONTACT</span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "自然生命力の調律" : "Vital Alignment"}
+                    {lang === "ja" ? "触れず、語らず" : "Non-Contact Conduit"}
                   </h3>
                   <p className="text-xs text-[#6C645A] leading-relaxed">
                     {lang === "ja"
-                      ? "心身に溜まった見えない疲労を浄め、本来備わる澄んだ生命力を回復させます。"
-                      : "Clears accumulated subtle burdens to rekindle your inherent calm vitality."}
+                      ? "約30cm離れた手から光を静かにお取り次ぎします。お身体に直接触れることは一切ございません。"
+                      : "Channeled approximately 12 inches away. There is no physical contact."}
                   </p>
                 </div>
 
@@ -886,7 +895,7 @@ export default function Home() {
               <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight">
                 {lang === "ja"
                   ? "心から安心してお過ごしいただくための、3つの約束。"
-                  : "Built on Pure Sincerity. Three Commitments to Every Guest."}
+                  : "Built on Sincerity and Universal Love. Three Commitments to Every Guest."}
               </h2>
             </div>
             <p className="text-xs font-mono uppercase tracking-widest text-[#7C7368] max-w-xs">
@@ -897,7 +906,7 @@ export default function Home() {
           {/* 3-Column Card Layout */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#DDD3C4] border border-[#DDD3C4] mt-12 rounded-2xl overflow-hidden shadow-xs">
             
-            {/* Card 01: Purely Donation-Based (No "Free First Visit") */}
+            {/* Card 01: Purely Donation-Based & Free First Visit */}
             <div className="bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
@@ -907,17 +916,17 @@ export default function Home() {
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
-                  {lang === "ja" ? "完全な自発性（ドネーション制）" : "Purely Donation-Based"}
+                  {lang === "ja" ? "完全な自発性（ドネーション制・初回無料）" : "Donation-Based / Free First Visit"}
                 </h3>
                 <p className="text-sm text-[#5D554B] leading-relaxed">
                   {lang === "ja"
-                    ? "当センターは営利目的の定額請求や義務的な支払いは一切なく、ご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
-                    : "Our sanctuary operates entirely through voluntary donations based on personal gratitude. There are never fixed fees, mandatory dues, or commercial charges."}
+                    ? "神の大愛に基づく実践だからこそ、営利の縛りはありません。初回の体験セッションは完全無料です。継続される場合も定額の請求や強制はなく、ご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
+                    : "Rooted in Divine Love, there are no commercial demands. The first introductory session is completely free. Continued practice remains purely voluntary, sustained solely by heartfelt donations."}
                 </p>
               </div>
               <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
                 <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                <span>{lang === "ja" ? "物品販売・高額請求の一切なし" : "Zero sales or forced payments"}</span>
+                <span>{lang === "ja" ? "初回無料 ｜ 物品販売・強制請求一切なし" : "Free first visit ｜ Zero sales or fees"}</span>
               </div>
             </div>
 
@@ -935,8 +944,8 @@ export default function Home() {
                 </h3>
                 <p className="text-sm text-[#5D554B] leading-relaxed">
                   {lang === "ja"
-                    ? "特定の宗教への改宗や入会を求めることは一切ありません。どのような信仰・哲学をお持ちの方でも、あるいは無宗教の方でも、等しく穏やかにお迎えいたします。"
-                    : "We never solicit membership or pressure anyone toward religious conversion. People of all spiritual traditions, faiths, or secular backgrounds are warmly welcomed as equals."}
+                    ? "神の大愛は、人種や信条、既存の宗教の垣根を越えて、すべての人に等しく注がれています。特定の教義への改宗を求めることは一切なく、どなたにも開かれた場です。"
+                    : "God's boundless love descends equally on all people regardless of race, background, or religious creed. We never solicit membership or demand conversion. Our sanctuary is open to all."}
                 </p>
               </div>
               <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
@@ -959,8 +968,8 @@ export default function Home() {
                 </h3>
                 <p className="text-sm text-[#5D554B] leading-relaxed">
                   {lang === "ja"
-                    ? "World Divine Light Organization は、米国政府に認められた非営利団体です。営利を目的とせず、真心のボランティアスタッフによって誠実に維持管理されています。"
-                    : "World Divine Light Organization is an officially registered US federal 501(c)(3) non-profit entity, maintained with integrity by sincere volunteer staff members."}
+                    ? "World Divine Light Organization は、米国政府に認められた非営利団体です。見返りを求めない真心のボランティアスタッフによって、誠実に維持されています。"
+                    : "World Divine Light Organization is an officially recognized US 501(c)(3) non-profit entity, maintained with sincerity and dedication by selfless volunteer staff."}
                 </p>
               </div>
               <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
@@ -985,7 +994,7 @@ export default function Home() {
               04 / WHAT TO EXPECT
             </span>
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4">
-              {lang === "ja" ? "静寂へ至る、55分間の流れ。" : "A Thoughtful 55-Minute Journey."}
+              {lang === "ja" ? "静寂と大愛へ至る、55分間の流れ。" : "A Thoughtful 55-Minute Journey."}
             </h2>
             <p className="text-sm sm:text-base text-[#6B6358] font-light">
               {lang === "ja"
@@ -1044,12 +1053,12 @@ export default function Home() {
                 </h3>
                 <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
                   {lang === "ja"
-                    ? "椅子に腰掛け、目を閉じてリラックスしてください。施術者が静かに光を取り次ぎます。眠ってしまっても差し支えありません。"
-                    : "Sit comfortably and close your eyes. The practitioner radiates Divine Light over you in serene quietude."}
+                    ? "椅子に腰掛け、目を閉じてリラックスしてください。天から降り注ぐ神の大愛のみ光を静かにお取り次ぎします。途中で眠ってしまっても差し支えありません。"
+                    : "Sit comfortably and close your eyes. Experience 30 minutes of deep quietude as the radiant light of God’s love is gently channeled over you."}
                 </p>
               </div>
               <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※静寂の中で光に身を委ねる時間" : "Serene Divine Light Radiance"}
+                {lang === "ja" ? "※神の大愛に身を委ねる静寂の時間" : "Channeled with God's Boundless Love"}
               </div>
             </div>
 
@@ -1101,7 +1110,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 06: WORDS FROM THE CENTER (迎える人の声)
-          - Staff Host: Kevin
+          - Staff Host: Meia
           ==================================================================== */}
       <section className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 sm:px-12">
@@ -1111,9 +1120,9 @@ export default function Home() {
             {/* Header Badge */}
             <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-6 mb-8">
               <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356]">
-                05 / MESSAGE FROM THE SANCTUARY
+                05 / MESSAGE
               </span>
-              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Kevin</span>
+              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Meia</span>
             </div>
 
             {/* Letter Content */}
@@ -1129,47 +1138,44 @@ export default function Home() {
               {lang === "ja" ? (
                 <>
                   <p>
-                    「ロサンゼルスで懸命に日々を過ごしていると、いつの間にか呼吸が浅くなり、自分の本質を見失ってしまうことがあります。
+                    「ロサンゼルスで懸命に日々を過ごしていると、いつの間にか呼吸が浅くなり、自分の本質や温もりを見失ってしまうことがあります。
                   </p>
                   <p>
-                    私たちが大切にしているのは、何かを教え込むことではなく、誰もが本来持っている澄んだ状態へ還るための『余白』をお守りすることです。
+                    私たちが大切にしているのは、何かを教え込むことではなく、神様の大愛の光に包まれて、誰もが『ありのままの自分』で安心して魂を休められる場所をお守りすることです。
                   </p>
                   <p>
-                    特別な準備も、気負いも要りません。ふと自然の風に触れたくなったときのように、いつでも静かに扉を開けてください。」
+                    特別な準備も、気負いも要りません。心が温もりを求めたときは、いつでも静かに扉を開けてください。」
+                  </p>
+                  <p className="text-sm font-mono text-[#8C8276] pt-2">
+                    — スタッフ：Meia
                   </p>
                 </>
               ) : (
                 <>
                   <p>
-                    &ldquo;Living in the vibrant pace of Los Angeles, it is easy for life to become overwhelming and for one’s breath to turn shallow.
+                    &ldquo;Living in the vibrant pace of Los Angeles, it is easy to feel overwhelmed and disconnected.
                   </p>
                   <p>
-                    Our center does not seek to lecture or persuade; we simply offer a quiet clearing where you can remember your natural lightness.
+                    Our center does not seek to lecture or persuade; we simply offer a quiet sanctuary where you are held in the pure light of God&apos;s love.
                   </p>
                   <p>
                     Whenever you feel the need to pause and breathe, our doors are open.&rdquo;
+                  </p>
+                  <p className="text-xs font-mono text-[#8C8276] pt-2">
+                    — Meia, Staff Host
                   </p>
                 </>
               )}
             </div>
 
-            {/* Signature Area: Kevin */}
+            {/* Signature Area: Meia */}
             <div className="mt-10 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#1A1816]">
-                  <Image
-                    src="/assets/staff_host.jpg"
-                    alt="Kevin, Staff Host"
-                    fill
-                    className="object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
-                  />
-                  <div className="w-full h-full flex items-center justify-center text-white font-serif text-sm">K</div>
+                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#964731] flex items-center justify-center text-white font-serif text-base font-medium">
+                  M
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[#1A1816]">Kevin</div>
+                  <div className="text-sm font-semibold text-[#1A1816]">Meia</div>
                   <div className="text-xs font-mono text-[#7A7266]">Staff Host ｜ Los Angeles Divine Light Center</div>
                 </div>
               </div>
@@ -1185,7 +1191,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 07: INFORMATION & VISITING GUIDELINES
-          - Email updated to losangeles@worlddivinelight.org
+          - Email: info-la@worlddivinelight.org
           ==================================================================== */}
       <section id="access" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
@@ -1283,8 +1289,8 @@ export default function Home() {
                   <a href="tel:+16268615069" className="block hover:text-[#DE7356] transition-colors font-mono">
                     +1 (626) 861-5069
                   </a>
-                  <a href="mailto:losangeles@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
-                    losangeles@worlddivinelight.org
+                  <a href="mailto:info-la@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
+                    info-la@worlddivinelight.org
                   </a>
                   <div className="text-[11px] text-[#7C7368] font-mono">
                     SMS inquiries welcomed
@@ -1360,28 +1366,28 @@ export default function Home() {
           <div className="space-y-4">
             {[
               {
-                q_ja: "料金やドネーションはどのようになっていますか？",
-                a_ja: "当センターは定額の料金設定や義務的な請求は一切ございません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）によって支えられております。物品の販売や無理な支払いを求めることは一切ございません。",
-                q_en: "How do donations and fees work?",
-                a_en: "We do not charge fixed fees or impose mandatory dues. Our sanctuary is supported entirely by voluntary offerings (donations) based on personal gratitude. There are never product sales or commercial obligations.",
+                q_ja: "本当に無料ですか？ 追加の請求はありませんか？",
+                a_ja: "初めての方の体験セッションは完全無料です。物品の販売や、寄付の強制などは一切ございません。",
+                q_en: "Is the first session truly free?",
+                a_en: "Yes. There is no fee, no hidden cost, and no obligation of any kind.",
               },
               {
                 q_ja: "特定の宗教を信じていなくても参加できますか？",
                 a_ja: "はい。どのような宗教・信条をお持ちの方でも、あるいは無宗教の方でも、分け隔てなく歓迎いたします。教義の押し付けや改宗の要求は一切ありません。",
-                q_en: "Can I participate without a specific religious background?",
-                a_en: "Absolutely. People of all backgrounds, faiths, or secular philosophies are welcomed warmly. There is no proselytizing or requirement to convert.",
+                q_en: "Do I need a specific religious background?",
+                a_en: "Not at all. People of all faiths and life philosophies are warmly welcomed.",
               },
               {
                 q_ja: "施術中に身体に触れられることはありますか？",
-                a_ja: "お浄めの前後に、心身の滞りや濁毒の箇所を確認するために優しく触れる程度です。その後の手かざし（光を注ぐ時間）は身体から約30cm離した位置で行われます。強い指圧やマッサージなどは一切ございません。",
+                a_ja: "いいえ。手かざしは完全な非接触（約30cm離れた位置）で行われます。お身体に直接触れることは一切ございません。",
                 q_en: "Is there any physical contact during tekazashi?",
-                a_en: "Before and after the session, the practitioner may gently touch to check areas of tension or stagnation (dakudoku). During the main light session, the hand is held approx. 12 inches away. There is no heavy pressure or massage.",
+                a_en: "None. The practice is completely non-contact, held approximately 12 inches away from your body.",
               },
               {
                 q_ja: "予約なしで当日伺うことはできますか？",
-                a_ja: "落ち着いた静謐な空間を保つため、また行事等により開館時間が変更となる場合があるため、事前のご予約をお願いしております。お電話・SMSまたは予約フォームよりご連絡ください。",
-                q_en: "Can I walk in without an advance appointment?",
-                a_en: "Because our schedule adjusts for community ceremonies and to preserve a tranquil environment for every guest, advance reservations are required.",
+                a_ja: "落ち着いた静謐な空間を保つため、また行事等により開館時間が変更となる場合があるため、必ず事前のご予約をお願いしております。お電話・SMSまたは予約フォームよりご連絡ください。",
+                q_en: "Can I walk in without an appointment?",
+                a_en: "Because our hours may adjust for community events and to ensure private quietude, advance reservations are required.",
               },
             ].map((faq, idx) => (
               <div
@@ -1438,29 +1444,29 @@ export default function Home() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 text-center space-y-8">
           
           <span className="inline-block text-xs font-mono tracking-widest uppercase text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
-            {lang === "ja" ? "体験セッションのご案内" : "Introductory Session"}
+            {lang === "ja" ? "無料体験セッションのご案内" : "Free Introductory Session"}
           </span>
 
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-tight max-w-3xl mx-auto text-[#FAF6F0]">
             {lang === "ja" ? (
               <>
-                呼吸を整え、
+                神の大愛の光に包まれ、
                 <br />
                 本来の澄みわたるあなたへ。
               </>
             ) : (
               <>
-                Return to Stillness.
+                Wrapped in Divine Love.
                 <br />
-                <span className="italic font-light text-[#E0D7CC]">Step into the Light.</span>
+                <span className="italic font-light text-[#E0D7CC]">Step Into the Light.</span>
               </>
             )}
           </h2>
 
           <p className="max-w-2xl mx-auto text-sm sm:text-lg text-[#C8BFB2] font-light leading-relaxed">
             {lang === "ja"
-              ? "都会の速度から一歩身を引き、心と魂に純粋な静寂を届ける。静かな空間とお席を整えてお待ちしております。"
-              : "Take a quiet step away from the urban noise. A sanctuary of peace and gentle light awaits you in Monterey Park."}
+              ? "都会の速度から一歩身を引き、心と魂に純粋な静寂と愛の温もりを届ける。静かな空間とお席を整えてお待ちしております。"
+              : "Take a quiet step away from the urban noise. A sanctuary of peace and boundless divine love awaits you in Monterey Park."}
           </p>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1471,7 +1477,7 @@ export default function Home() {
               }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-9 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-xl cursor-pointer"
             >
-              <span>{lang === "ja" ? "体験セッションを予約する" : "Book Your Session"}</span>
+              <span>{lang === "ja" ? "無料体験セッションを予約する" : "Book Your Free Session"}</span>
               <Icons.ArrowRight className="w-4 h-4" />
             </button>
 
@@ -1480,7 +1486,7 @@ export default function Home() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/20 hover:border-white/50 text-white/90 px-7 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-colors backdrop-blur-sm"
             >
               <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
-              <span>Tel/SMS: +1 (626) 861-5069</span>
+              <span>{lang === "ja" ? "事前お問い合わせ（通話・SMS）: +1 (626) 861-5069" : "Direct Call / SMS: +1 (626) 861-5069"}</span>
             </a>
           </div>
 
@@ -1493,8 +1499,6 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 10: FOOTER
-          - Email updated to losangeles@worlddivinelight.org
-          - Clean footer logo
           ==================================================================== */}
       <footer className="bg-[#0E0D0C] text-[#8C8377] py-16 px-6 sm:px-12 border-t border-[#23201C]">
         <div className="max-w-7xl mx-auto space-y-12">
@@ -1512,9 +1516,14 @@ export default function Home() {
                   className="h-8 w-auto object-contain brightness-0 invert opacity-90 block"
                 />
               </div>
-              <p className="text-xs text-[#7A7266] leading-relaxed max-w-md">
-                World Divine Light Organization is a US Government-Recognized 501(c)(3) Nonprofit Spiritual Organization dedicated to spiritual harmony and inner purification through the practice of Tekazashi.
-              </p>
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-white/90">
+                  World Divine Light Organization — Los Angeles Divine Light Center
+                </p>
+                <p className="text-xs text-[#7A7266] leading-relaxed max-w-md">
+                  A US Government-Recognized 501(c)(3) Nonprofit Spiritual Organization dedicated to spiritual harmony and inner peace through the Art of Divine Light (Tekazashi).
+                </p>
+              </div>
             </div>
 
             {/* Col 2: Navigation Links */}
@@ -1530,14 +1539,16 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Col 3: Direct Contacts */}
+            {/* Col 3: Direct Contacts & Hours */}
             <div className="md:col-span-4 space-y-3 font-mono text-xs">
-              <span className="text-white block uppercase tracking-wider font-medium">Visiting Address</span>
+              <span className="text-white block uppercase tracking-wider font-medium">Visiting Address & Hours</span>
               <div className="text-[#8C8377] leading-relaxed">
                 <div>809 S Atlantic Blvd, #378</div>
                 <div>Monterey Park, CA 91754</div>
+                <div className="mt-2 text-white/80">Tue–Sat 10:00 AM – 6:00 PM</div>
+                <div className="text-white/80">Sun 9:00 AM – 4:00 PM (Closed Mon)</div>
                 <div className="mt-2 text-white">Direct: +1 (626) 861-5069</div>
-                <div>Email: losangeles@worlddivinelight.org</div>
+                <div>Email: info-la@worlddivinelight.org</div>
               </div>
             </div>
 
@@ -1549,7 +1560,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-6">
               <span>501(c)(3) Nonprofit Entity</span>
-              <span>Purely Donation-Based</span>
+              <span>Donation-Based / Free First Visit</span>
             </div>
           </div>
 
@@ -1558,7 +1569,6 @@ export default function Home() {
 
       {/* ====================================================================
           INTERACTIVE RESERVATION MODAL / DIALOG
-          - Free claims removed, purely donation-based guidance
           ==================================================================== */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm">
@@ -1609,12 +1619,12 @@ export default function Home() {
                     SANCTUARY APPOINTMENT
                   </span>
                   <h3 className="text-2xl font-serif font-medium text-[#1A1816]">
-                    {lang === "ja" ? "体験セッションの予約" : "Book Your Session"}
+                    {lang === "ja" ? "無料体験セッションの予約" : "Book Your Free Session"}
                   </h3>
                   <p className="text-xs text-[#7C7368] mt-1">
                     {lang === "ja"
-                      ? "完全事前予約制 ｜ 約55分の静寂と調律のひととき（ドネーション制）"
-                      : "By advance appointment ｜ Approx. 55 minutes of quietude (Donation-based)"}
+                      ? "完全事前予約制 ｜ 約55分の静寂と神の大愛に包まれるひととき（初回無料・ドネーション制）"
+                      : "By advance appointment ｜ Approx. 55 minutes of quietude & Divine Light (Free First Visit)"}
                   </p>
                 </div>
 
@@ -1731,7 +1741,7 @@ export default function Home() {
                     <span>
                       {isSubmitting
                         ? (lang === "ja" ? "送信中..." : "Submitting...")
-                        : (lang === "ja" ? "予約リクエストを送信する" : "Submit Reservation Request")}
+                        : (lang === "ja" ? "無料体験セッションを予約する" : "Submit Free Session Request")}
                     </span>
                     <Icons.ArrowRight className="w-4 h-4" />
                   </button>
@@ -1739,8 +1749,8 @@ export default function Home() {
 
                 <div className="text-[11px] text-[#7C7368] text-center leading-relaxed">
                   {lang === "ja"
-                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。完全なドネーション制であり、無理な勧誘や請求は一切ございません。"
-                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Purely donation-based with zero obligations."}
+                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。初回の体験セッションは完全無料、無理な勧誘や請求は一切ございません。"
+                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Free first visit with zero obligations or solicitations."}
                 </div>
 
               </form>
