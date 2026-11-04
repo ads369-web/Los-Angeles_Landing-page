@@ -73,6 +73,13 @@ const Icons = {
       <polyline points="12 6 12 12 16 14"></polyline>
     </svg>
   ),
+  Menu: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" y1="12" x2="20" y2="12"></line>
+      <line x1="4" y1="6" x2="20" y2="6"></line>
+      <line x1="4" y1="18" x2="20" y2="18"></line>
+    </svg>
+  ),
   X: ({ className = "w-5 h-5" }: { className?: string }) => (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -163,6 +170,17 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    if (isModalOpen || mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isModalOpen, mobileMenuOpen]);
+
   return (
     <div className="relative min-h-screen bg-[#FBF9F5] text-[#24211D] font-sans selection:bg-[#DE7356]/20 selection:text-[#24211D] antialiased">
       
@@ -190,27 +208,28 @@ export default function Home() {
           STICKY HEADER & NAVIGATION
           - Full natural aspect ratio for WDL logo (no clipping)
           - Unified two-tier navigation menu (上段: 数字, 下段: 文字)
+          - Fully responsive & mobile-friendly drawer navigation
           ==================================================================== */}
       <header className="sticky top-0 z-40 w-full bg-[#FBF9F5]/90 backdrop-blur-md border-b border-[#EAE3D9] transition-all duration-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-20 sm:h-22 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 sm:h-22 flex items-center justify-between">
           
           {/* Logo / Brand Identity - Full wide logo properly rendered */}
-          <a href="#" className="flex items-center gap-3 sm:gap-4 group shrink-0">
-            <div className="relative h-9 sm:h-10 flex items-center shrink-0">
+          <a href="#" className="flex items-center gap-2.5 sm:gap-4 group min-w-0 pr-2">
+            <div className="relative h-7 sm:h-9 flex items-center shrink-0">
               <Image
                 src="/assets/wdl_logo.png"
                 alt="World Divine Light Organization"
                 width={120}
                 height={38}
-                className="h-8 sm:h-9 w-auto object-contain block transition-opacity duration-300 group-hover:opacity-90"
+                className="h-7 sm:h-9 w-auto object-contain block transition-opacity duration-300 group-hover:opacity-90"
                 priority
               />
             </div>
-            <div className="flex flex-col border-l border-[#DCD3C5] pl-3">
-              <span className="text-sm sm:text-base font-semibold tracking-tight text-[#1A1816] font-serif leading-none mb-1">
+            <div className="flex flex-col border-l border-[#DCD3C5] pl-2.5 sm:pl-3 min-w-0">
+              <span className="text-xs sm:text-base font-semibold tracking-tight text-[#1A1816] font-serif leading-tight truncate">
                 Los Angeles Divine Light Center
               </span>
-              <span className="text-[10px] tracking-widest text-[#7C756B] uppercase font-mono leading-none">
+              <span className="hidden sm:block text-[10px] tracking-widest text-[#7C756B] uppercase font-mono leading-none mt-0.5">
                 World Divine Light Organization
               </span>
             </div>
@@ -251,14 +270,14 @@ export default function Home() {
 
           </nav>
 
-          {/* Right Action: Language Switch + Reserve CTA */}
-          <div className="flex items-center gap-3 sm:gap-5">
+          {/* Right Action: Language Switch + Reserve CTA + Mobile Menu Button */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Language Toggle */}
             <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 text-xs font-mono bg-[#F2EDE4]/60">
               <button
                 type="button"
                 onClick={() => setLang("ja")}
-                className={`px-2.5 py-1 rounded-full transition-all text-[11px] font-medium cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 rounded-full transition-all text-[11px] font-medium cursor-pointer ${
                   lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B] hover:text-[#1A1816]"
                 }`}
                 aria-label="Switch to Japanese"
@@ -268,7 +287,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setLang("en")}
-                className={`px-2.5 py-1 rounded-full transition-all text-[11px] font-medium cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 rounded-full transition-all text-[11px] font-medium cursor-pointer ${
                   lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B] hover:text-[#1A1816]"
                 }`}
                 aria-label="Switch to English"
@@ -277,13 +296,13 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Primary Action Button (Purely Donation-Based, no "Free" label) */}
+            {/* Primary Action Button (Purely Donation-Based, desktop) */}
             <button
               onClick={() => {
                 setSubmitStatus("idle");
                 setIsModalOpen(true);
               }}
-              className="hidden sm:inline-flex items-center gap-2 bg-[#1A1816] hover:bg-[#DE7356] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider px-5 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-2 bg-[#1A1816] hover:bg-[#DE7356] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider px-4 sm:px-5 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer shrink-0"
             >
               <span>{lang === "ja" ? "セッションを予約" : "Reserve a Session"}</span>
               <Icons.ArrowUpRight className="w-3.5 h-3.5" />
@@ -292,63 +311,205 @@ export default function Home() {
             {/* Mobile Hamburger Button */}
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-[#1A1816] hover:text-[#DE7356] focus:outline-none cursor-pointer"
-              aria-label="Toggle Mobile Menu"
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full border border-[#DDD4C7] bg-[#F2EDE4]/60 hover:bg-[#F2EDE4] text-[#1A1816] transition-colors focus:outline-none cursor-pointer shrink-0"
+              aria-label="Open Navigation Menu"
             >
-              <div className="w-5 h-4 flex flex-col justify-between">
-                <span className={`h-0.5 w-full bg-current transition-transform duration-200 ${mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}></span>
-                <span className={`h-0.5 w-full bg-current transition-opacity duration-200 ${mobileMenuOpen ? "opacity-0" : ""}`}></span>
-                <span className={`h-0.5 w-full bg-current transition-transform duration-200 ${mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}></span>
-              </div>
+              <Icons.Menu className="w-5 h-5 text-[#1A1816]" />
             </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#FBF9F5] border-b border-[#EAE3D9] px-6 py-6 shadow-lg">
-            <nav className="flex flex-col gap-4 text-xs font-mono tracking-widest uppercase text-[#544D44]">
-              <a href="#dilemma" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
-                <span className="text-[#A89F94] font-mono">01</span>
-                <span>Dilemma</span>
-              </a>
-              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
-                <span className="text-[#A89F94] font-mono">02</span>
-                <span>Tekazashi</span>
-              </a>
-              <a href="#principles" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
-                <span className="text-[#A89F94] font-mono">03</span>
-                <span>Integrity</span>
-              </a>
-              <a href="#journey" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
-                <span className="text-[#A89F94] font-mono">04</span>
-                <span>Journey</span>
-              </a>
-              <a href="#access" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
-                <span className="text-[#A89F94] font-mono">05</span>
-                <span>Location</span>
-              </a>
-              <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
-                <span className="text-[#A89F94] font-mono">06</span>
-                <span>FAQ</span>
-              </a>
-            </nav>
-            <div className="mt-6 pt-5 border-t border-[#EAE3D9]">
+        {/* Full-screen Mobile Menu Drawer */}
+        <div
+          className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${
+            mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+          aria-hidden={!mobileMenuOpen}
+        >
+          {/* Backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-[#121110]/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Drawer container */}
+          <div
+            className={`fixed inset-y-0 right-0 w-full max-w-sm sm:max-w-md bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-out overflow-y-auto ${
+              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#EAE3D9] bg-[#F4EFEA]/80 sticky top-0 z-10 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/assets/wdl_logo.png"
+                  alt="World Divine Light Organization"
+                  width={90}
+                  height={28}
+                  className="h-6 w-auto object-contain"
+                />
+                <div className="flex flex-col border-l border-[#DCD3C5] pl-2.5">
+                  <span className="text-xs font-serif font-semibold text-[#1A1816] leading-none">
+                    Los Angeles Center
+                  </span>
+                  <span className="text-[9px] font-mono text-[#8C8276] uppercase tracking-wider mt-0.5">
+                    Divine Light Sanctuary
+                  </span>
+                </div>
+              </div>
               <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-[#DDD4C7] bg-white text-[#1A1816] hover:bg-[#F2EDE4] transition-colors cursor-pointer"
+                aria-label="Close Menu"
+              >
+                <Icons.X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="px-5 py-6 flex-1 space-y-1">
+              <div className="text-[10px] font-mono tracking-widest text-[#8C8276] uppercase mb-3 px-3">
+                {lang === "ja" ? "メニューナビゲーション" : "Menu Navigation"}
+              </div>
+
+              {[
+                {
+                  num: "01",
+                  id: "dilemma",
+                  title_ja: "都会の渇きと静寂への回帰",
+                  title_en: "The Modern Dilemma",
+                  sub: "Dilemma",
+                },
+                {
+                  num: "02",
+                  id: "practice",
+                  title_ja: "手かざし（お浄め）とは",
+                  title_en: "The Art of Divine Light",
+                  sub: "Tekazashi",
+                },
+                {
+                  num: "03",
+                  id: "principles",
+                  title_ja: "3つの安心と透明性",
+                  title_en: "Three Commitments",
+                  sub: "Integrity",
+                },
+                {
+                  num: "04",
+                  id: "journey",
+                  title_ja: "当日の体験の流れ",
+                  title_en: "First Visit Journey",
+                  sub: "Journey",
+                },
+                {
+                  num: "05",
+                  id: "access",
+                  title_ja: "所在地・アクセス情報",
+                  title_en: "Sanctuary Location",
+                  sub: "Location",
+                },
+                {
+                  num: "06",
+                  id: "faq",
+                  title_ja: "よくあるご質問",
+                  title_en: "Frequently Asked Questions",
+                  sub: "FAQ",
+                },
+              ].map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-3.5 rounded-xl hover:bg-[#F2EDE4] border border-transparent hover:border-[#E5DDD2] transition-colors group"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <span className="w-8 h-8 rounded-lg bg-[#EFE8DE] group-hover:bg-[#DE7356] group-hover:text-white transition-colors flex items-center justify-center font-mono text-xs font-semibold text-[#8C8276]">
+                      {item.num}
+                    </span>
+                    <div>
+                      <div className="font-serif text-sm font-medium text-[#1A1816] group-hover:text-[#DE7356] transition-colors">
+                        {lang === "ja" ? item.title_ja : item.title_en}
+                      </div>
+                      <div className="text-[10px] font-mono tracking-wider text-[#8C8276] uppercase">
+                        {item.num} / {item.sub}
+                      </div>
+                    </div>
+                  </div>
+                  <Icons.ArrowRight className="w-4 h-4 text-[#A89F94] group-hover:text-[#DE7356] group-hover:translate-x-1 transition-all" />
+                </a>
+              ))}
+            </div>
+
+            {/* Bottom Actions & Contacts */}
+            <div className="p-6 border-t border-[#EAE3D9] bg-[#F4EFEA]/90 space-y-4">
+              {/* Language Switcher in Drawer */}
+              <div className="flex items-center justify-between bg-white p-2 rounded-xl border border-[#DDD4C7]">
+                <span className="text-xs font-mono text-[#8C8276] uppercase pl-2">
+                  {lang === "ja" ? "表示言語" : "Language"}
+                </span>
+                <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 bg-[#F2EDE4]">
+                  <button
+                    type="button"
+                    onClick={() => setLang("ja")}
+                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
+                      lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
+                    }`}
+                  >
+                    日本語
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLang("en")}
+                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
+                      lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
+                    }`}
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Booking CTA */}
+              <button
+                type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   setSubmitStatus("idle");
                   setIsModalOpen(true);
                 }}
-                className="w-full flex items-center justify-center gap-2 bg-[#1A1816] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider py-3 rounded-full cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] text-white py-3.5 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
               >
-                <span>{lang === "ja" ? "セッションを予約する" : "Reserve a Session"}</span>
-                <Icons.ArrowUpRight className="w-4 h-4" />
+                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
+                <Icons.ArrowRight className="w-4 h-4" />
               </button>
+
+              {/* Direct Tap to Contact */}
+              <div className="grid grid-cols-2 gap-2 pt-1 text-center text-xs font-mono text-[#6C645A]">
+                <a
+                  href="tel:6262828437"
+                  className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
+                  <span>(626) 282-8437</span>
+                </a>
+                <a
+                  href="mailto:losangeles@worlddivinelight.org"
+                  className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Icons.Mail className="w-3.5 h-3.5 text-[#DE7356]" />
+                  <span>Email</span>
+                </a>
+              </div>
+
+              {/* Address / Monterey Park note */}
+              <div className="text-[10px] font-mono text-[#8C8276] text-center">
+                Monterey Park, CA ｜ 501(c)(3) Nonprofit Organization
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </header>
 
       {/* ====================================================================
