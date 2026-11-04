@@ -312,35 +312,33 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full border border-[#DDD4C7] bg-[#F2EDE4]/60 hover:bg-[#F2EDE4] text-[#1A1816] transition-colors focus:outline-none cursor-pointer shrink-0"
+              className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#DDD4C7] bg-[#F2EDE4]/70 hover:bg-[#F2EDE4] active:bg-[#EAE3D9] text-[#1A1816] transition-colors focus:outline-none cursor-pointer shrink-0"
               aria-label="Open Navigation Menu"
             >
-              <Icons.Menu className="w-5 h-5 text-[#1A1816]" />
+              <Icons.Menu className="w-4 h-4 text-[#1A1816]" />
+              <span className="text-[11px] font-mono tracking-wider uppercase font-semibold">
+                {lang === "ja" ? "メニュー" : "MENU"}
+              </span>
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Full-screen Mobile Menu Drawer */}
-        <div
-          className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${
-            mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
-          aria-hidden={!mobileMenuOpen}
-        >
+      {/* ====================================================================
+          FULL-SCREEN MOBILE MENU DRAWER (Root Level - No CSS Stacking Interference)
+          ==================================================================== */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[9999] lg:hidden flex justify-end">
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-[#121110]/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-[#121110]/70 backdrop-blur-sm transition-opacity duration-300"
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Drawer container */}
-          <div
-            className={`fixed inset-y-0 right-0 w-full max-w-sm sm:max-w-md bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-out overflow-y-auto ${
-              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-            }`}
-          >
+          <div className="relative z-10 w-full max-w-sm sm:max-w-md h-full bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col justify-between overflow-y-auto">
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#EAE3D9] bg-[#F4EFEA]/80 sticky top-0 z-10 backdrop-blur-md">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#EAE3D9] bg-[#F4EFEA] sticky top-0 z-10">
               <div className="flex items-center gap-3">
                 <Image
                   src="/assets/wdl_logo.png"
@@ -361,7 +359,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-10 h-10 rounded-full flex items-center justify-center border border-[#DDD4C7] bg-white text-[#1A1816] hover:bg-[#F2EDE4] transition-colors cursor-pointer"
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-[#DDD4C7] bg-white text-[#1A1816] hover:bg-[#F2EDE4] active:bg-[#EAE3D9] transition-colors cursor-pointer"
                 aria-label="Close Menu"
               >
                 <Icons.X className="w-5 h-5" />
@@ -422,7 +420,7 @@ export default function Home() {
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-3.5 rounded-xl hover:bg-[#F2EDE4] border border-transparent hover:border-[#E5DDD2] transition-colors group"
+                  className="flex items-center justify-between p-3.5 rounded-xl hover:bg-[#F2EDE4] active:bg-[#EAE3D9] border border-transparent hover:border-[#E5DDD2] transition-colors group cursor-pointer"
                 >
                   <div className="flex items-center gap-3.5">
                     <span className="w-8 h-8 rounded-lg bg-[#EFE8DE] group-hover:bg-[#DE7356] group-hover:text-white transition-colors flex items-center justify-center font-mono text-xs font-semibold text-[#8C8276]">
@@ -443,7 +441,7 @@ export default function Home() {
             </div>
 
             {/* Bottom Actions & Contacts */}
-            <div className="p-6 border-t border-[#EAE3D9] bg-[#F4EFEA]/90 space-y-4">
+            <div className="p-6 border-t border-[#EAE3D9] bg-[#F4EFEA] space-y-4">
               {/* Language Switcher in Drawer */}
               <div className="flex items-center justify-between bg-white p-2 rounded-xl border border-[#DDD4C7]">
                 <span className="text-xs font-mono text-[#8C8276] uppercase pl-2">
@@ -510,7 +508,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </header>
+      )}
 
       {/* ====================================================================
           SECTION 01: HERO / FIRST VIEW
