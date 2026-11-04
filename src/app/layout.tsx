@@ -37,24 +37,24 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Los Angeles Divine Light Center | Back to the Origin",
   description:
-    "Experience the Art of Divine Light (tekazashi) in Los Angeles. Purify spiritual burdens, elevate your Sonen, and return to your original luminous self. 100% non-profit 501(c)(3).",
+    "喧騒を脱ぎ、本来の澄みわたる自分へ。カリフォルニア州モントレーパークの静寂な空間で、非接触の手かざし（Art of Divine Light）をご体験いただけます。米国政府公認 501(c)(3) 非営利法人。",
   keywords: [
     "World Divine Light Organization",
-    "Sekai Mahikari Bunmei Kyodan",
-    "Okiyome",
-    "Art of Divine Light",
+    "Los Angeles Divine Light Center",
+    "Monterey Park spiritual sanctuary",
     "Tekazashi",
-    "Los Angeles",
-    "spiritual healing",
-    "soul purification",
-    "nonprofit",
+    "Art of Divine Light",
+    "お浄め",
+    "手かざし",
+    "ロサンゼルス道場",
+    "501(c)(3) nonprofit spiritual",
   ],
   openGraph: {
     title: "Los Angeles Divine Light Center | Back to the Origin",
     description:
-      "A sacred non-contact practice that purifies the soul and elevates the spirit.",
+      "喧騒を脱ぎ、本来の澄みわたる自分へ。ロサンゼルス・モントレーパークの静寂な空間で、非接触の手かざし（Art of Divine Light）をご体験いただけます。",
     type: "website",
-    locale: "en_US",
+    locale: "ja_JP",
   },
 };
 
