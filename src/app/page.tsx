@@ -753,9 +753,9 @@ export default function Home() {
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-6">
               {lang === "ja" ? (
                 <>
-                  触れず、語らず。
+                  神の大愛が「光」となって、
                   <br />
-                  <span className="text-[#964731] font-normal">神の大愛が「光」となって魂をほどく。</span>
+                  <span className="text-[#964731] font-normal">魂の奥底の曇りを静かにほどく。</span>
                 </>
               ) : (
                 <>
@@ -814,7 +814,7 @@ export default function Home() {
                       施術者はその光を、無私の心で静かにお取り次ぎするパイプに過ぎません。
                     </p>
                     <p>
-                      椅子に深く腰掛け、そっと目を閉じる。約30cm離れた手のひらから注がれる温かな愛の光が、魂の奥底にこびりついた想念の曇りや緊張を優しく溶かし、内側から芯まで満たされるような深い平安をもたらします。
+                      椅子に深く腰掛け、そっと目を閉じる。手のひらから注がれる温かな愛の光が、魂の奥底にこびりついた想念の曇りや緊張を優しく溶かし、内側から芯まで満たされるような深い平安をもたらします。
                     </p>
                     <p className="text-sm sm:text-base text-[#665D52]">
                       医療行為でも、催眠でもありません。神の大愛に包まれることで、人間が本来授かっている「神の子としての澄んだ生命力」へと立ち返るための、最も純粋で静かなアプローチです。
@@ -823,7 +823,7 @@ export default function Home() {
                 ) : (
                   <>
                     <p className="text-xl font-serif text-[#1A1816]">
-                      Tekazashi involves no physical contact, no personal force, and no human will. The practice is founded on the profound truth that God’s boundless love descends as radiant, purifying light.
+                      Tekazashi involves no personal force and no human will. The practice is founded on the profound truth that God’s boundless love descends as radiant, purifying light.
                     </p>
                     <p>
                       The practitioner serves solely as a humble, clear conduit. Seated comfortably with eyes closed, you simply receive. The gentle warmth of Divine Light dissolves the spiritual burdens of daily life, awakening the luminous peace within.
@@ -860,14 +860,14 @@ export default function Home() {
                 </div>
 
                 <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">03 / NON-CONTACT</span>
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">03 / HARMONY</span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "触れず、語らず" : "Non-Contact Conduit"}
+                    {lang === "ja" ? "自然生命力の調律" : "Vital Alignment"}
                   </h3>
                   <p className="text-xs text-[#6C645A] leading-relaxed">
                     {lang === "ja"
-                      ? "約30cm離れた手から光を静かにお取り次ぎします。お身体に直接触れることは一切ございません。"
-                      : "Channeled approximately 12 inches away. There is no physical contact."}
+                      ? "心身に溜まった見えない疲労や想念の曇りを優しく浄め、本来備わる澄んだ生命力を回復させます。"
+                      : "Clears accumulated subtle burdens and spiritual clouds to awaken your inherent serene vitality."}
                   </p>
                 </div>
 
@@ -1020,9 +1020,19 @@ export default function Home() {
                   <span className="px-2.5 py-1 rounded bg-[#EFE8DE] text-[#1A1816] font-semibold">STEP 01</span>
                   <span>{lang === "ja" ? "約10分" : "Approx. 10 Min"}</span>
                 </div>
-                <h3 className="text-xl font-serif text-[#1A1816] font-medium">
-                  {lang === "ja" ? "お出迎えと静かなご案内" : "Warm Welcome & Orientation"}
-                </h3>
+                <div className="flex items-center gap-3">
+                  <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#D5CCC0] shadow-xs bg-[#EFE8DF]">
+                    <Image
+                      src="/assets/staff_host.jpg"
+                      alt="Kevin, Staff Host"
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
+                  <h3 className="text-xl font-serif text-[#1A1816] font-medium">
+                    {lang === "ja" ? "お出迎えと静かなご案内" : "Warm Welcome & Orientation"}
+                  </h3>
+                </div>
                 <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
                   {lang === "ja"
                     ? "スタッフが静かに笑顔でお迎えします。お浄めの趣旨を簡潔にお伝えし、静穏な部屋へとご案内します。"
@@ -1170,13 +1180,19 @@ export default function Home() {
 
             {/* Signature Area: Kevin */}
             <div className="mt-10 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#964731] flex items-center justify-center text-white font-serif text-base font-medium">
-                  K
+              <div className="flex items-center gap-4">
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-[#D5CCC0] shadow-sm shrink-0 bg-[#EFE8DF]">
+                  <Image
+                    src="/assets/staff_host.jpg"
+                    alt="Kevin, Staff Host"
+                    fill
+                    className="object-cover object-top"
+                  />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[#1A1816]">Kevin</div>
+                  <div className="text-base font-semibold text-[#1A1816]">Kevin</div>
                   <div className="text-xs font-mono text-[#7A7266]">Staff Host ｜ Los Angeles Divine Light Center</div>
+                  <div className="text-[11px] font-mono text-[#DE7356] mt-0.5">Monterey Park, California</div>
                 </div>
               </div>
               <div className="text-xs font-mono text-[#7A7266] uppercase tracking-wider">
@@ -1378,10 +1394,10 @@ export default function Home() {
                 a_en: "Not at all. People of all faiths and life philosophies are warmly welcomed.",
               },
               {
-                q_ja: "施術中に身体に触れられることはありますか？",
-                a_ja: "いいえ。手かざしは完全な非接触（約30cm離れた位置）で行われます。お身体に直接触れることは一切ございません。",
-                q_en: "Is there any physical contact during tekazashi?",
-                a_en: "None. The practice is completely non-contact, held approximately 12 inches away from your body.",
+                q_ja: "セッション中はどのようなことをしますか？",
+                a_ja: "椅子に腰掛けて静かに目を閉じ、リラックスしてお過ごしいただきます。施術者が静かに手かざし（神の大愛のみ光をお取り次ぎ）を行います。強い指圧やマッサージなどは一切ございません。",
+                q_en: "What should I expect during the session?",
+                a_en: "You simply sit comfortably in a chair with eyes closed and rest while the practitioner quietly channels the Art of Divine Light. There is no vigorous manipulation or deep pressure massage.",
               },
               {
                 q_ja: "予約なしで当日伺うことはできますか？",
