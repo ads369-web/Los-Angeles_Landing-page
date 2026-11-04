@@ -131,13 +131,12 @@ export default function Home() {
           name: formData.fullName,
           email: formData.email,
           preferredTime: `${formData.preferredDate} ${formData.preferredTime} (Phone: ${formData.phone})`,
-          message: formData.notes || "Free Introduction Session requested via Los Angeles Landing Page.",
+          message: formData.notes || "Introduction Session requested via Los Angeles Landing Page.",
         }),
       });
 
       if (res.ok) {
         setSubmitStatus("success");
-        // Trigger Google Ads conversion tracking if available
         if (typeof window !== "undefined" && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
           (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "conversion", {
             send_to: "AW-853490942/rYqNCMjM_vYZEN7b_5YD",
@@ -189,43 +188,67 @@ export default function Home() {
 
       {/* ====================================================================
           STICKY HEADER & NAVIGATION
+          - Full natural aspect ratio for WDL logo (no clipping)
+          - Unified two-tier navigation menu (上段: 数字, 下段: 文字)
           ==================================================================== */}
       <header className="sticky top-0 z-40 w-full bg-[#FBF9F5]/90 backdrop-blur-md border-b border-[#EAE3D9] transition-all duration-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-18 sm:h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-20 sm:h-22 flex items-center justify-between">
           
-          {/* Logo / Brand Name */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 rounded-full overflow-hidden bg-[#1A1816] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+          {/* Logo / Brand Identity - Full wide logo properly rendered */}
+          <a href="#" className="flex items-center gap-3 sm:gap-4 group shrink-0">
+            <div className="relative h-9 sm:h-10 flex items-center shrink-0">
               <Image
                 src="/assets/wdl_logo.png"
-                alt="World Divine Light Logo"
-                width={36}
-                height={36}
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = "none";
-                }}
+                alt="World Divine Light Organization"
+                width={120}
+                height={38}
+                className="h-8 sm:h-9 w-auto object-contain block transition-opacity duration-300 group-hover:opacity-90"
+                priority
               />
-              <span className="text-white text-xs font-mono font-medium">WDL</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm sm:text-base font-semibold tracking-tight text-[#1A1816] font-serif">
+            <div className="flex flex-col border-l border-[#DCD3C5] pl-3">
+              <span className="text-sm sm:text-base font-semibold tracking-tight text-[#1A1816] font-serif leading-none mb-1">
                 Los Angeles Divine Light Center
               </span>
-              <span className="text-[10px] tracking-widest text-[#7C756B] uppercase font-mono">
+              <span className="text-[10px] tracking-widest text-[#7C756B] uppercase font-mono leading-none">
                 World Divine Light Organization
               </span>
             </div>
           </a>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-mono tracking-widest uppercase text-[#544D44]">
-            <a href="#dilemma" className="hover:text-[#DE7356] transition-colors">01 / Dilemma</a>
-            <a href="#practice" className="hover:text-[#DE7356] transition-colors">02 / Tekazashi</a>
-            <a href="#principles" className="hover:text-[#DE7356] transition-colors">03 / Integrity</a>
-            <a href="#journey" className="hover:text-[#DE7356] transition-colors">04 / 55-Min Walk</a>
-            <a href="#access" className="hover:text-[#DE7356] transition-colors">05 / Location</a>
-            <a href="#faq" className="hover:text-[#DE7356] transition-colors">06 / FAQ</a>
+          {/* Desktop Nav Links: Unified two-tier layout (上段: 数字, 下段: 文字) */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-mono tracking-widest uppercase text-[#544D44]">
+            
+            <a href="#dilemma" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
+              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">01</span>
+              <span className="text-[11px] tracking-wider leading-none">Dilemma</span>
+            </a>
+
+            <a href="#practice" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
+              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">02</span>
+              <span className="text-[11px] tracking-wider leading-none">Tekazashi</span>
+            </a>
+
+            <a href="#principles" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
+              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">03</span>
+              <span className="text-[11px] tracking-wider leading-none">Integrity</span>
+            </a>
+
+            <a href="#journey" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
+              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">04</span>
+              <span className="text-[11px] tracking-wider leading-none">Journey</span>
+            </a>
+
+            <a href="#access" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
+              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">05</span>
+              <span className="text-[11px] tracking-wider leading-none">Location</span>
+            </a>
+
+            <a href="#faq" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
+              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">06</span>
+              <span className="text-[11px] tracking-wider leading-none">FAQ</span>
+            </a>
+
           </nav>
 
           {/* Right Action: Language Switch + Reserve CTA */}
@@ -254,7 +277,7 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Primary Action Button */}
+            {/* Primary Action Button (Purely Donation-Based, no "Free" label) */}
             <button
               onClick={() => {
                 setSubmitStatus("idle");
@@ -262,7 +285,7 @@ export default function Home() {
               }}
               className="hidden sm:inline-flex items-center gap-2 bg-[#1A1816] hover:bg-[#DE7356] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider px-5 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer"
             >
-              <span>{lang === "ja" ? "無料体験を予約" : "Reserve Free Session"}</span>
+              <span>{lang === "ja" ? "セッションを予約" : "Reserve a Session"}</span>
               <Icons.ArrowUpRight className="w-3.5 h-3.5" />
             </button>
 
@@ -286,12 +309,30 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="lg:hidden bg-[#FBF9F5] border-b border-[#EAE3D9] px-6 py-6 shadow-lg">
             <nav className="flex flex-col gap-4 text-xs font-mono tracking-widest uppercase text-[#544D44]">
-              <a href="#dilemma" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-[#DE7356]">01 / Dilemma</a>
-              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-[#DE7356]">02 / Tekazashi</a>
-              <a href="#principles" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-[#DE7356]">03 / Integrity</a>
-              <a href="#journey" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-[#DE7356]">04 / 55-Min Walk</a>
-              <a href="#access" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-[#DE7356]">05 / Location</a>
-              <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-[#DE7356]">06 / FAQ</a>
+              <a href="#dilemma" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
+                <span className="text-[#A89F94] font-mono">01</span>
+                <span>Dilemma</span>
+              </a>
+              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
+                <span className="text-[#A89F94] font-mono">02</span>
+                <span>Tekazashi</span>
+              </a>
+              <a href="#principles" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
+                <span className="text-[#A89F94] font-mono">03</span>
+                <span>Integrity</span>
+              </a>
+              <a href="#journey" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
+                <span className="text-[#A89F94] font-mono">04</span>
+                <span>Journey</span>
+              </a>
+              <a href="#access" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
+                <span className="text-[#A89F94] font-mono">05</span>
+                <span>Location</span>
+              </a>
+              <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-1 hover:text-[#DE7356]">
+                <span className="text-[#A89F94] font-mono">06</span>
+                <span>FAQ</span>
+              </a>
             </nav>
             <div className="mt-6 pt-5 border-t border-[#EAE3D9]">
               <button
@@ -302,7 +343,7 @@ export default function Home() {
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-[#1A1816] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider py-3 rounded-full cursor-pointer"
               >
-                <span>{lang === "ja" ? "無料体験セッションを予約" : "Reserve Free Session"}</span>
+                <span>{lang === "ja" ? "セッションを予約する" : "Reserve a Session"}</span>
                 <Icons.ArrowUpRight className="w-4 h-4" />
               </button>
             </div>
@@ -325,7 +366,6 @@ export default function Home() {
             priority
             className="object-cover object-center scale-102 transition-transform duration-1000 ease-out brightness-[0.78] contrast-[1.08]"
           />
-          {/* Subtle gradient vignette to emulate atami-sanga deep room frame */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#121110] via-[#121110]/40 to-black/30"></div>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(18,17,16,0.6)_100%)]"></div>
         </div>
@@ -377,9 +417,9 @@ export default function Home() {
             {/* Subcopy */}
             <p className="max-w-2xl text-sm sm:text-base md:text-lg text-[#D6CFBE] font-light leading-relaxed">
               {lang === "ja" ? (
-                "ロサンゼルスの日常で、知らず知らずのうちに積み重なる心身の重荷。言葉や思考を休め、ただ静かに光に身を委ねる。非接触の手かざし（Art of Divine Light）が、魂の奥底にある澄んだ静けさを呼び覚まします。"
+                "ロサンゼルスの日常で、知らず知らずのうちに積み重なる心身の重荷。言葉や思考を休め、ただ静かに光に身を委ねる。お浄め（Art of Divine Light）が、魂の奥底にある澄んだ静けさを呼び覚まします。"
               ) : (
-                "Beyond the constant rush of the city lies a sacred space to pause. Experience tekazashi—the gentle, non-contact Art of Divine Light. Let go of accumulated fatigue, align with nature’s rhythm, and return to your peaceful, unburdened self."
+                "Beyond the constant rush of the city lies a sacred space to pause. Experience tekazashi—the gentle Art of Divine Light. Let go of accumulated fatigue, align with nature’s rhythm, and return to your peaceful, unburdened self."
               )}
             </p>
 
@@ -392,7 +432,7 @@ export default function Home() {
                 }}
                 className="inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-8 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-xl hover:translate-y-[-1px] cursor-pointer"
               >
-                <span>{lang === "ja" ? "無料体験セッションを予約する" : "Reserve a Free Session"}</span>
+                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
                 <Icons.ArrowRight className="w-4 h-4" />
               </button>
 
@@ -410,7 +450,7 @@ export default function Home() {
           <div className="mt-16 sm:mt-24 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-white/50 tracking-wider">
             <div className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-[#DE7356]"></span>
-              <span>100% NON-PROFIT 501(C)(3) ｜ NEVER A FEE OR OBLIGATION</span>
+              <span>100% NON-PROFIT 501(C)(3) ｜ PURELY DONATION-BASED</span>
             </div>
             <a href="#dilemma" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors">
               <span>( Scroll Down ↓ )</span>
@@ -422,7 +462,8 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 02: THE MODERN DILEMMA / EMPATHY
-          Aesthetic: atami-sanga.jp (Dark-to-Light Sanctuary & Nature Window Frame)
+          Aesthetic: atami-sanga.jp (Dark-to-Light Sanctuary & Clean Window Frame)
+          - Frame coordinates caption removed as requested
           ==================================================================== */}
       <section id="dilemma" className="relative py-28 sm:py-36 bg-[#1A1816] text-[#F4EFEA] overflow-hidden">
         
@@ -450,7 +491,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Grid Layout: Framed Sanctuary Nature View */}
+          {/* Grid Layout: Framed Sanctuary Nature View (Caption removed) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-center pt-14">
             
             {/* Left: Window Frame Photography */}
@@ -463,12 +504,7 @@ export default function Home() {
                     fill
                     className="object-cover object-center group-hover:scale-103 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  
-                  <div className="absolute bottom-4 left-4 right-4 text-xs font-mono text-white/80 backdrop-blur-md bg-black/40 px-3 py-2 rounded-lg border border-white/10 flex justify-between">
-                    <span>Frame: Sanctuary Stillness</span>
-                    <span>34.0522° N, 118.2437° W</span>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                 </div>
               </div>
             </div>
@@ -520,8 +556,8 @@ export default function Home() {
               {/* Data points */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#35302A] text-xs font-mono">
                 <div className="space-y-1">
-                  <div className="text-[#877E73] uppercase">Approach</div>
-                  <div className="text-[#F4EFEA] font-medium">Non-Contact (30cm)</div>
+                  <div className="text-[#877E73] uppercase">Practice</div>
+                  <div className="text-[#F4EFEA] font-medium">Kyusho & Tekazashi</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-[#877E73] uppercase">Environment</div>
@@ -542,7 +578,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 03: THE PRACTICE / OKIYOME
-          Aesthetic: Clean minimalist architectural space & sincere explanation
+          - Accurate explanation: 急所の探査（濁毒の確認）とお手かざし
           ==================================================================== */}
       <section id="practice" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
@@ -555,7 +591,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-6">
               {lang === "ja" ? (
                 <>
-                  触れず、語らず。
+                  急所を探り、濁毒を見極め、
                   <br />
                   <span className="text-[#964731] font-normal">光の温もりだけで魂を調律する。</span>
                 </>
@@ -563,7 +599,7 @@ export default function Home() {
                 <>
                   The Art of Divine Light.
                   <br />
-                  <span className="text-[#964731] font-normal italic">A Quiet Resonance Beyond Words.</span>
+                  <span className="text-[#964731] font-normal italic">Attuning the Spirit Through Gentle Radiance.</span>
                 </>
               )}
             </h2>
@@ -613,33 +649,33 @@ export default function Home() {
                       「手かざし（Art of Divine Light）」は、施術者が自らの力を加えるものではありません。宇宙と自然を貫く根源的な神の光（Divine Light）を、静かに取り次ぐ無私の実践です。
                     </p>
                     <p>
-                      椅子に深く腰掛け、そっと目を閉じる。約30cm離れた手のひらから注がれる穏やかな光が、蓄積した想念の曇りや緊張をほどき、内側から澄みわたるような深い安らぎをもたらします。
+                      椅子に深く腰掛け、そっと目を閉じる。施術の前後に心身の急所を優しく探査して濁毒（不調や滞りの原因）を見極め、約30cm離れた手のひらから穏やかな光を注ぎます。蓄積した想念の曇りや緊張をほどき、内側から澄みわたるような深い安らぎをもたらします。
                     </p>
                   </>
                 ) : (
                   <>
                     <p className="text-xl font-serif text-[#1A1816]">
-                      Tekazashi involves no physical contact and no personal force. The practitioner serves solely as a clear conduit for Divine Light—the universal, purifying energy of nature and creation.
+                      Tekazashi involves no personal force. The practitioner serves solely as a clear conduit for Divine Light—the universal, purifying energy of nature and creation.
                     </p>
                     <p>
-                      Seated comfortably with eyes closed, you simply receive. The gentle radiance melts inner tension, clears mental static, and harmonizes your original spiritual balance.
+                      Seated comfortably with eyes closed, the practitioner first gently examines vital points (kyusho) before and after the session to identify subtle stagnation (dakudoku), then focuses Divine Light from approximately 12 inches away. The gentle radiance melts inner tension and restores your spiritual balance.
                     </p>
                   </>
                 )}
               </div>
 
-              {/* 3 Pillars */}
+              {/* 3 Pillars (Accurate Kyusho + Light flow) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                 
                 <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / NON-CONTACT</span>
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / KYUSHO CHECK</span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "完全な非接触" : "Zero Physical Touch"}
+                    {lang === "ja" ? "急所の探査とお浄め" : "Kyusho & Radiant Light"}
                   </h3>
                   <p className="text-xs text-[#6C645A] leading-relaxed">
                     {lang === "ja"
-                      ? "身体から約30cm離した位置から手をかざします。接触や揉みほぐしはありません。"
-                      : "Conducted approximately 12 inches away from your body without any physical touch."}
+                      ? "お浄めの前後に急所を優しく探査して濁毒を見極め、約30cm離れた手から光を注ぎます。"
+                      : "The practitioner gently checks vital points to locate impurities (dakudoku), then radiates light from approx. 12 inches."}
                   </p>
                 </div>
 
@@ -678,7 +714,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 04: THREE COMMITMENTS TO INTEGRITY
-          Aesthetic: wolverineworldwide.com 3-column clean hairline card layout
+          - Purely Donation-Based (Free First Visit removed as requested)
           ==================================================================== */}
       <section id="principles" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
@@ -702,7 +738,7 @@ export default function Home() {
           {/* 3-Column Card Layout */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#DDD3C4] border border-[#DDD3C4] mt-12 rounded-2xl overflow-hidden shadow-xs">
             
-            {/* Card 01 */}
+            {/* Card 01: Purely Donation-Based (No "Free First Visit") */}
             <div className="bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
@@ -712,17 +748,17 @@ export default function Home() {
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
-                  {lang === "ja" ? "完全な自発性（ドネーション制）" : "Donation-Based / Free First Visit"}
+                  {lang === "ja" ? "完全な自発性（ドネーション制）" : "Purely Donation-Based"}
                 </h3>
                 <p className="text-sm text-[#5D554B] leading-relaxed">
                   {lang === "ja"
-                    ? "初回の体験セッションは完全無料です。継続される場合も定額の請求や強制はなく、ご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
-                    : "The first introductory session is completely free. Should you choose to return, there are never fixed fees or mandatory dues—our center operates entirely through sincere voluntary donations."}
+                    ? "当センターは営利目的の定額請求や義務的な支払いは一切なく、ご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
+                    : "Our sanctuary operates entirely through voluntary donations based on personal gratitude. There are never fixed fees, mandatory dues, or commercial charges."}
                 </p>
               </div>
               <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
                 <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                <span>{lang === "ja" ? "物品販売・高額請求の一切なし" : "Zero sales or product obligations"}</span>
+                <span>{lang === "ja" ? "物品販売・高額請求の一切なし" : "Zero sales or forced payments"}</span>
               </div>
             </div>
 
@@ -849,12 +885,12 @@ export default function Home() {
                 </h3>
                 <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
                   {lang === "ja"
-                    ? "椅子に腰掛け、目を閉じてリラックスしてください。施術者が静かに光を取り次ぎます。途中で眠ってしまっても差し支えありません。"
-                    : "Sit comfortably and close your eyes. Experience 30 minutes of deep quietude as Divine Light is radiated over you."}
+                    ? "椅子に腰掛け、目を閉じてリラックスしてください。施術者が急所を探査し、静かに光を取り次ぎます。眠ってしまっても差し支えありません。"
+                    : "Sit comfortably and close your eyes. The practitioner checks vital points and radiates Divine Light over you in quietude."}
                 </p>
               </div>
               <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※完全非接触・静寂のひととき" : "Completely non-contact"}
+                {lang === "ja" ? "※急所探査とお手かざしの時間" : "Vital point check & radiance"}
               </div>
             </div>
 
@@ -896,7 +932,7 @@ export default function Home() {
               }}
               className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#1A1816] hover:text-[#DE7356] border-b border-current pb-1 transition-colors cursor-pointer"
             >
-              <span>{lang === "ja" ? "この流れで体験セッションを予約する" : "Schedule this 55-minute session"}</span>
+              <span>{lang === "ja" ? "この流れでセッションを予約する" : "Schedule this 55-minute session"}</span>
               <Icons.ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -906,6 +942,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 06: WORDS FROM THE CENTER (迎える人の声)
+          - Staff Host: Kevin
           ==================================================================== */}
       <section className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 sm:px-12">
@@ -917,7 +954,7 @@ export default function Home() {
               <span className="text-xs font-mono tracking-widest uppercase text-[#DE7356]">
                 05 / MESSAGE FROM THE SANCTUARY
               </span>
-              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Meia</span>
+              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Kevin</span>
             </div>
 
             {/* Letter Content */}
@@ -957,23 +994,23 @@ export default function Home() {
               )}
             </div>
 
-            {/* Signature Area */}
+            {/* Signature Area: Kevin */}
             <div className="mt-10 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#1A1816]">
                   <Image
                     src="/assets/staff_host.jpg"
-                    alt="Meia, Staff Host"
+                    alt="Kevin, Staff Host"
                     fill
                     className="object-cover"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
                     }}
                   />
-                  <div className="w-full h-full flex items-center justify-center text-white font-serif text-sm">M</div>
+                  <div className="w-full h-full flex items-center justify-center text-white font-serif text-sm">K</div>
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[#1A1816]">Meia</div>
+                  <div className="text-sm font-semibold text-[#1A1816]">Kevin</div>
                   <div className="text-xs font-mono text-[#7A7266]">Staff Host ｜ Los Angeles Divine Light Center</div>
                 </div>
               </div>
@@ -989,6 +1026,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 07: INFORMATION & VISITING GUIDELINES
+          - Email updated to losangeles@worlddivinelight.org
           ==================================================================== */}
       <section id="access" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
@@ -1086,8 +1124,8 @@ export default function Home() {
                   <a href="tel:+16268615069" className="block hover:text-[#DE7356] transition-colors font-mono">
                     +1 (626) 861-5069
                   </a>
-                  <a href="mailto:info-la@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
-                    info-la@worlddivinelight.org
+                  <a href="mailto:losangeles@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
+                    losangeles@worlddivinelight.org
                   </a>
                   <div className="text-[11px] text-[#7C7368] font-mono">
                     SMS inquiries welcomed
@@ -1141,6 +1179,8 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 08: FREQUENTLY ASKED QUESTIONS
+          - Q1: Purely Donation-Based (No "Free" claim)
+          - Q3: Accurate vital-point touch before/after
           ==================================================================== */}
       <section id="faq" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
         <div className="max-w-4xl mx-auto px-6 sm:px-12">
@@ -1161,10 +1201,10 @@ export default function Home() {
           <div className="space-y-4">
             {[
               {
-                q_ja: "本当に無料ですか？ 追加の請求はありませんか？",
-                a_ja: "はい、初めての方の体験セッションは完全無料です。物品の販売や、寄付の強制などは一切ございません。どなた様も安心してお越しください。",
-                q_en: "Is the first session truly free? Are there any hidden fees?",
-                a_en: "Yes. The introductory session is 100% free with zero fees, no sales of items, and no mandatory donations whatsoever.",
+                q_ja: "料金やドネーションはどのようになっていますか？",
+                a_ja: "当センターは定額の料金設定や義務的な請求は一切ございません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）によって支えられております。物品の販売や無理な支払いを求めることは一切ございません。",
+                q_en: "How do donations and fees work?",
+                a_en: "We do not charge fixed fees or impose mandatory dues. Our sanctuary is supported entirely by voluntary offerings (donations) based on personal gratitude. There are never product sales or commercial obligations.",
               },
               {
                 q_ja: "特定の宗教を信じていなくても参加できますか？",
@@ -1174,9 +1214,9 @@ export default function Home() {
               },
               {
                 q_ja: "施術中に身体に触れられることはありますか？",
-                a_ja: "いいえ。手かざしは完全な非接触（約30cm離れた位置）で行われます。お身体に直接触れることは一切ございません。",
+                a_ja: "お浄めの前後に、心身の滞りや濁毒の箇所を確認するために頭部などの急所に優しく触れて探査を行います。その後の手かざし（光を注ぐ時間）は身体から約30cm離した位置で行われます。強い指圧やマッサージなどは一切ございません。",
                 q_en: "Is there any physical contact during tekazashi?",
-                a_en: "None at all. The practice is strictly non-contact, performed approximately 12 inches away from your body while you remain fully clothed.",
+                a_en: "Before and after the session, the practitioner gently checks vital points (kyusho) on the head or upper body to locate areas of stagnation (dakudoku). During the main light session, the hand is held approx. 12 inches away. There is no heavy pressure or massage.",
               },
               {
                 q_ja: "予約なしで当日伺うことはできますか？",
@@ -1239,7 +1279,7 @@ export default function Home() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 text-center space-y-8">
           
           <span className="inline-block text-xs font-mono tracking-widest uppercase text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
-            {lang === "ja" ? "無料体験セッションのご案内" : "Complimentary Introductory Visit"}
+            {lang === "ja" ? "体験セッションのご案内" : "Introductory Session"}
           </span>
 
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-tight max-w-3xl mx-auto text-[#FAF6F0]">
@@ -1272,7 +1312,7 @@ export default function Home() {
               }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-9 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-xl cursor-pointer"
             >
-              <span>{lang === "ja" ? "無料体験セッションを予約する" : "Book Your Free Session"}</span>
+              <span>{lang === "ja" ? "体験セッションを予約する" : "Book Your Session"}</span>
               <Icons.ArrowRight className="w-4 h-4" />
             </button>
 
@@ -1294,6 +1334,8 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 10: FOOTER
+          - Email updated to losangeles@worlddivinelight.org
+          - Clean footer logo
           ==================================================================== */}
       <footer className="bg-[#0E0D0C] text-[#8C8377] py-16 px-6 sm:px-12 border-t border-[#23201C]">
         <div className="max-w-7xl mx-auto space-y-12">
@@ -1303,15 +1345,16 @@ export default function Home() {
             {/* Col 1: Identity */}
             <div className="md:col-span-5 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-xs font-mono">
-                  WDL
-                </div>
-                <span className="text-white font-serif text-lg font-medium">
-                  Los Angeles Divine Light Center
-                </span>
+                <Image
+                  src="/assets/wdl_logo.png"
+                  alt="World Divine Light"
+                  width={130}
+                  height={40}
+                  className="h-8 w-auto object-contain brightness-0 invert opacity-90 block"
+                />
               </div>
               <p className="text-xs text-[#7A7266] leading-relaxed max-w-md">
-                World Divine Light Organization is a US Government-Recognized 501(c)(3) Nonprofit Spiritual Organization dedicated to spiritual harmony and inner purification through the non-contact practice of Tekazashi.
+                World Divine Light Organization is a US Government-Recognized 501(c)(3) Nonprofit Spiritual Organization dedicated to spiritual harmony and inner purification through the practice of Tekazashi.
               </p>
             </div>
 
@@ -1322,7 +1365,7 @@ export default function Home() {
                 <li><a href="#dilemma" className="hover:text-white transition-colors">01 / The Dilemma</a></li>
                 <li><a href="#practice" className="hover:text-white transition-colors">02 / Tekazashi</a></li>
                 <li><a href="#principles" className="hover:text-white transition-colors">03 / Integrity</a></li>
-                <li><a href="#journey" className="hover:text-white transition-colors">04 / 55-Min Walk</a></li>
+                <li><a href="#journey" className="hover:text-white transition-colors">04 / Journey</a></li>
                 <li><a href="#access" className="hover:text-white transition-colors">05 / Location</a></li>
                 <li><a href="#faq" className="hover:text-white transition-colors">06 / FAQ</a></li>
               </ul>
@@ -1335,7 +1378,7 @@ export default function Home() {
                 <div>809 S Atlantic Blvd, #378</div>
                 <div>Monterey Park, CA 91754</div>
                 <div className="mt-2 text-white">Direct: +1 (626) 861-5069</div>
-                <div>Email: info-la@worlddivinelight.org</div>
+                <div>Email: losangeles@worlddivinelight.org</div>
               </div>
             </div>
 
@@ -1347,7 +1390,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-6">
               <span>501(c)(3) Nonprofit Entity</span>
-              <span>Privacy-First Sanctuary</span>
+              <span>Purely Donation-Based</span>
             </div>
           </div>
 
@@ -1356,6 +1399,7 @@ export default function Home() {
 
       {/* ====================================================================
           INTERACTIVE RESERVATION MODAL / DIALOG
+          - Free claims removed, purely donation-based guidance
           ==================================================================== */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm">
@@ -1403,15 +1447,15 @@ export default function Home() {
                 
                 <div className="border-b border-[#EAE3D9] pb-4">
                   <span className="text-[10px] font-mono tracking-widest uppercase text-[#DE7356] block mb-1">
-                    COMPLIMENTARY SESSION
+                    SANCTUARY APPOINTMENT
                   </span>
                   <h3 className="text-2xl font-serif font-medium text-[#1A1816]">
-                    {lang === "ja" ? "無料体験セッションの予約" : "Book Your Free Session"}
+                    {lang === "ja" ? "体験セッションの予約" : "Book Your Session"}
                   </h3>
                   <p className="text-xs text-[#7C7368] mt-1">
                     {lang === "ja"
-                      ? "完全事前予約制 ｜ 約55分の静寂と調律のひととき"
-                      : "By advance appointment ｜ Approx. 55 minutes of quietude"}
+                      ? "完全事前予約制 ｜ 約55分の静寂と調律のひととき（ドネーション制）"
+                      : "By advance appointment ｜ Approx. 55 minutes of quietude (Donation-based)"}
                   </p>
                 </div>
 
@@ -1536,8 +1580,8 @@ export default function Home() {
 
                 <div className="text-[11px] text-[#7C7368] text-center leading-relaxed">
                   {lang === "ja"
-                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。無理な勧誘や請求は一切ございません。"
-                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Zero obligations or fees."}
+                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。完全なドネーション制であり、無理な勧誘や請求は一切ございません。"
+                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Purely donation-based with zero obligations."}
                 </div>
 
               </form>
