@@ -557,7 +557,7 @@ export default function Home() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#35302A] text-xs font-mono">
                 <div className="space-y-1">
                   <div className="text-[#877E73] uppercase">Practice</div>
-                  <div className="text-[#F4EFEA] font-medium">Kyusho & Tekazashi</div>
+                  <div className="text-[#F4EFEA] font-medium">Tekazashi (Divine Light)</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-[#877E73] uppercase">Environment</div>
@@ -578,7 +578,7 @@ export default function Home() {
 
       {/* ====================================================================
           SECTION 03: THE PRACTICE / OKIYOME
-          - Accurate explanation: 急所の探査（濁毒の確認）とお手かざし
+          - The Art of Divine Light (Tekazashi)
           ==================================================================== */}
       <section id="practice" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
@@ -591,7 +591,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-6">
               {lang === "ja" ? (
                 <>
-                  急所を探り、濁毒を見極め、
+                  心身の滞りを解きほぐし、
                   <br />
                   <span className="text-[#964731] font-normal">光の温もりだけで魂を調律する。</span>
                 </>
@@ -649,7 +649,7 @@ export default function Home() {
                       「手かざし（Art of Divine Light）」は、施術者が自らの力を加えるものではありません。宇宙と自然を貫く根源的な神の光（Divine Light）を、静かに取り次ぐ無私の実践です。
                     </p>
                     <p>
-                      椅子に深く腰掛け、そっと目を閉じる。施術の前後に心身の急所を優しく探査して濁毒（不調や滞りの原因）を見極め、約30cm離れた手のひらから穏やかな光を注ぎます。蓄積した想念の曇りや緊張をほどき、内側から澄みわたるような深い安らぎをもたらします。
+                      椅子に深く腰掛け、そっと目を閉じる。施術の前後に心身の滞りや濁毒（不調の原因）を優しく確認し、約30cm離れた手のひらから穏やかな光を注ぎます。蓄積した想念の曇りや緊張をほどき、内側から澄みわたるような深い安らぎをもたらします。
                     </p>
                   </>
                 ) : (
@@ -658,24 +658,24 @@ export default function Home() {
                       Tekazashi involves no personal force. The practitioner serves solely as a clear conduit for Divine Light—the universal, purifying energy of nature and creation.
                     </p>
                     <p>
-                      Seated comfortably with eyes closed, the practitioner first gently examines vital points (kyusho) before and after the session to identify subtle stagnation (dakudoku), then focuses Divine Light from approximately 12 inches away. The gentle radiance melts inner tension and restores your spiritual balance.
+                      Seated comfortably with eyes closed, the practitioner gently assesses subtle stagnation (dakudoku) before and after the session, then focuses Divine Light from approximately 12 inches away. The gentle radiance melts inner tension and restores your spiritual balance.
                     </p>
                   </>
                 )}
               </div>
 
-              {/* 3 Pillars (Accurate Kyusho + Light flow) */}
+              {/* 3 Pillars */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                 
                 <div className="p-5 rounded-xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / KYUSHO CHECK</span>
+                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">01 / ATTUNEMENT</span>
                   <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "急所の探査とお浄め" : "Kyusho & Radiant Light"}
+                    {lang === "ja" ? "心身の調律とお浄め" : "Attunement & Radiance"}
                   </h3>
                   <p className="text-xs text-[#6C645A] leading-relaxed">
                     {lang === "ja"
-                      ? "お浄めの前後に急所を優しく探査して濁毒を見極め、約30cm離れた手から光を注ぎます。"
-                      : "The practitioner gently checks vital points to locate impurities (dakudoku), then radiates light from approx. 12 inches."}
+                      ? "お浄めの前後に心身の滞りや濁毒を静かに見極め、約30cm離れた手から光を注ぎます。"
+                      : "The practitioner gently assesses areas of stagnation (dakudoku), then radiates Divine Light from approx. 12 inches away."}
                   </p>
                 </div>
 
@@ -885,12 +885,12 @@ export default function Home() {
                 </h3>
                 <p className="text-xs sm:text-sm text-[#5C544A] leading-relaxed">
                   {lang === "ja"
-                    ? "椅子に腰掛け、目を閉じてリラックスしてください。施術者が急所を探査し、静かに光を取り次ぎます。眠ってしまっても差し支えありません。"
-                    : "Sit comfortably and close your eyes. The practitioner checks vital points and radiates Divine Light over you in quietude."}
+                    ? "椅子に腰掛け、目を閉じてリラックスしてください。施術者が静かに光を取り次ぎます。眠ってしまっても差し支えありません。"
+                    : "Sit comfortably and close your eyes. The practitioner radiates Divine Light over you in serene quietude."}
                 </p>
               </div>
               <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※急所探査とお手かざしの時間" : "Vital point check & radiance"}
+                {lang === "ja" ? "※静寂の中で光に身を委ねる時間" : "Serene Divine Light Radiance"}
               </div>
             </div>
 
@@ -1214,9 +1214,9 @@ export default function Home() {
               },
               {
                 q_ja: "施術中に身体に触れられることはありますか？",
-                a_ja: "お浄めの前後に、心身の滞りや濁毒の箇所を確認するために頭部などの急所に優しく触れて探査を行います。その後の手かざし（光を注ぐ時間）は身体から約30cm離した位置で行われます。強い指圧やマッサージなどは一切ございません。",
+                a_ja: "お浄めの前後に、心身の滞りや濁毒の箇所を確認するために優しく触れる程度です。その後の手かざし（光を注ぐ時間）は身体から約30cm離した位置で行われます。強い指圧やマッサージなどは一切ございません。",
                 q_en: "Is there any physical contact during tekazashi?",
-                a_en: "Before and after the session, the practitioner gently checks vital points (kyusho) on the head or upper body to locate areas of stagnation (dakudoku). During the main light session, the hand is held approx. 12 inches away. There is no heavy pressure or massage.",
+                a_en: "Before and after the session, the practitioner may gently touch to check areas of tension or stagnation (dakudoku). During the main light session, the hand is held approx. 12 inches away. There is no heavy pressure or massage.",
               },
               {
                 q_ja: "予約なしで当日伺うことはできますか？",
