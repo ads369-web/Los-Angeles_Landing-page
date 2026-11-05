@@ -49,6 +49,13 @@ export const metadata: Metadata = {
     "ロサンゼルス道場",
     "501(c)(3) nonprofit spiritual",
   ],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     title: "Los Angeles Divine Light Center | Back to the Origin",
     description:
