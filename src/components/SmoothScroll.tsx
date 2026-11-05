@@ -34,20 +34,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       }
       rafId = requestAnimationFrame(raf);
 
-      // Parallax listener for background imagery
-      lenis.on("scroll", ({ scroll }: { scroll: number }) => {
-        const parallaxEls = document.querySelectorAll<HTMLElement>("[data-parallax-speed]");
-        parallaxEls.forEach((el) => {
-          const speed = parseFloat(el.getAttribute("data-parallax-speed") || "0.15");
-          const rect = el.getBoundingClientRect();
-          // Only transform if in or near viewport
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            const offset = (window.innerHeight - rect.top) * speed * 0.4;
-            el.style.transform = `translate3d(0, ${offset}px, 0)`;
-          }
-        });
-      });
-
       // Smooth scroll on internal anchor clicks
       const handleAnchorClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement | null;

@@ -100,7 +100,7 @@ const Icons = {
 // Main Page Component
 // ============================================================================
 export default function Home() {
-  const [lang, setLang] = useState<Language>("ja");
+  const [lang, setLang] = useState<Language>("en");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -220,7 +220,7 @@ export default function Home() {
           - Unified two-tier navigation menu (上段: 数字, 下段: 文字)
           - Fully responsive & mobile-friendly drawer navigation
           ==================================================================== */}
-      <header className="sticky top-0 z-40 w-full bg-[#FBF9F5]/90 backdrop-blur-md border-b border-[#EAE3D9] transition-all duration-200">
+      <header className="sticky top-0 z-40 w-full bg-[#FBF9F5]/90 backdrop-blur-md border-b border-[#EAE3D9] transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 sm:h-22 flex items-center justify-between">
           
           {/* Logo / Brand Identity - Full wide logo properly rendered */}
@@ -526,8 +526,8 @@ export default function Home() {
           ==================================================================== */}
       <section className="relative min-h-[92vh] sm:min-h-screen flex items-end justify-start overflow-hidden bg-[#121110]">
         
-        {/* Full Landscape Visual with atmospheric layering & subtle parallax */}
-        <div className="absolute inset-0 z-0 parallax-layer" data-parallax-speed="0.12">
+        {/* Full Landscape Visual with atmospheric layering */}
+        <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=85"
             alt="Sanctuary Landscape - Morning light breaking over quiet ridges"
@@ -1043,19 +1043,9 @@ export default function Home() {
                   <span className="px-2.5 py-1 rounded bg-[#EFE8DE] text-[#1A1816] font-semibold">STEP 01</span>
                   <span>{lang === "ja" ? "約10分" : "Approx. 10 Min"}</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#D5CCC0] shadow-xs bg-[#EFE8DF] img-zoom-reveal">
-                    <Image
-                      src="/assets/staff_host.jpg"
-                      alt="Kevin, Staff Host"
-                      fill
-                      className="object-cover object-top"
-                    />
-                  </div>
-                  <h3 className="text-xl font-serif text-[#1A1816] font-medium">
-                    {lang === "ja" ? "お出迎えと静かなご案内" : "Warm Welcome & Orientation"}
-                  </h3>
-                </div>
+                <h3 className="text-xl font-serif text-[#1A1816] font-medium">
+                  {lang === "ja" ? "お出迎えと静かなご案内" : "Warm Welcome & Orientation"}
+                </h3>
                 <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
                   {lang === "ja"
                     ? "スタッフが静かに笑顔でお迎えします。お浄めの趣旨を簡潔にお伝えし、心落ち着く静穏な部屋へとご案内します。"
@@ -1469,8 +1459,8 @@ export default function Home() {
           ==================================================================== */}
       <section className="relative py-32 sm:py-44 bg-[#121110] text-white overflow-hidden">
         
-        {/* Atmospheric Landscape with Subtle Parallax */}
-        <div className="absolute inset-0 opacity-40 parallax-layer" data-parallax-speed="0.14">
+        {/* Atmospheric Landscape */}
+        <div className="absolute inset-0 opacity-40">
           <Image
             src="/assets/ocean_light.jpg"
             alt="Quiet evening ocean horizon with soft warm glow"

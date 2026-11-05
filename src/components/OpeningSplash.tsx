@@ -33,17 +33,17 @@ export default function OpeningSplash({ onComplete }: OpeningSplashProps) {
     // Begin entrance animation on next animation frame
     setPhase("entering");
 
-    // Hold for 1.5 seconds after entrance, then begin dramatic exit
+    // Hold for 3.0 seconds after entrance (extended by 1.5s as requested), then begin dramatic exit
     const holdTimer = setTimeout(() => {
       setPhase("exiting");
-    }, 1500);
+    }, 3000);
 
     // Complete exit and unmount from DOM
     const removeTimer = setTimeout(() => {
       setPhase("removed");
       document.body.style.overflow = originalOverflow;
       onComplete?.();
-    }, 2500);
+    }, 4000);
 
     return () => {
       clearTimeout(holdTimer);
@@ -106,9 +106,9 @@ export default function OpeningSplash({ onComplete }: OpeningSplashProps) {
           Los Angeles Divine Light Center
         </h1>
 
-        {/* Japanese Sacred Subtitle */}
-        <p className="text-xs sm:text-sm text-[#D6CFBE]/80 tracking-[0.25em] font-light mt-3">
-          神の大愛のみ光 ｜ カリフォルニア州モントレーパーク
+        {/* Subtitle - English primary with bilingual balance */}
+        <p className="text-xs sm:text-sm text-[#D6CFBE]/80 tracking-[0.22em] font-light mt-3">
+          The Art of Divine Light ｜ Monterey Park, California
         </p>
 
         {/* Hairline Golden Divider */}
@@ -116,7 +116,7 @@ export default function OpeningSplash({ onComplete }: OpeningSplashProps) {
 
         {/* Non-Profit Badge */}
         <p className="font-mono text-[10px] text-[#E3A387] tracking-[0.28em] uppercase">
-          US 501(c)(3) Nonprofit Spiritual Sanctuary
+          US 501(c)(3) Nonprofit Spiritual Sanctuary ｜ 神の大愛のみ光
         </p>
       </div>
 
