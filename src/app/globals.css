@@ -101,11 +101,97 @@ button:disabled, a:disabled {
   box-shadow: var(--shadow-retro-btn);
 }
 
+/* ==========================================================================
+   Lenis Smooth Scrolling Base
+   ========================================================================== */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   BOTANIST-Style Scroll Reveal & Motion
+   ========================================================================== */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-up.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger Delays */
+.reveal-up.stagger-1 { transition-delay: 0.15s; }
+.reveal-up.stagger-2 { transition-delay: 0.30s; }
+.reveal-up.stagger-3 { transition-delay: 0.45s; }
+.reveal-up.stagger-4 { transition-delay: 0.60s; }
+
+/* Visual Zoom-Out on Scroll Reveal */
+.img-zoom-reveal {
+  overflow: hidden;
+}
+.img-zoom-reveal img {
+  transform: scale(1.08);
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.img-zoom-reveal.is-revealed img,
+.is-revealed .img-zoom-reveal img {
+  transform: scale(1.0);
+}
+
+/* Subtle Hero & Parallax Layers */
+.parallax-layer {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Opening Splash Animation Keyframes */
+@keyframes splashGlowPulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.04);
+  }
+}
+.animate-splash-glow {
+  animation: splashGlowPulse 3s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .img-zoom-reveal img {
+    transform: none !important;
   }
 }

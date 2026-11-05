@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import OpeningSplash from "@/components/OpeningSplash";
+import SmoothScroll from "@/components/SmoothScroll";
 
 // ============================================================================
 // Types & Interfaces
@@ -171,18 +173,26 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     if (isModalOpen || mobileMenuOpen) {
       document.body.style.overflow = "hidden";
+      lenis?.stop();
     } else {
       document.body.style.overflow = "unset";
+      lenis?.start();
     }
     return () => {
       document.body.style.overflow = "unset";
+      lenis?.start();
     };
   }, [isModalOpen, mobileMenuOpen]);
 
   return (
-    <div className="relative min-h-screen bg-[#FBF9F5] text-[#24211D] font-sans selection:bg-[#DE7356]/20 selection:text-[#24211D] antialiased">
+    <SmoothScroll>
+      {/* 1. Opening Splash Screen Animation (First Visit Only via sessionStorage) */}
+      <OpeningSplash />
+
+      <div className="relative min-h-screen bg-[#FBF9F5] text-[#24211D] font-sans selection:bg-[#DE7356]/20 selection:text-[#24211D] antialiased">
       
       {/* ====================================================================
           TOP NOTIFICATION BAR (Nonprofit Status & Location)
@@ -516,8 +526,8 @@ export default function Home() {
           ==================================================================== */}
       <section className="relative min-h-[92vh] sm:min-h-screen flex items-end justify-start overflow-hidden bg-[#121110]">
         
-        {/* Full Landscape Visual with atmospheric layering */}
-        <div className="absolute inset-0 z-0">
+        {/* Full Landscape Visual with atmospheric layering & subtle parallax */}
+        <div className="absolute inset-0 z-0 parallax-layer" data-parallax-speed="0.12">
           <Image
             src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=85"
             alt="Sanctuary Landscape - Morning light breaking over quiet ridges"
@@ -536,7 +546,7 @@ export default function Home() {
         <div className="relative z-20 max-w-7xl w-full mx-auto px-6 sm:px-12 pb-16 sm:pb-24 pt-32">
           
           {/* Badge & Monospace Meta */}
-          <div className="flex flex-wrap items-center gap-3 mb-6 sm:mb-8 text-white/80 font-mono text-xs tracking-wider">
+          <div className="reveal-up flex flex-wrap items-center gap-3 mb-6 sm:mb-8 text-white/80 font-mono text-xs tracking-wider">
             <span className="px-3 py-1 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm">
               Monterey Park, CA
             </span>
@@ -548,7 +558,7 @@ export default function Home() {
 
           {/* Main Hero Typography */}
           <div className="max-w-4xl space-y-4 sm:space-y-6">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-light text-white tracking-tight leading-[1.16]" style={{ textWrap: "balance" }}>
+            <h1 className="reveal-up stagger-1 text-4xl sm:text-6xl md:text-7xl font-serif font-light text-white tracking-tight leading-[1.16]" style={{ textWrap: "balance" }}>
               {lang === "ja" ? (
                 <>
                   <span className="block text-sm sm:text-base font-mono tracking-widest text-[#E3A387] mb-3 uppercase font-normal">
@@ -571,10 +581,10 @@ export default function Home() {
             </h1>
 
             {/* Hairline Divider */}
-            <div className="w-16 h-px bg-[#DE7356]"></div>
+            <div className="reveal-up stagger-1 w-16 h-px bg-[#DE7356]"></div>
 
             {/* Subcopy */}
-            <p className="max-w-2xl text-base sm:text-lg text-[#D6CFBE] font-light leading-[1.9] sm:leading-[2.1] tracking-wide" style={{ textWrap: "pretty" }}>
+            <p className="reveal-up stagger-2 max-w-2xl text-base sm:text-lg text-[#D6CFBE] font-light leading-[1.9] sm:leading-[2.1] tracking-wide" style={{ textWrap: "pretty" }}>
               {lang === "ja" ? (
                 <>
                   <span className="inline-block">ロサンゼルスの日常で、</span>
@@ -595,7 +605,7 @@ export default function Home() {
             </p>
 
             {/* CTA Group */}
-            <div className="pt-4 sm:pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="reveal-up stagger-3 pt-4 sm:pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <button
                 onClick={() => {
                   setSubmitStatus("idle");
@@ -618,7 +628,7 @@ export default function Home() {
           </div>
 
           {/* Bottom Indicators */}
-          <div className="mt-16 sm:mt-24 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-white/50 tracking-wider">
+          <div className="reveal-up stagger-4 mt-16 sm:mt-24 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-white/50 tracking-wider">
             <div className="flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-[#DE7356]"></span>
               <span>100% NON-PROFIT 501(C)(3) ｜ PURELY DONATION-BASED</span>
@@ -644,7 +654,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
           
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#35302A]">
+          <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#35302A]">
             <div>
               <div className="text-xs font-mono tracking-wider text-[#DE7356] mb-3">
                 {lang === "ja" ? "01 ｜ 静寂への回帰" : "01 ｜ A Quiet Pause"}
@@ -670,8 +680,8 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-center pt-14">
             
             {/* Left: Window Frame Photography */}
-            <div className="lg:col-span-5 order-2 lg:order-1">
-              <div className="relative rounded-2xl overflow-hidden border border-[#3E3832] bg-[#121110] p-3 sm:p-4 shadow-2xl group">
+            <div className="reveal-up stagger-1 lg:col-span-5 order-2 lg:order-1">
+              <div className="relative rounded-2xl overflow-hidden border border-[#3E3832] bg-[#121110] p-3 sm:p-4 shadow-2xl group img-zoom-reveal">
                 <div className="relative aspect-[4/5] rounded-xl overflow-hidden">
                   <Image
                     src="/assets/la_palm_trees.jpg"
@@ -685,7 +695,7 @@ export default function Home() {
             </div>
 
             {/* Right: Thoughtful Typography and Analysis */}
-            <div className="lg:col-span-7 order-1 lg:order-2 space-y-6 sm:space-y-8">
+            <div className="reveal-up stagger-2 lg:col-span-7 order-1 lg:order-2 space-y-6 sm:space-y-8">
               
               <div className="space-y-6 text-base sm:text-lg text-[#C8BFB2] leading-[1.9] sm:leading-[2.1] font-light">
                 {lang === "ja" ? (
@@ -717,7 +727,7 @@ export default function Home() {
               </div>
 
               {/* Data points */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#35302A] text-xs font-mono">
+              <div className="reveal-up stagger-3 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#35302A] text-xs font-mono">
                 <div className="space-y-1">
                   <div className="text-[#877E73]">Practice</div>
                   <div className="text-[#F4EFEA] font-medium">Tekazashi (Divine Light)</div>
@@ -747,7 +757,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
           {/* Eyebrow and Section Heading */}
-          <div className="max-w-3xl mb-14">
+          <div className="reveal-up max-w-3xl mb-14">
             <span className="text-xs font-mono text-[#964731] block mb-2 tracking-wider">
               {lang === "ja" ? "02 ｜ 手かざしの本質" : "02 ｜ The Practice"}
             </span>
@@ -774,7 +784,7 @@ export default function Home() {
             
             {/* Visual Card */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="relative aspect-[4/3] sm:aspect-square rounded-2xl overflow-hidden bg-[#EFE8DF] shadow-md border border-[#E2DAD0]">
+              <div className="reveal-up stagger-1 relative aspect-[4/3] sm:aspect-square rounded-2xl overflow-hidden bg-[#EFE8DF] shadow-md border border-[#E2DAD0] img-zoom-reveal">
                 <Image
                   src="/assets/okiyome_session.jpg"
                   alt="Minimalist meditation space with gentle natural light during Okiyome"
@@ -789,7 +799,7 @@ export default function Home() {
               </div>
 
               {/* Distinction Statement */}
-              <div className="p-6 rounded-2xl bg-[#F4EFEA] border border-[#E5DDD2] space-y-2">
+              <div className="reveal-up stagger-2 p-6 rounded-2xl bg-[#F4EFEA] border border-[#E5DDD2] space-y-2">
                 <div className="flex items-center gap-2 text-xs font-mono tracking-wider text-[#964731] font-semibold">
                   <Icons.ShieldCheck className="w-4 h-4 text-[#DE7356]" />
                   <span>{lang === "ja" ? "透明性と安心のために" : "Our Ethical Distinction"}</span>
@@ -805,7 +815,7 @@ export default function Home() {
             {/* Content & Step Architecture */}
             <div className="lg:col-span-7 space-y-8">
               
-              <div className="prose text-[#4A433A] text-base sm:text-lg leading-[1.9] sm:leading-[2.1] font-light space-y-5">
+              <div className="reveal-up stagger-1 prose text-[#4A433A] text-base sm:text-lg leading-[1.9] sm:leading-[2.1] font-light space-y-5">
                 {lang === "ja" ? (
                   <>
                     <p className="text-xl font-serif text-[#1A1816] leading-snug" style={{ textWrap: "pretty" }}>
@@ -836,7 +846,7 @@ export default function Home() {
               {/* 3 Pillars */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                 
-                <div className="p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
+                <div className="reveal-up stagger-1 p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
                   <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
                     {lang === "ja" ? "01 ｜ 神の大愛のみ光" : "01 ｜ PURE LIGHT"}
                   </span>
@@ -850,7 +860,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
+                <div className="reveal-up stagger-2 p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
                   <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
                     {lang === "ja" ? "02 ｜ 静寂と休息" : "02 ｜ STILLNESS"}
                   </span>
@@ -864,7 +874,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
+                <div className="reveal-up stagger-3 p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
                   <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
                     {lang === "ja" ? "03 ｜ 生命力の調律" : "03 ｜ HARMONY"}
                   </span>
@@ -893,7 +903,7 @@ export default function Home() {
       <section id="principles" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
+          <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
             <div>
               <span className="text-xs font-mono text-[#DE7356] block mb-2 tracking-wider">
                 {lang === "ja" ? "03 ｜ 私たちの約束" : "03 ｜ OUR PRINCIPLES"}
@@ -909,11 +919,11 @@ export default function Home() {
             </p>
           </div>
 
-          {/* 3-Column Card Layout */}
+          {/* 3-Column Card Layout with 0.15s Staggered Reveal */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#DDD3C4] border border-[#DDD3C4] mt-12 rounded-2xl overflow-hidden shadow-xs">
             
             {/* Card 01: Purely Donation-Based */}
-            <div className="bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
+            <div className="reveal-up stagger-1 bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
                   <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">01</span>
@@ -937,7 +947,7 @@ export default function Home() {
             </div>
 
             {/* Card 02 */}
-            <div className="bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
+            <div className="reveal-up stagger-2 bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
                   <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">02</span>
@@ -961,7 +971,7 @@ export default function Home() {
             </div>
 
             {/* Card 03 */}
-            <div className="bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
+            <div className="reveal-up stagger-3 bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
                   <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">03</span>
@@ -995,7 +1005,7 @@ export default function Home() {
       <section id="journey" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
-          <div className="max-w-3xl mb-16">
+          <div className="reveal-up max-w-3xl mb-16">
             <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
               04 ｜ 当日の流れ
             </span>
@@ -1016,13 +1026,13 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Interactive Steps Grid */}
+          {/* Interactive Steps Grid with 0.15s Staggered Reveal */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             
             {/* Step 01 */}
             <div
               onClick={() => setActiveStep(0)}
-              className={`p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+              className={`reveal-up stagger-1 p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
                 activeStep === 0
                   ? "bg-white border-[#DE7356] shadow-md scale-[1.01]"
                   : "bg-[#F7F3EC] border-[#E8E0D5] hover:bg-white"
@@ -1034,7 +1044,7 @@ export default function Home() {
                   <span>{lang === "ja" ? "約10分" : "Approx. 10 Min"}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#D5CCC0] shadow-xs bg-[#EFE8DF]">
+                  <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#D5CCC0] shadow-xs bg-[#EFE8DF] img-zoom-reveal">
                     <Image
                       src="/assets/staff_host.jpg"
                       alt="Kevin, Staff Host"
@@ -1060,7 +1070,7 @@ export default function Home() {
             {/* Step 02 */}
             <div
               onClick={() => setActiveStep(1)}
-              className={`p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+              className={`reveal-up stagger-2 p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
                 activeStep === 1
                   ? "bg-white border-[#DE7356] shadow-md scale-[1.01]"
                   : "bg-[#F7F3EC] border-[#E8E0D5] hover:bg-white"
@@ -1088,7 +1098,7 @@ export default function Home() {
             {/* Step 03 */}
             <div
               onClick={() => setActiveStep(2)}
-              className={`p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+              className={`reveal-up stagger-3 p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
                 activeStep === 2
                   ? "bg-white border-[#DE7356] shadow-md scale-[1.01]"
                   : "bg-[#F7F3EC] border-[#E8E0D5] hover:bg-white"
@@ -1115,7 +1125,7 @@ export default function Home() {
 
           </div>
 
-          <div className="mt-12 text-center">
+          <div className="reveal-up stagger-4 mt-12 text-center">
             <button
               onClick={() => {
                 setSubmitStatus("idle");
@@ -1138,7 +1148,7 @@ export default function Home() {
       <section className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 sm:px-12">
           
-          <div className="relative bg-[#FBF9F5] rounded-3xl border border-[#E2DAD0] p-8 sm:p-14 shadow-sm">
+          <div className="reveal-up relative bg-[#FBF9F5] rounded-3xl border border-[#E2DAD0] p-8 sm:p-14 shadow-sm">
             
             {/* Header Badge */}
             <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-6 mb-8">
@@ -1194,7 +1204,7 @@ export default function Home() {
             {/* Signature Area: Kevin */}
             <div className="mt-10 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-[#D5CCC0] shadow-sm shrink-0 bg-[#EFE8DF]">
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-[#D5CCC0] shadow-sm shrink-0 bg-[#EFE8DF] img-zoom-reveal">
                   <Image
                     src="/assets/staff_host.jpg"
                     alt="Kevin, Staff Host"
@@ -1225,7 +1235,7 @@ export default function Home() {
       <section id="access" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
+          <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
             <div>
               <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
                 06 ｜ 所在地・開館時間
@@ -1240,7 +1250,7 @@ export default function Home() {
           </div>
 
           {/* Hairline Data Snapshot Grid */}
-          <div className="mt-12 border border-[#D5CCC0] rounded-2xl overflow-hidden bg-white shadow-xs">
+          <div className="reveal-up stagger-1 mt-12 border border-[#D5CCC0] rounded-2xl overflow-hidden bg-white shadow-xs">
             
             {/* Top Bar */}
             <div className="p-6 sm:p-8 bg-[#FAF6F0] border-b border-[#D5CCC0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1272,7 +1282,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#EAE3D9]">
               
               {/* Box 1: Address */}
-              <div className="p-6 sm:p-8 space-y-3">
+              <div className="reveal-up stagger-1 p-6 sm:p-8 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
                   <Icons.MapPin className="w-3.5 h-3.5 text-[#DE7356]" />
                   <span>{lang === "ja" ? "所在地" : "Address"}</span>
@@ -1287,7 +1297,7 @@ export default function Home() {
               </div>
 
               {/* Box 2: Hours */}
-              <div className="p-6 sm:p-8 space-y-3">
+              <div className="reveal-up stagger-2 p-6 sm:p-8 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
                   <Icons.Clock className="w-3.5 h-3.5 text-[#DE7356]" />
                   <span>{lang === "ja" ? "開館時間" : "Hours"}</span>
@@ -1309,7 +1319,7 @@ export default function Home() {
               </div>
 
               {/* Box 3: Contact */}
-              <div className="p-6 sm:p-8 space-y-3">
+              <div className="reveal-up stagger-3 p-6 sm:p-8 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
                   <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
                   <span>{lang === "ja" ? "連絡先" : "Contact"}</span>
@@ -1328,7 +1338,7 @@ export default function Home() {
               </div>
 
               {/* Box 4: Attire */}
-              <div className="p-6 sm:p-8 space-y-3">
+              <div className="reveal-up stagger-4 p-6 sm:p-8 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
                   <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
                   <span>{lang === "ja" ? "ご来訪の準備" : "Attire & Entry"}</span>
@@ -1343,7 +1353,7 @@ export default function Home() {
             </div>
 
             {/* Policy Banner */}
-            <div className="p-6 sm:p-8 bg-[#1A1816] text-[#FBF9F5] border-t border-[#D5CCC0] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="reveal-up stagger-2 p-6 sm:p-8 bg-[#1A1816] text-[#FBF9F5] border-t border-[#D5CCC0] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-2 max-w-3xl">
                 <div className="flex items-center gap-2 text-xs font-mono text-[#DE7356] tracking-wider">
                   <span className="w-2 h-2 rounded-full bg-[#DE7356] animate-pulse"></span>
@@ -1379,7 +1389,7 @@ export default function Home() {
       <section id="faq" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
         <div className="max-w-4xl mx-auto px-6 sm:px-12">
           
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="reveal-up text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
               07 ｜ よくあるご質問
             </span>
@@ -1421,7 +1431,7 @@ export default function Home() {
             ].map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-[#DDD3C4] overflow-hidden transition-colors"
+                className={`reveal-up stagger-${(idx % 4) + 1} bg-white rounded-2xl border border-[#DDD3C4] overflow-hidden transition-colors`}
               >
                 <button
                   type="button"
@@ -1445,7 +1455,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-12 text-center text-xs font-mono text-[#8C8377]">
+          <div className="reveal-up stagger-3 mt-12 text-center text-xs font-mono text-[#8C8377]">
             {lang === "ja"
               ? "その他ご不明な点はお気軽にお電話（+1 626-861-5069）またはご予約時にお尋ねください。"
               : "Have other questions? Feel free to call +1 (626) 861-5069 or leave a note with your reservation."}
@@ -1459,8 +1469,8 @@ export default function Home() {
           ==================================================================== */}
       <section className="relative py-32 sm:py-44 bg-[#121110] text-white overflow-hidden">
         
-        {/* Atmospheric Landscape */}
-        <div className="absolute inset-0 opacity-40">
+        {/* Atmospheric Landscape with Subtle Parallax */}
+        <div className="absolute inset-0 opacity-40 parallax-layer" data-parallax-speed="0.14">
           <Image
             src="/assets/ocean_light.jpg"
             alt="Quiet evening ocean horizon with soft warm glow"
@@ -1472,11 +1482,11 @@ export default function Home() {
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 text-center space-y-8">
           
-          <span className="inline-block text-xs font-mono tracking-wider text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
+          <span className="reveal-up inline-block text-xs font-mono tracking-wider text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
             {lang === "ja" ? "体験セッションのご案内" : "Introductory Session"}
           </span>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-[1.2] max-w-3xl mx-auto text-[#FAF6F0]" style={{ textWrap: "balance" }}>
+          <h2 className="reveal-up stagger-1 text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-[1.2] max-w-3xl mx-auto text-[#FAF6F0]" style={{ textWrap: "balance" }}>
             {lang === "ja" ? (
               <>
                 <span className="inline-block">神の大愛の光に包まれ、</span>
@@ -1492,7 +1502,7 @@ export default function Home() {
             )}
           </h2>
 
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-[#C8BFB2] font-light leading-[1.9] sm:leading-[2.1]" style={{ textWrap: "pretty" }}>
+          <p className="reveal-up stagger-2 max-w-2xl mx-auto text-base sm:text-lg text-[#C8BFB2] font-light leading-[1.9] sm:leading-[2.1]" style={{ textWrap: "pretty" }}>
             {lang === "ja" ? (
               <>
                 <span className="inline-block">都会の速度から一歩身を引き、</span>
@@ -1505,7 +1515,7 @@ export default function Home() {
             )}
           </p>
 
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="reveal-up stagger-3 pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => {
                 setSubmitStatus("idle");
@@ -1526,7 +1536,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="pt-12 text-xs font-mono text-white/40 tracking-wider">
+          <div className="reveal-up stagger-4 pt-12 text-xs font-mono text-white/40 tracking-wider">
             MONTEREY PARK, CALIFORNIA ｜ ADVANCE APPOINTMENT ONLY
           </div>
 
@@ -1796,6 +1806,7 @@ export default function Home() {
         </div>
       )}
 
-    </div>
+      </div>
+    </SmoothScroll>
   );
 }
