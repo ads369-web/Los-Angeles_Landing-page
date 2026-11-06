@@ -9,12 +9,13 @@ interface SmoothScrollProps {
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
-    // Respect user's motion preference
+    // Respect user motion preference and never intercept touch on mobile devices
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isTouchDevice = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
     let lenis: Lenis | null = null;
 
-    if (!prefersReducedMotion) {
+    if (!prefersReducedMotion && !isTouchDevice) {
       lenis = new Lenis({
         duration: 1.2,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // BOTANIST-style deceleration curve
@@ -22,7 +23,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         gestureOrientation: "vertical",
         smoothWheel: true,
         wheelMultiplier: 0.9,
-        touchMultiplier: 1.2,
         infinite: false,
       });
 

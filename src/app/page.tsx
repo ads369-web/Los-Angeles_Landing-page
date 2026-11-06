@@ -174,7 +174,7 @@ export default function Home() {
 
   useEffect(() => {
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    if (isModalOpen || mobileMenuOpen) {
+    if (isModalOpen) {
       document.body.style.overflow = "hidden";
       lenis?.stop();
     } else {
@@ -185,7 +185,7 @@ export default function Home() {
       document.body.style.overflow = "unset";
       lenis?.start();
     };
-  }, [isModalOpen, mobileMenuOpen]);
+  }, [isModalOpen]);
 
   return (
     <SmoothScroll>
@@ -335,7 +335,7 @@ export default function Home() {
       </header>
 
       {/* ====================================================================
-          FULL-SCREEN MOBILE MENU DRAWER (Root Level - No CSS Stacking Interference)
+          FULL-SCREEN MOBILE MENU DRAWER (Pinned Action Footer & Touch-Safe Scroll)
           ==================================================================== */}
       {mobileMenuOpen && (
         <div
@@ -348,7 +348,7 @@ export default function Home() {
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          {/* Drawer container */}
+          {/* Drawer container: Flex column with pinned header and pinned bottom action bar */}
           <div
             className="relative z-10 w-full max-w-sm sm:max-w-md bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col"
             style={{
@@ -357,8 +357,8 @@ export default function Home() {
             }}
             data-lenis-prevent="true"
           >
-            {/* Drawer Header */}
-            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#EAE3D9] bg-[#F4EFEA] shrink-0">
+            {/* 1. Drawer Header (Pinned Top) */}
+            <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 border-b border-[#EAE3D9] bg-[#F4EFEA] shrink-0">
               <div className="flex items-center gap-3">
                 <Image
                   src="/assets/wdl_logo.png"
@@ -386,13 +386,12 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Scrollable Drawer Body with Lenis exclusion & safe-area padding */}
+            {/* 2. Scrollable Middle Section: Navigation links + Direct Contacts */}
             <div
-              className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-5"
+              className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-4"
               style={{
                 WebkitOverflowScrolling: "touch",
                 touchAction: "pan-y",
-                paddingBottom: "calc(env(safe-area-inset-bottom, 24px) + 80px)",
               }}
               data-lenis-prevent="true"
             >
@@ -450,7 +449,7 @@ export default function Home() {
                     key={item.id}
                     href={`#${item.id}`}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl hover:bg-[#F2EDE4] active:bg-[#EAE3D9] border border-transparent hover:border-[#E5DDD2] transition-colors group cursor-pointer"
+                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F2EDE4] active:bg-[#EAE3D9] border border-transparent hover:border-[#E5DDD2] transition-colors group cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
                       <span className="w-7 h-7 rounded-lg bg-[#EFE8DE] group-hover:bg-[#DE7356] group-hover:text-white transition-colors flex items-center justify-center font-mono text-[11px] font-semibold text-[#8C8276]">
@@ -470,73 +469,77 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Language Switcher in Drawer */}
-              <div className="pt-2">
-                <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-[#DDD4C7] shadow-xs">
-                  <span className="text-xs font-mono text-[#8C8276] uppercase pl-2 font-medium">
-                    {lang === "ja" ? "表示言語" : "Language"}
-                  </span>
-                  <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 bg-[#F2EDE4]">
-                    <button
-                      type="button"
-                      onClick={() => setLang("ja")}
-                      className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
-                        lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
-                      }`}
-                    >
-                      日本語
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setLang("en")}
-                      className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
-                        lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
-                      }`}
-                    >
-                      English
-                    </button>
-                  </div>
+              {/* Direct Tap to Contact & Info */}
+              <div className="pt-2 border-t border-[#EAE3D9] space-y-2">
+                <div className="grid grid-cols-2 gap-2 text-center text-xs font-mono text-[#6C645A]">
+                  <a
+                    href="tel:+16268615069"
+                    className="p-2 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
+                    <span>(626) 861-5069</span>
+                  </a>
+                  <a
+                    href="mailto:losangeles@worlddivinelight.org"
+                    className="p-2 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <Icons.Mail className="w-3.5 h-3.5 text-[#DE7356]" />
+                    <span>Email</span>
+                  </a>
+                </div>
+                <div className="text-[10px] font-mono text-[#8C8276] text-center pt-1">
+                  Monterey Park, CA ｜ 501(c)(3) Nonprofit
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Pinned Bottom Action Footer: ALWAYS VISIBLE & REACHABLE WITHOUT SCROLLING */}
+            <div
+              className="shrink-0 p-4 border-t border-[#EAE3D9] bg-[#F4EFEA] space-y-3 shadow-lg"
+              style={{
+                paddingBottom: "max(1rem, env(safe-area-inset-bottom, 1rem))",
+              }}
+            >
+              {/* Language Switcher */}
+              <div className="flex items-center justify-between bg-white px-3 py-1.5 rounded-xl border border-[#DDD4C7] shadow-xs">
+                <span className="text-[11px] font-mono text-[#8C8276] uppercase font-medium">
+                  {lang === "ja" ? "表示言語" : "Language"}
+                </span>
+                <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 bg-[#F2EDE4]">
+                  <button
+                    type="button"
+                    onClick={() => setLang("ja")}
+                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
+                      lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
+                    }`}
+                  >
+                    日本語
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLang("en")}
+                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
+                      lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
+                    }`}
+                  >
+                    English
+                  </button>
                 </div>
               </div>
 
               {/* Main Booking CTA */}
-              <div className="pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setSubmitStatus("idle");
-                    setIsModalOpen(true);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] active:bg-[#B9553A] text-white py-3.5 px-4 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
-                >
-                  <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
-                  <Icons.ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Direct Tap to Contact */}
-              <div className="grid grid-cols-2 gap-2 text-center text-xs font-mono text-[#6C645A]">
-                <a
-                  href="tel:+16268615069"
-                  className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>(626) 861-5069</span>
-                </a>
-                <a
-                  href="mailto:losangeles@worlddivinelight.org"
-                  className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <Icons.Mail className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>Email</span>
-                </a>
-              </div>
-
-              {/* Address / Monterey Park note */}
-              <div className="text-[10px] font-mono text-[#8C8276] text-center pt-1 pb-4">
-                Monterey Park, CA ｜ 501(c)(3) Nonprofit Organization
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setSubmitStatus("idle");
+                  setIsModalOpen(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] active:bg-[#B9553A] text-white py-3.5 px-4 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
+              >
+                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
+                <Icons.ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
