@@ -338,7 +338,10 @@ export default function Home() {
           FULL-SCREEN MOBILE MENU DRAWER (Root Level - No CSS Stacking Interference)
           ==================================================================== */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[9999] lg:hidden flex justify-end">
+        <div
+          className="fixed inset-0 z-[9999] lg:hidden flex justify-end"
+          style={{ height: "100dvh" }}
+        >
           {/* Backdrop overlay */}
           <div
             className="fixed inset-0 bg-[#121110]/70 backdrop-blur-sm transition-opacity duration-300"
@@ -346,9 +349,16 @@ export default function Home() {
           />
 
           {/* Drawer container */}
-          <div className="relative z-10 w-full max-w-sm sm:max-w-md h-full bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col justify-between overflow-y-auto">
+          <div
+            className="relative z-10 w-full max-w-sm sm:max-w-md bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col"
+            style={{
+              height: "100dvh",
+              maxHeight: "100dvh",
+            }}
+            data-lenis-prevent="true"
+          >
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#EAE3D9] bg-[#F4EFEA] sticky top-0 z-10">
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#EAE3D9] bg-[#F4EFEA] shrink-0">
               <div className="flex items-center gap-3">
                 <Image
                   src="/assets/wdl_logo.png"
@@ -369,132 +379,144 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-10 h-10 rounded-full flex items-center justify-center border border-[#DDD4C7] bg-white text-[#1A1816] hover:bg-[#F2EDE4] active:bg-[#EAE3D9] transition-colors cursor-pointer"
+                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#DDD4C7] bg-white text-[#1A1816] hover:bg-[#F2EDE4] active:bg-[#EAE3D9] transition-colors cursor-pointer"
                 aria-label="Close Menu"
               >
                 <Icons.X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Navigation Links */}
-            <div className="px-5 py-6 flex-1 space-y-1">
-              <div className="text-[10px] font-mono tracking-widest text-[#8C8276] uppercase mb-3 px-3">
-                {lang === "ja" ? "メニューナビゲーション" : "Menu Navigation"}
-              </div>
+            {/* Scrollable Drawer Body with Lenis exclusion & safe-area padding */}
+            <div
+              className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-5"
+              style={{
+                WebkitOverflowScrolling: "touch",
+                touchAction: "pan-y",
+                paddingBottom: "calc(env(safe-area-inset-bottom, 24px) + 80px)",
+              }}
+              data-lenis-prevent="true"
+            >
+              {/* Navigation Links */}
+              <div className="space-y-1">
+                <div className="text-[10px] font-mono tracking-widest text-[#8C8276] uppercase mb-2 px-2">
+                  {lang === "ja" ? "メニューナビゲーション" : "Menu Navigation"}
+                </div>
 
-              {[
-                {
-                  num: "01",
-                  id: "dilemma",
-                  title_ja: "都会の渇きと静寂への回帰",
-                  title_en: "The Modern Dilemma",
-                  sub: "Dilemma",
-                },
-                {
-                  num: "02",
-                  id: "practice",
-                  title_ja: "手かざし（お浄め）とは",
-                  title_en: "The Art of Divine Light",
-                  sub: "Tekazashi",
-                },
-                {
-                  num: "03",
-                  id: "principles",
-                  title_ja: "3つの安心と透明性",
-                  title_en: "Three Commitments",
-                  sub: "Integrity",
-                },
-                {
-                  num: "04",
-                  id: "journey",
-                  title_ja: "当日の体験の流れ",
-                  title_en: "First Visit Journey",
-                  sub: "Journey",
-                },
-                {
-                  num: "05",
-                  id: "access",
-                  title_ja: "所在地・アクセス情報",
-                  title_en: "Sanctuary Location",
-                  sub: "Location",
-                },
-                {
-                  num: "06",
-                  id: "faq",
-                  title_ja: "よくあるご質問",
-                  title_en: "Frequently Asked Questions",
-                  sub: "FAQ",
-                },
-              ].map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-3.5 rounded-xl hover:bg-[#F2EDE4] active:bg-[#EAE3D9] border border-transparent hover:border-[#E5DDD2] transition-colors group cursor-pointer"
-                >
-                  <div className="flex items-center gap-3.5">
-                    <span className="w-8 h-8 rounded-lg bg-[#EFE8DE] group-hover:bg-[#DE7356] group-hover:text-white transition-colors flex items-center justify-center font-mono text-xs font-semibold text-[#8C8276]">
-                      {item.num}
-                    </span>
-                    <div>
-                      <div className="font-serif text-sm font-medium text-[#1A1816] group-hover:text-[#DE7356] transition-colors">
-                        {lang === "ja" ? item.title_ja : item.title_en}
-                      </div>
-                      <div className="text-[10px] font-mono tracking-wider text-[#8C8276] uppercase">
-                        {item.num} / {item.sub}
+                {[
+                  {
+                    num: "01",
+                    id: "dilemma",
+                    title_ja: "都会の渇きと静寂への回帰",
+                    title_en: "The Modern Dilemma",
+                    sub: "Dilemma",
+                  },
+                  {
+                    num: "02",
+                    id: "practice",
+                    title_ja: "手かざし（お浄め）とは",
+                    title_en: "The Art of Divine Light",
+                    sub: "Tekazashi",
+                  },
+                  {
+                    num: "03",
+                    id: "principles",
+                    title_ja: "3つの安心と透明性",
+                    title_en: "Three Commitments",
+                    sub: "Integrity",
+                  },
+                  {
+                    num: "04",
+                    id: "journey",
+                    title_ja: "当日の体験の流れ",
+                    title_en: "First Visit Journey",
+                    sub: "Journey",
+                  },
+                  {
+                    num: "05",
+                    id: "access",
+                    title_ja: "所在地・アクセス情報",
+                    title_en: "Sanctuary Location",
+                    sub: "Location",
+                  },
+                  {
+                    num: "06",
+                    id: "faq",
+                    title_ja: "よくあるご質問",
+                    title_en: "Frequently Asked Questions",
+                    sub: "FAQ",
+                  },
+                ].map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl hover:bg-[#F2EDE4] active:bg-[#EAE3D9] border border-transparent hover:border-[#E5DDD2] transition-colors group cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="w-7 h-7 rounded-lg bg-[#EFE8DE] group-hover:bg-[#DE7356] group-hover:text-white transition-colors flex items-center justify-center font-mono text-[11px] font-semibold text-[#8C8276]">
+                        {item.num}
+                      </span>
+                      <div>
+                        <div className="font-serif text-xs sm:text-sm font-medium text-[#1A1816] group-hover:text-[#DE7356] transition-colors">
+                          {lang === "ja" ? item.title_ja : item.title_en}
+                        </div>
+                        <div className="text-[9px] font-mono tracking-wider text-[#8C8276] uppercase">
+                          {item.num} / {item.sub}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <Icons.ArrowRight className="w-4 h-4 text-[#A89F94] group-hover:text-[#DE7356] group-hover:translate-x-1 transition-all" />
-                </a>
-              ))}
-            </div>
+                    <Icons.ArrowRight className="w-3.5 h-3.5 text-[#A89F94] group-hover:text-[#DE7356] group-hover:translate-x-1 transition-all" />
+                  </a>
+                ))}
+              </div>
 
-            {/* Bottom Actions & Contacts */}
-            <div className="p-6 border-t border-[#EAE3D9] bg-[#F4EFEA] space-y-4">
               {/* Language Switcher in Drawer */}
-              <div className="flex items-center justify-between bg-white p-2 rounded-xl border border-[#DDD4C7]">
-                <span className="text-xs font-mono text-[#8C8276] uppercase pl-2">
-                  {lang === "ja" ? "表示言語" : "Language"}
-                </span>
-                <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 bg-[#F2EDE4]">
-                  <button
-                    type="button"
-                    onClick={() => setLang("ja")}
-                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
-                      lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
-                    }`}
-                  >
-                    日本語
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLang("en")}
-                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
-                      lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
-                    }`}
-                  >
-                    English
-                  </button>
+              <div className="pt-2">
+                <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-[#DDD4C7] shadow-xs">
+                  <span className="text-xs font-mono text-[#8C8276] uppercase pl-2 font-medium">
+                    {lang === "ja" ? "表示言語" : "Language"}
+                  </span>
+                  <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 bg-[#F2EDE4]">
+                    <button
+                      type="button"
+                      onClick={() => setLang("ja")}
+                      className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
+                        lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
+                      }`}
+                    >
+                      日本語
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLang("en")}
+                      className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
+                        lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
+                      }`}
+                    >
+                      English
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Main Booking CTA */}
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setSubmitStatus("idle");
-                  setIsModalOpen(true);
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] text-white py-3.5 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
-              >
-                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
-                <Icons.ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setSubmitStatus("idle");
+                    setIsModalOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] active:bg-[#B9553A] text-white py-3.5 px-4 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
+                  <Icons.ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
 
               {/* Direct Tap to Contact */}
-              <div className="grid grid-cols-2 gap-2 pt-1 text-center text-xs font-mono text-[#6C645A]">
+              <div className="grid grid-cols-2 gap-2 text-center text-xs font-mono text-[#6C645A]">
                 <a
                   href="tel:+16268615069"
                   className="p-2.5 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
@@ -512,7 +534,7 @@ export default function Home() {
               </div>
 
               {/* Address / Monterey Park note */}
-              <div className="text-[10px] font-mono text-[#8C8276] text-center">
+              <div className="text-[10px] font-mono text-[#8C8276] text-center pt-1 pb-4">
                 Monterey Park, CA ｜ 501(c)(3) Nonprofit Organization
               </div>
             </div>
@@ -1007,7 +1029,7 @@ export default function Home() {
           
           <div className="reveal-up max-w-3xl mb-16">
             <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
-              04 ｜ 当日の流れ
+              {lang === "ja" ? "04 ｜ 当日の流れ" : "04 ｜ First Visit Journey"}
             </span>
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4" style={{ textWrap: "balance" }}>
               {lang === "ja" ? "静寂と大愛へ至る、55分間の流れ。" : "A Thoughtful 55-Minute Journey."}
@@ -1143,7 +1165,7 @@ export default function Home() {
             {/* Header Badge */}
             <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-6 mb-8">
               <span className="text-xs font-mono tracking-wider text-[#DE7356]">
-                05 ｜ 迎える人の声
+                {lang === "ja" ? "05 ｜ 迎える人の声" : "05 ｜ Words from the Center"}
               </span>
               <span className="text-xs font-mono text-[#8A8174]">Staff Host: Kevin</span>
             </div>
@@ -1228,7 +1250,7 @@ export default function Home() {
           <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
             <div>
               <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
-                06 ｜ 所在地・開館時間
+                {lang === "ja" ? "06 ｜ 所在地・開館時間" : "06 ｜ Center Location & Hours"}
               </span>
               <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight" style={{ textWrap: "balance" }}>
                 {lang === "ja" ? "所在地と開館時間" : "Center Location & Visiting Hours"}
@@ -1381,7 +1403,7 @@ export default function Home() {
           
           <div className="reveal-up text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
-              07 ｜ よくあるご質問
+              {lang === "ja" ? "07 ｜ よくあるご質問" : "07 ｜ Frequently Asked Questions"}
             </span>
             <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight mb-4" style={{ textWrap: "balance" }}>
               {lang === "ja" ? "よくあるご質問" : "Frequently Asked Questions"}
