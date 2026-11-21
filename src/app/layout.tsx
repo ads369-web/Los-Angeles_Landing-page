@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Fraunces, Plus_Jakarta_Sans, Noto_Serif_JP, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from "@/lib/gtag";
+
+const VALID_HTML_LANGS = new Set(["en", "ja", "zh", "es"]);
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -35,6 +39,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://la.worlddivinelight.org"),
   title: "Los Angeles Divine Light Center | Monterey Park Spiritual Sanctuary",
   description:
     "World Divine Light — Los Angeles Spiritual Center in Monterey Park, CA. Experience seated Art of Divine Light (Okiyome) sessions in English, Japanese, or by advance request in Standard Chinese and Spanish. US 501(c)(3) nonprofit operating on voluntary donations.",
@@ -66,26 +71,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const headerList = await headers();
+  const rawLang = headerList.get("x-wdl-lang");
+  const htmlLang = rawLang && VALID_HTML_LANGS.has(rawLang) ? rawLang : "en";
+
   return (
     <html
-      lang="en"
+      lang={htmlLang}
       className={`${fraunces.variable} ${plusJakartaSans.variable} ${notoSerifJP.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body>
         {children}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-1695WNK4CX"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'G-1695WNK4CX');
-          gtag('config', 'AW-853490942');
+          gtag('config', '${GA_MEASUREMENT_ID}');
+          gtag('config', '${GOOGLE_ADS_ID}');
         `}</Script>
       </body>
     </html>

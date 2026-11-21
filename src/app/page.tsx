@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Mail, AlertCircle } from "lucide-react";
@@ -7,6 +8,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import HeaderControls from "@/components/HeaderControls";
 import JourneySteps from "@/components/JourneySteps";
 import BookingForm from "@/components/BookingForm";
+import { TrackedPhoneLink, TrackedEmailLink } from "@/components/TrackingLink";
 import { LP_COPY, type Language } from "@/data/lpCopy";
 
 const VALID_LANGS: readonly Language[] = ["en", "ja", "zh", "es"] as const;
@@ -21,6 +23,36 @@ function resolveLanguage(raw?: string | string[]): Language {
 
 interface HomePageProps {
   searchParams: Promise<{ lang?: string | string[] }>;
+}
+
+export async function generateMetadata({ searchParams }: HomePageProps): Promise<Metadata> {
+  const resolved = await searchParams;
+  const lang = resolveLanguage(resolved?.lang);
+  const seo = LP_COPY[lang].seo;
+  const canonicalUrl = lang === "en" ? "/" : `/?lang=${lang}`;
+
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        en: "https://la.worlddivinelight.org/",
+        ja: "https://la.worlddivinelight.org/?lang=ja",
+        zh: "https://la.worlddivinelight.org/?lang=zh",
+        es: "https://la.worlddivinelight.org/?lang=es",
+        "x-default": "https://la.worlddivinelight.org/",
+      },
+    },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: `https://la.worlddivinelight.org${canonicalUrl}`,
+      type: "website",
+      locale: seo.ogLocale,
+      alternateLocale: ["en_US", "ja_JP", "zh_CN", "es_US"].filter((loc) => loc !== seo.ogLocale),
+    },
+  };
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
@@ -70,10 +102,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   };
 
   return (
-    <div
-      lang={lang}
-      className="min-h-screen bg-[#FBF9F5] text-[#1A1816] selection:bg-[#DE7356]/20 selection:text-[#1A1816]"
-    >
+    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1816] selection:bg-[#DE7356]/20 selection:text-[#1A1816]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -93,9 +122,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <span className="text-center sm:text-left">{t.topBar}</span>
           <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-1 text-[#C7BFB5] font-mono text-[10px] sm:text-[11px]">
             <span>{t.topBarHours}</span>
-            <a href="tel:+16268615069" className="hover:text-white transition-colors">
+            <TrackedPhoneLink
+              href="tel:+16268615069"
+              location="top_bar"
+              className="hover:text-white transition-colors"
+            >
               Tel: +1 (626) 861-5069
-            </a>
+            </TrackedPhoneLink>
           </div>
         </div>
       </div>
@@ -480,7 +513,27 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                         {row.label}
                       </th>
                       <td className="block md:table-cell px-6 pb-2 md:py-6 font-serif text-sm sm:text-base font-bold text-[#1A1816] align-top">
-                        {row.value}
+                        {idx === 3 ? (
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <TrackedPhoneLink
+                              href="tel:+16268615069"
+                              location="access_table"
+                              className="underline decoration-[#DE7356]/60 hover:text-[#9A5B25] transition-colors"
+                            >
+                              +1 (626) 861-5069
+                            </TrackedPhoneLink>
+                            <span aria-hidden="true">·</span>
+                            <TrackedEmailLink
+                              href="mailto:losangeles@worlddivinelight.org"
+                              location="access_table"
+                              className="underline decoration-[#DE7356]/60 hover:text-[#9A5B25] transition-colors break-all"
+                            >
+                              losangeles@worlddivinelight.org
+                            </TrackedEmailLink>
+                          </div>
+                        ) : (
+                          row.value
+                        )}
                       </td>
                       <td className="block md:table-cell px-6 pb-5 md:py-6 text-xs sm:text-sm text-[#5C554F] leading-relaxed align-top">
                         {row.sub}
@@ -663,21 +716,26 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </p>
               <p>{t.footer.hoursSummary}</p>
               <p className="pt-1">
-                <a href="tel:+16268615069" className="text-[#F3DFC1] hover:underline font-medium">
+                <TrackedPhoneLink
+                  href="tel:+16268615069"
+                  location="footer"
+                  className="text-[#F3DFC1] hover:underline font-medium"
+                >
                   {t.footer.phoneLabel}
-                </a>
+                </TrackedPhoneLink>
                 <span className="block text-[11px] text-[#9E958B] mt-0.5">
                   {t.footer.phoneLangNote}
                 </span>
               </p>
               <p>
-                <a
+                <TrackedEmailLink
                   href="mailto:losangeles@worlddivinelight.org"
+                  location="footer"
                   className="inline-flex items-center gap-1.5 text-[#F3DFC1] hover:underline"
                 >
                   <Mail className="w-3.5 h-3.5" aria-hidden="true" />
                   losangeles@worlddivinelight.org
-                </a>
+                </TrackedEmailLink>
               </p>
             </div>
           </div>

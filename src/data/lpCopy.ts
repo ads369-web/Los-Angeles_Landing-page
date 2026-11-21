@@ -7,6 +7,11 @@ export interface FaqItem {
 
 export interface LocalizedContent {
   langLabel: string;
+  seo: {
+    title: string;
+    description: string;
+    ogLocale: string;
+  };
   topBar: string;
   topBarHours: string;
   nav: {
@@ -190,6 +195,12 @@ export interface LocalizedContent {
 export const LP_COPY: Record<Language, LocalizedContent> = {
   en: {
     langLabel: "English",
+    seo: {
+      title: "Los Angeles Divine Light Center | Monterey Park Spiritual Sanctuary",
+      description:
+        "World Divine Light — Los Angeles Spiritual Center in Monterey Park, CA. Seated Art of Divine Light (Okiyome) sessions in English, Japanese, or by advance request in Standard Chinese and Spanish. Tue–Sat 10:00–18:00, Sun 9:00–16:00 (Closed Mon). Donation-based.",
+      ogLocale: "en_US",
+    },
     topBar: "US 501(c)(3) Nonprofit Spiritual Center · Monterey Park, CA · Donation-Based",
     topBarHours: "Tue–Sat 10:00–18:00 | Sun 9:00–16:00 (Closed Mon)",
     nav: {
@@ -543,6 +554,12 @@ export const LP_COPY: Record<Language, LocalizedContent> = {
 
   ja: {
     langLabel: "日本語",
+    seo: {
+      title: "世界真光文明教団 ロサンゼルス道場 | カリフォルニア州モントレーパーク",
+      description:
+        "ロサンゼルス・モントレーパークの穏やかな霊性サンクチュアリ。椅子に座ったまま「神の光の業（お浄め）」を体験いただけます（火〜土 10:00–18:00・日 9:00–16:00／月曜休館・ドネーション制・駐車場43台無料）。",
+      ogLocale: "ja_JP",
+    },
     topBar: "米国政府公認 501(c)(3) 非営利スピリチュアルセンター ｜ ロサンゼルス・モントレーパーク",
     topBarHours: "火〜土 10:00–18:00 ｜ 日 9:00–16:00（月曜休館）",
     nav: {
@@ -896,6 +913,12 @@ export const LP_COPY: Record<Language, LocalizedContent> = {
 
   zh: {
     langLabel: "中文",
+    seo: {
+      title: "世界真光文明教团 洛杉矶道场 | 加州蒙特利公园市灵性中心",
+      description:
+        "位于加州蒙特利公园市的宁静灵性场所，体验“神之光的业（浄化 / Okiyome）”。周二至周六 10:00–18:00、周日 9:00–16:00（周一闭馆），采用随喜奉献制。提供标准中文预约接待。",
+      ogLocale: "zh_CN",
+    },
     topBar: "美国 501(c)(3) 非营利灵性中心 · 加州蒙特利公园市 · 随喜奉献（捐献制）",
     topBarHours: "周二至周六 10:00–18:00 ｜ 周日 9:00–16:00（周一闭馆）",
     nav: {
@@ -1239,6 +1262,12 @@ export const LP_COPY: Record<Language, LocalizedContent> = {
 
   es: {
     langLabel: "Español",
+    seo: {
+      title: "World Divine Light Centro Los Ángeles | Santuario en Monterey Park",
+      description:
+        "Centro espiritual sin fines de lucro 501(c)(3) en Monterey Park, CA. Sesiones del Arte de la Luz Divina (Okiyome) sentado en silla. Mar–Sáb 10:00–18:00, Dom 9:00–16:00 (Cerrado Lun). Basado en donaciones.",
+      ogLocale: "es_US",
+    },
     topBar: "Centro Espiritual sin fines de lucro 501(c)(3) · Monterey Park, CA · Basado en donaciones",
     topBarHours: "Mar–Sáb 10:00–18:00 | Dom 9:00–16:00 (Cerrado Lun)",
     nav: {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { TrackedPhoneLink, TrackedEmailLink } from "@/components/TrackingLink";
 
 export const metadata: Metadata = {
   title: "Accessibility Statement (WCAG 2.1 AA) | World Divine Light - Los Angeles Spiritual Center",
@@ -90,16 +91,24 @@ export default function AccessibilityPage() {
             <div className="mt-3 p-4 rounded-2xl bg-brand-cream border border-brand-border text-xs text-brand-dark space-y-1">
               <p>
                 <strong>Phone / SMS:</strong>{" "}
-                <a href="tel:+16268615069" className="underline text-brand-terracotta">
+                <TrackedPhoneLink
+                  href="tel:+16268615069"
+                  location="accessibility_page"
+                  className="underline text-brand-terracotta"
+                >
                   +1 (626) 861-5069
-                </a>{" "}
+                </TrackedPhoneLink>{" "}
                 <span className="text-brand-muted">(English &amp; Japanese; advance request for Chinese or Spanish)</span>
               </p>
               <p>
                 <strong>Email:</strong>{" "}
-                <a href="mailto:losangeles@worlddivinelight.org" className="underline text-brand-terracotta">
+                <TrackedEmailLink
+                  href="mailto:losangeles@worlddivinelight.org"
+                  location="accessibility_page"
+                  className="underline text-brand-terracotta"
+                >
                   losangeles@worlddivinelight.org
-                </a>
+                </TrackedEmailLink>
               </p>
             </div>
           </div>

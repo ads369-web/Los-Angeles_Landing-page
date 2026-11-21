@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckCircle2, ShieldCheck } from "lucide-react";
 import type { Language, LocalizedContent } from "@/data/lpCopy";
 import { BookingFormSchema } from "@/lib/bookingSchema";
+import { trackFormSubmit } from "@/lib/gtag";
 
 interface BookingFormProps {
   lang: Language;
@@ -104,14 +105,10 @@ export default function BookingForm({ lang, copy }: BookingFormProps) {
         return;
       }
 
-      if (typeof window !== "undefined") {
-        const gtagFn = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
-        if (typeof gtagFn === "function") {
-          gtagFn("event", "conversion", {
-            send_to: "AW-853490942/rYqNCMjM_vYZEN7b_5YD",
-          });
-        }
-      }
+      trackFormSubmit({
+        language: parsed.data.preferredLanguage,
+        practitionerPreference: parsed.data.practitionerPreference,
+      });
 
       setSubmitStatus("success");
       setSubmitMessage(copy.successBody);
