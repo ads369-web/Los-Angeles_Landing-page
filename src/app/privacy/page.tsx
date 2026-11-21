@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -13,11 +14,11 @@ export default function PrivacyPage() {
       <header className="bg-brand-cream/95 border-b border-brand-border py-5 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3 group">
-            <img
+            <Image
               src="/assets/wdl_logo.png"
               alt="World Divine Light"
-              width={84}
-              height={30}
+              width={1024}
+              height={372}
               className="h-7 w-auto object-contain"
             />
             <span className="font-serif font-bold text-sm sm:text-base text-brand-dark group-hover:text-brand-terracotta transition-colors">
