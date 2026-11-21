@@ -12,18 +12,24 @@ export default function OpeningSplash({ onComplete }: OpeningSplashProps) {
   const [phase, setPhase] = useState<"hidden" | "entering" | "holding" | "exiting" | "removed">("hidden");
 
   useEffect(() => {
-    // Check if visitor has already experienced the splash in this session
+    let alreadyVisited = false;
     try {
       const hasVisited = sessionStorage.getItem("has_visited");
       if (hasVisited === "true") {
-        setPhase("removed");
-        onComplete?.();
-        return;
+        alreadyVisited = true;
+      } else {
+        sessionStorage.setItem("has_visited", "true");
       }
-      // Record visit for this session
-      sessionStorage.setItem("has_visited", "true");
     } catch {
       // Fallback for environments where sessionStorage might be blocked
+    }
+
+    if (alreadyVisited) {
+      const skipTimer = setTimeout(() => {
+        setPhase("removed");
+        onComplete?.();
+      }, 0);
+      return () => clearTimeout(skipTimer);
     }
 
     // Lock page scrolling while opening splash plays
@@ -31,7 +37,9 @@ export default function OpeningSplash({ onComplete }: OpeningSplashProps) {
     document.body.style.overflow = "hidden";
 
     // Begin entrance animation on next animation frame
-    setPhase("entering");
+    const enterFrame = requestAnimationFrame(() => {
+      setPhase("entering");
+    });
 
     // Hold for 3.0 seconds after entrance (extended by 1.5s as requested), then begin dramatic exit
     const holdTimer = setTimeout(() => {
@@ -46,6 +54,7 @@ export default function OpeningSplash({ onComplete }: OpeningSplashProps) {
     }, 4000);
 
     return () => {
+      cancelAnimationFrame(enterFrame);
       clearTimeout(holdTimer);
       clearTimeout(removeTimer);
       document.body.style.overflow = originalOverflow;

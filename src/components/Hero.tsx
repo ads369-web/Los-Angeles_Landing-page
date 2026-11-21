@@ -206,7 +206,7 @@ export default function Hero() {
               lineHeight: 1.6,
             }}
           >
-            "A warm community united by the same light."
+            &ldquo;A warm community united by the same light.&rdquo;
           </p>
           <p
             style={{

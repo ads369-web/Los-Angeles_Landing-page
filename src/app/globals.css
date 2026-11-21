@@ -1,6 +1,5 @@
 /* Hallmark · built: the project · redesign: polish · genre: editorial
  * posture: warm-organic · contrast: pass · fold: pass · v2.0.0 */
-/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 · polish: strip eyebrows, replace emojis with clean marks, tone down transitions */
 @import "tailwindcss";
 
 :root {
@@ -38,7 +37,7 @@
   --color-brand-gold: var(--color-brand-gold);
   --color-brand-goldLight: var(--color-brand-goldLight);
 
-  --font-sans: var(--font-plus-jakarta), var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-plus-jakarta), var(--font-inter), "Noto Sans TC", system-ui, sans-serif;
   --font-serif: var(--font-fraunces), var(--font-noto-serif-jp), var(--font-playfair), Georgia, serif;
 }
 
@@ -46,14 +45,16 @@ html, body {
   overflow-x: clip;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   background: var(--color-brand-cream);
   color: var(--color-brand-dark);
-  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  font-family: var(--font-plus-jakarta), "Noto Sans TC", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -71,6 +72,32 @@ p, li {
 :focus-visible {
   outline: 2px solid var(--color-brand-terracotta);
   outline-offset: 2px;
+}
+
+/* Visually hidden utility for screen readers & skip link */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.skip-link:focus-visible {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10000;
+  padding: 0.65rem 1.15rem;
+  border-radius: 9999px;
+  background: #1A1816;
+  color: #FBF9F5;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 /* Button & interactive tactile feedback */
@@ -101,6 +128,37 @@ button:disabled, a:disabled {
   box-shadow: var(--shadow-retro-btn);
 }
 
+/* Native <details> Accordion Smooth Reveal */
+.faq-item > summary {
+  list-style: none;
+}
+.faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item::details-content {
+  interpolate-size: allow-keywords;
+  overflow: clip;
+  contain: layout;
+}
+.faq-item:not([open])::details-content {
+  block-size: 0;
+}
+.faq-chevron {
+  flex-shrink: 0;
+}
+.faq-item[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+/* Form Validation after interaction */
+.booking-field-control:is(:user-invalid, .user-invalid-fallback) {
+  border-color: #B91C1C;
+  background-color: #FEF2F2;
+}
+.booking-field-control:user-valid {
+  border-color: var(--color-brand-sage);
+}
+
 /* ==========================================================================
    Lenis Smooth Scrolling Base
    ========================================================================== */
@@ -124,47 +182,59 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   BOTANIST-Style Scroll Reveal & Motion
+   BOTANIST-Style Scroll Reveal & Motion (Scoped under motion preference)
    ========================================================================== */
-.reveal-up {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-up.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-up.stagger-1 { transition-delay: 0.15s; }
+  .reveal-up.stagger-2 { transition-delay: 0.30s; }
+  .reveal-up.stagger-3 { transition-delay: 0.45s; }
+  .reveal-up.stagger-4 { transition-delay: 0.60s; }
+
+  .img-zoom-reveal {
+    overflow: hidden;
+  }
+  .img-zoom-reveal img {
+    transform: scale(1.08);
+    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+  .img-zoom-reveal.is-revealed img,
+  .is-revealed .img-zoom-reveal img {
+    transform: scale(1.0);
+  }
+
+  .faq-item::details-content {
+    transition: block-size, content-visibility, display;
+    transition-duration: 0.28s;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+  .faq-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .animate-splash-glow {
+    animation: splashGlowPulse 3s ease-in-out infinite;
+  }
 }
 
-.reveal-up.is-revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger Delays */
-.reveal-up.stagger-1 { transition-delay: 0.15s; }
-.reveal-up.stagger-2 { transition-delay: 0.30s; }
-.reveal-up.stagger-3 { transition-delay: 0.45s; }
-.reveal-up.stagger-4 { transition-delay: 0.60s; }
-
-/* Visual Zoom-Out on Scroll Reveal */
-.img-zoom-reveal {
-  overflow: hidden;
-}
-.img-zoom-reveal img {
-  transform: scale(1.08);
-  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-}
-.img-zoom-reveal.is-revealed img,
-.is-revealed .img-zoom-reveal img {
-  transform: scale(1.0);
-}
-
-/* Subtle Hero & Parallax Layers */
 .parallax-layer {
   will-change: transform;
   transform: translate3d(0, 0, 0);
 }
 
-/* Opening Splash Animation Keyframes */
 @keyframes splashGlowPulse {
   0%, 100% {
     opacity: 0.25;
@@ -173,25 +243,5 @@ html.lenis body {
   50% {
     opacity: 0.45;
     transform: scale(1.04);
-  }
-}
-.animate-splash-glow {
-  animation: splashGlowPulse 3s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  .reveal-up {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-  .img-zoom-reveal img {
-    transform: none !important;
   }
 }

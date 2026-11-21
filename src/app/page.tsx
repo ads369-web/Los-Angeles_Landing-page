@@ -1,1827 +1,1325 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import Link from "next/link";
+import { Menu, X, ChevronDown, CheckCircle2, MapPin, Clock, Car, Phone, Mail, ShieldCheck, AlertCircle } from "lucide-react";
 import OpeningSplash from "@/components/OpeningSplash";
 import SmoothScroll from "@/components/SmoothScroll";
+import { LP_COPY, type Language } from "@/data/lpCopy";
+import { BookingFormSchema } from "@/lib/bookingSchema";
 
-// ============================================================================
-// Types & Interfaces
-// ============================================================================
-type Language = "ja" | "en";
+const VALID_LANGS: readonly Language[] = ["en", "ja", "zh", "es"] as const;
+const LANG_STORAGE_KEY = "wdl_la_lang";
+const LANG_EVENT = "wdl-lang-change";
 
-interface BookingFormState {
-  fullName: string;
-  email: string;
-  phone: string;
-  preferredDate: string;
-  preferredTime: string;
-  partySize: string;
-  notes: string;
+function isLanguage(value: string | null): value is Language {
+  return value !== null && (VALID_LANGS as readonly string[]).includes(value);
 }
 
-// ============================================================================
-// SVG Micro-Icons (Zero external dependencies, clean hairline style)
-// ============================================================================
-const Icons = {
-  ArrowRight: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-      <polyline points="12 5 19 12 12 19"></polyline>
-    </svg>
-  ),
-  ArrowUpRight: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="7" y1="17" x2="17" y2="7"></line>
-      <polyline points="7 7 17 7 17 17"></polyline>
-    </svg>
-  ),
-  Check: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-  ),
-  Plus: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
-  ),
-  Minus: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
-  ),
-  Phone: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-    </svg>
-  ),
-  Mail: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-      <polyline points="22,6 12,13 2,6"></polyline>
-    </svg>
-  ),
-  MapPin: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-      <circle cx="12" cy="10" r="3"></circle>
-    </svg>
-  ),
-  Clock: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <polyline points="12 6 12 12 16 14"></polyline>
-    </svg>
-  ),
-  Menu: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="4" y1="12" x2="20" y2="12"></line>
-      <line x1="4" y1="6" x2="20" y2="6"></line>
-      <line x1="4" y1="18" x2="20" y2="18"></line>
-    </svg>
-  ),
-  X: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
-  ),
-  ShieldCheck: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-      <polyline points="9 12 11 14 15 10"></polyline>
-    </svg>
-  ),
+function getLangSnapshot(): Language {
+  if (typeof window === "undefined") return "en";
+  const urlParam = new URLSearchParams(window.location.search).get("lang");
+  if (isLanguage(urlParam)) return urlParam;
+  const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+  if (isLanguage(stored)) return stored;
+  return "en";
+}
+
+function getLangServerSnapshot(): Language {
+  return "en";
+}
+
+function subscribeToLang(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener(LANG_EVENT, callback);
+  window.addEventListener("storage", callback);
+  window.addEventListener("popstate", callback);
+  return () => {
+    window.removeEventListener(LANG_EVENT, callback);
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("popstate", callback);
+  };
+}
+
+let cachedTodayIso = "";
+function getTodaySnapshot(): string {
+  if (typeof window === "undefined") return "";
+  if (!cachedTodayIso) {
+    cachedTodayIso = new Date().toISOString().split("T")[0];
+  }
+  return cachedTodayIso;
+}
+function getTodayServerSnapshot(): string {
+  return "";
+}
+function noopSubscribe(): () => void {
+  return () => {};
+}
+
+const DEFAULT_BOOKING_STATE = {
+  fullName: "",
+  email: "",
+  phone: "",
+  preferredDate: "",
+  preferredTime: "",
+  preferredLanguage: "English" as "English" | "Japanese" | "Chinese" | "Spanish",
+  practitionerPreference: "No preference" as "No preference" | "Female practitioner" | "Male practitioner",
+  notes: "",
+  smsConsent: false,
 };
 
-// ============================================================================
-// Main Page Component
-// ============================================================================
-export default function Home() {
-  const [lang, setLang] = useState<Language>("en");
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [activeStep, setActiveStep] = useState<number>(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+function mapUiLangToFormLang(lang: Language): "English" | "Japanese" | "Chinese" | "Spanish" {
+  switch (lang) {
+    case "ja":
+      return "Japanese";
+    case "zh":
+      return "Chinese";
+    case "es":
+      return "Spanish";
+    default:
+      return "English";
+  }
+}
 
-  // Booking Form State
-  const [formData, setFormData] = useState<BookingFormState>({
-    fullName: "",
-    email: "",
-    phone: "",
-    preferredDate: "",
-    preferredTime: "11:00 AM",
-    partySize: "1",
-    notes: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+export default function HomePage() {
+  const lang = useSyncExternalStore(subscribeToLang, getLangSnapshot, getLangServerSnapshot);
+  const todayIso = useSyncExternalStore(noopSubscribe, getTodaySnapshot, getTodayServerSnapshot);
+  const t = LP_COPY[lang];
 
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+
+  // Booking form state
+  const [formValues, setFormValues] = useState(DEFAULT_BOOKING_STATE);
+  const [languageTouched, setLanguageTouched] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
+  const drawerCloseBtnRef = useRef<HTMLButtonElement>(null);
+
+  const effectivePreferredLanguage = languageTouched
+    ? formValues.preferredLanguage
+    : mapUiLangToFormLang(lang);
+
+  const effectivePreferredTime =
+    formValues.preferredTime || t.booking.form.timeOptions[0];
+
+  const handleSetLang = (next: Language) => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(LANG_STORAGE_KEY, next);
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", next);
+    window.history.replaceState({}, "", url.toString());
+    window.dispatchEvent(new Event(LANG_EVENT));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      drawerCloseBtnRef.current?.focus();
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  const scrollToTarget = (selector: string) => {
+    setMobileMenuOpen(false);
+    const el = document.querySelector(selector);
+    if (!el) return;
+    const headerOffset = 96;
+    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   };
 
-  const handleBookingSubmit = async (e: React.FormEvent) => {
+  const handleBookingSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus("idle");
+    setFieldErrors({});
+    setSubmitMessage("");
 
+    const payload = {
+      ...formValues,
+      preferredLanguage: effectivePreferredLanguage,
+      preferredTime: effectivePreferredTime,
+    };
+
+    const parsed = BookingFormSchema.safeParse(payload);
+    if (!parsed.success) {
+      setFieldErrors(parsed.error.flatten().fieldErrors);
+      setSubmitStatus("error");
+      setSubmitMessage(t.booking.form.validationNotice);
+      return;
+    }
+
+    setSubmitStatus("submitting");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          preferredTime: `${formData.preferredDate} ${formData.preferredTime} (Phone: ${formData.phone})`,
-          message: formData.notes || "Introduction Session requested via Los Angeles Landing Page.",
-        }),
+        body: JSON.stringify(parsed.data),
       });
 
-      if (res.ok) {
-        setSubmitStatus("success");
-        if (typeof window !== "undefined" && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
-          (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "conversion", {
+      if (!res.ok) {
+        const errData = (await res.json().catch(() => null)) as {
+          error?: string;
+          fieldErrors?: Record<string, string[]>;
+        } | null;
+        if (errData?.fieldErrors) {
+          setFieldErrors(errData.fieldErrors);
+        }
+        setSubmitStatus("error");
+        setSubmitMessage(t.booking.form.errorFallback);
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        const gtagFn = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+        if (typeof gtagFn === "function") {
+          gtagFn("event", "conversion", {
             send_to: "AW-853490942/rYqNCMjM_vYZEN7b_5YD",
           });
         }
-      } else {
-        setSubmitStatus("error");
       }
+
+      setSubmitStatus("success");
+      setSubmitMessage(t.booking.form.successBody);
+      setFormValues(DEFAULT_BOOKING_STATE);
+      setLanguageTouched(false);
     } catch {
       setSubmitStatus("error");
-    } finally {
-      setIsSubmitting(false);
+      setSubmitMessage(t.booking.form.errorFallback);
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsModalOpen(false);
-        setMobileMenuOpen(false);
+  const renderLangSwitch = (compact = false) => (
+    <div
+      role="group"
+      aria-label={t.nav.languageLabel}
+      className={
+        compact
+          ? "grid grid-cols-4 gap-1 rounded-full bg-[#EFEAE1] p-1 border border-[#E5E0D8]"
+          : "inline-flex items-center rounded-full bg-[#EFEAE1] p-1 border border-[#E5E0D8]"
       }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-      lenis?.stop();
-    } else {
-      document.body.style.overflow = "unset";
-      lenis?.start();
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-      lenis?.start();
-    };
-  }, [isModalOpen]);
+    >
+      {(["en", "ja", "zh", "es"] as const).map((code) => {
+        const active = lang === code;
+        const shortLabel = code === "en" ? "EN" : code === "ja" ? "日本語" : code === "zh" ? "中文" : "ES";
+        return (
+          <button
+            key={code}
+            type="button"
+            onClick={() => handleSetLang(code)}
+            aria-pressed={active}
+            className={`px-2.5 py-1 text-[11px] font-semibold rounded-full transition-colors cursor-pointer ${
+              active
+                ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs"
+                : "text-[#5C554F] hover:text-[#1A1816]"
+            }`}
+          >
+            {shortLabel}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
-    <SmoothScroll>
-      {/* 1. Opening Splash Screen Animation (First Visit Only via sessionStorage) */}
+    <div className="min-h-screen bg-[#FBF9F5] text-[#1A1816] selection:bg-[#DE7356]/20 selection:text-[#1A1816]">
       <OpeningSplash />
+      <SmoothScroll />
 
-      <div className="relative min-h-screen bg-[#FBF9F5] text-[#24211D] font-sans selection:bg-[#DE7356]/20 selection:text-[#24211D] antialiased">
-      
-      {/* ====================================================================
-          TOP NOTIFICATION BAR (Nonprofit Status & Location)
-          ==================================================================== */}
-      <div className="w-full bg-[#1A1816] text-[#A69F96] text-[11px] sm:text-xs tracking-wider uppercase py-2 px-4 border-b border-[#2C2825]">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-4 font-mono">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#DE7356] inline-block animate-pulse"></span>
-            <span>
-              {lang === "ja"
-                ? "米国政府公認 501(c)(3) 非営利法人 ｜ カリフォルニア州モントレーパーク"
-                : "US 501(c)(3) Nonprofit Spiritual Organization ｜ Monterey Park, California"}
-            </span>
-          </div>
-          <div className="hidden sm:flex items-center gap-4 text-[#8C857D]">
-            <span>Tue–Sat 10:00–18:00 ｜ Sun 9:00–16:00</span>
-            <a href="tel:+16268615069" className="hover:text-white transition-colors">Tel: +1 (626) 861-5069</a>
+      {/* Skip Link */}
+      <a href="#main-content" className="visually-hidden skip-link">
+        {t.nav.skipToContent}
+      </a>
+
+      {/* Top Notification Bar */}
+      <div className="w-full bg-[#1A1816] text-[#EFEAE1] text-[11px] sm:text-xs tracking-wide py-2 px-4 border-b border-white/10">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-4">
+          <span className="text-center sm:text-left">{t.topBar}</span>
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-1 text-[#C7BFB5] font-mono text-[10px] sm:text-[11px]">
+            <span>{t.topBarHours}</span>
+            <a href="tel:+16268615069" className="hover:text-white transition-colors">
+              Tel: +1 (626) 861-5069
+            </a>
           </div>
         </div>
       </div>
 
-      {/* ====================================================================
-          STICKY HEADER & NAVIGATION
-          - Full natural aspect ratio for WDL logo (no clipping)
-          - Unified two-tier navigation menu (上段: 数字, 下段: 文字)
-          - Fully responsive & mobile-friendly drawer navigation
-          ==================================================================== */}
-      <header className="sticky top-0 z-40 w-full bg-[#FBF9F5]/90 backdrop-blur-md border-b border-[#EAE3D9] transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 sm:h-22 flex items-center justify-between">
-          
-          {/* Logo / Brand Identity - Full wide logo properly rendered */}
-          <a href="#" className="flex items-center gap-2.5 sm:gap-4 group min-w-0 pr-2">
-            <div className="relative h-7 sm:h-9 flex items-center shrink-0">
-              <Image
-                src="/assets/wdl_logo.png"
-                alt="World Divine Light Organization"
-                width={120}
-                height={38}
-                className="h-7 sm:h-9 w-auto object-contain block transition-opacity duration-300 group-hover:opacity-90"
-                priority
-              />
-            </div>
-            <div className="flex flex-col border-l border-[#DCD3C5] pl-2.5 sm:pl-3 min-w-0">
-              <span className="text-xs sm:text-base font-semibold tracking-tight text-[#1A1816] font-serif leading-tight truncate">
-                Los Angeles Divine Light Center
-              </span>
-              <span className="hidden sm:block text-[10px] tracking-widest text-[#7C756B] uppercase font-mono leading-none mt-0.5">
-                World Divine Light Organization
-              </span>
-            </div>
-          </a>
-
-          {/* Desktop Nav Links: Unified two-tier layout (上段: 数字, 下段: 文字) */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-mono tracking-widest uppercase text-[#544D44]">
-            
-            <a href="#dilemma" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
-              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">01</span>
-              <span className="text-[11px] tracking-wider leading-none">Dilemma</span>
-            </a>
-
-            <a href="#practice" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
-              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">02</span>
-              <span className="text-[11px] tracking-wider leading-none">Tekazashi</span>
-            </a>
-
-            <a href="#principles" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
-              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">03</span>
-              <span className="text-[11px] tracking-wider leading-none">Integrity</span>
-            </a>
-
-            <a href="#journey" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
-              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">04</span>
-              <span className="text-[11px] tracking-wider leading-none">Journey</span>
-            </a>
-
-            <a href="#access" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
-              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">05</span>
-              <span className="text-[11px] tracking-wider leading-none">Location</span>
-            </a>
-
-            <a href="#faq" className="group flex flex-col items-center hover:text-[#DE7356] transition-colors py-1">
-              <span className="text-[10px] font-mono text-[#A89F94] group-hover:text-[#DE7356] leading-none mb-1 transition-colors">06</span>
-              <span className="text-[11px] tracking-wider leading-none">FAQ</span>
-            </a>
-
-          </nav>
-
-          {/* Right Action: Language Switch + Reserve CTA + Mobile Menu Button */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            {/* Language Toggle */}
-            <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 text-xs font-mono bg-[#F2EDE4]/60">
-              <button
-                type="button"
-                onClick={() => setLang("ja")}
-                className={`px-2 sm:px-2.5 py-1 rounded-full transition-all text-[11px] font-medium cursor-pointer ${
-                  lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B] hover:text-[#1A1816]"
-                }`}
-                aria-label="Switch to Japanese"
-              >
-                JA
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang("en")}
-                className={`px-2 sm:px-2.5 py-1 rounded-full transition-all text-[11px] font-medium cursor-pointer ${
-                  lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B] hover:text-[#1A1816]"
-                }`}
-                aria-label="Switch to English"
-              >
-                EN
-              </button>
-            </div>
-
-            {/* Primary Action Button */}
-            <button
-              onClick={() => {
-                setSubmitStatus("idle");
-                setIsModalOpen(true);
+      {/* Two-Tier Sticky Header */}
+      <header
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-[#FBF9F5]/95 backdrop-blur-md shadow-sm border-b border-[#E5E0D8]"
+            : "bg-[#FBF9F5]/92 backdrop-blur-sm border-b border-[#E5E0D8]/70"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Tier 1: Brand + Language + Primary CTA + Mobile Trigger */}
+          <div className="h-16 sm:h-[72px] flex items-center justify-between gap-4">
+            <a
+              href="#hero"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToTarget("#hero");
               }}
-              className="hidden sm:inline-flex items-center gap-2 bg-[#1A1816] hover:bg-[#DE7356] text-[#FBF9F5] text-xs font-mono uppercase tracking-wider px-4 sm:px-5 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer shrink-0"
+              className="flex items-center gap-3 min-w-0 group"
             >
-              <span>{lang === "ja" ? "セッションを予約" : "Reserve a Session"}</span>
-              <Icons.ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+              <img
+                src="/assets/wdl_logo.png"
+                alt="World Divine Light"
+                width={96}
+                height={34}
+                className="h-7 sm:h-8 w-auto object-contain shrink-0"
+              />
+              <div className="border-l border-[#E5E0D8] pl-3 min-w-0">
+                <p className="font-serif font-semibold text-sm sm:text-base text-[#1A1816] truncate group-hover:text-[#9A5B25] transition-colors">
+                  {t.nav.centerName}
+                </p>
+                <p className="hidden sm:block text-[10px] tracking-[0.18em] text-[#6C655E] truncate">
+                  {t.nav.centerTagline}
+                </p>
+              </div>
+            </a>
 
-            {/* Mobile Hamburger Button */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#DDD4C7] bg-[#F2EDE4]/70 hover:bg-[#F2EDE4] active:bg-[#EAE3D9] text-[#1A1816] transition-colors focus:outline-none cursor-pointer shrink-0"
-              aria-label="Open Navigation Menu"
-            >
-              <Icons.Menu className="w-4 h-4 text-[#1A1816]" />
-              <span className="text-[11px] font-mono tracking-wider uppercase font-semibold">
-                {lang === "ja" ? "メニュー" : "MENU"}
-              </span>
-            </button>
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="hidden md:block">{renderLangSwitch(false)}</div>
+              <button
+                type="button"
+                onClick={() => scrollToTarget("#booking")}
+                className="hidden sm:inline-flex items-center justify-center rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 shadow-retro-btn transition-colors cursor-pointer"
+              >
+                {t.nav.cta}
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(true)}
+                aria-label={t.nav.menuOpen}
+                aria-expanded={mobileMenuOpen}
+                className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#E5E0D8] bg-white text-[#1A1816] hover:bg-[#F4EFEA] transition-colors cursor-pointer"
+              >
+                <Menu className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
           </div>
+
+          {/* Tier 2: Desktop Numbered Section Links */}
+          <nav
+            aria-label="Primary Navigation"
+            className="hidden lg:flex items-center justify-between border-t border-[#E5E0D8]/70 py-2.5"
+          >
+            {t.nav.items.map((item) => (
+              <a
+                key={item.num}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToTarget(item.href);
+                }}
+                className="group flex items-center gap-2 text-xs text-[#5C554F] hover:text-[#1A1816] transition-colors py-1"
+              >
+                <span className="font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#EFEAE1] text-[#6C655E] group-hover:bg-[#1A1816] group-hover:text-[#FBF9F5] transition-colors">
+                  {item.num}
+                </span>
+                <span className="font-medium">{item.label}</span>
+                <span className="text-[9px] tracking-[0.14em] text-[#8E867D] hidden xl:inline">
+                  {item.enSub}
+                </span>
+              </a>
+            ))}
+          </nav>
         </div>
       </header>
 
-      {/* ====================================================================
-          FULL-SCREEN MOBILE MENU DRAWER (Pinned Action Footer & Touch-Safe Scroll)
-          ==================================================================== */}
+      {/* Mobile Navigation Drawer — Bottom Language & CTA Always Pinned */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[9999] lg:hidden flex justify-end"
-          style={{ height: "100dvh" }}
+          className="fixed inset-0 z-[100] lg:hidden flex justify-end bg-[#1A1816]/50 backdrop-blur-xs"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.nav.menuNavLabel}
         >
-          {/* Backdrop overlay */}
-          <div
-            className="fixed inset-0 bg-[#121110]/70 backdrop-blur-sm transition-opacity duration-300"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-
-          {/* Drawer container: Flex column with pinned header and pinned bottom action bar */}
-          <div
-            className="relative z-10 w-full max-w-sm sm:max-w-md bg-[#FBF9F5] border-l border-[#EAE3D9] shadow-2xl flex flex-col"
-            style={{
-              height: "100dvh",
-              maxHeight: "100dvh",
-            }}
-            data-lenis-prevent="true"
-          >
-            {/* 1. Drawer Header (Pinned Top) */}
-            <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 border-b border-[#EAE3D9] bg-[#F4EFEA] shrink-0">
-              <div className="flex items-center gap-3">
-                <Image
-                  src="/assets/wdl_logo.png"
-                  alt="World Divine Light Organization"
-                  width={90}
-                  height={28}
-                  className="h-6 w-auto object-contain"
-                />
-                <div className="flex flex-col border-l border-[#DCD3C5] pl-2.5">
-                  <span className="text-xs font-serif font-semibold text-[#1A1816] leading-none">
-                    Los Angeles Center
-                  </span>
-                  <span className="text-[9px] font-mono text-[#8C8276] uppercase tracking-wider mt-0.5">
-                    Divine Light Sanctuary
-                  </span>
-                </div>
+          <div className="w-full max-w-sm h-full bg-[#FBF9F5] flex flex-col shadow-2xl border-l border-[#E5E0D8]">
+            {/* Drawer Header */}
+            <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-[#E5E0D8]">
+              <div className="flex items-center gap-2.5">
+                <img src="/assets/wdl_logo.png" alt="World Divine Light" className="h-6 w-auto" />
+                <span className="font-serif font-semibold text-sm text-[#1A1816]">{t.nav.centerName}</span>
               </div>
               <button
+                ref={drawerCloseBtnRef}
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#DDD4C7] bg-white text-[#1A1816] hover:bg-[#F2EDE4] active:bg-[#EAE3D9] transition-colors cursor-pointer"
-                aria-label="Close Menu"
+                aria-label={t.nav.menuClose}
+                className="w-9 h-9 rounded-full border border-[#E5E0D8] bg-white flex items-center justify-center text-[#1A1816]"
               >
-                <Icons.X className="w-5 h-5" />
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
-            {/* 2. Scrollable Middle Section: Navigation links + Direct Contacts */}
-            <div
-              className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 space-y-4"
-              style={{
-                WebkitOverflowScrolling: "touch",
-                touchAction: "pan-y",
-              }}
-              data-lenis-prevent="true"
-            >
-              {/* Navigation Links */}
-              <div className="space-y-1">
-                <div className="text-[10px] font-mono tracking-widest text-[#8C8276] uppercase mb-2 px-2">
-                  {lang === "ja" ? "メニューナビゲーション" : "Menu Navigation"}
-                </div>
-
-                {[
-                  {
-                    num: "01",
-                    id: "dilemma",
-                    title_ja: "都会の渇きと静寂への回帰",
-                    title_en: "The Modern Dilemma",
-                    sub: "Dilemma",
-                  },
-                  {
-                    num: "02",
-                    id: "practice",
-                    title_ja: "手かざし（お浄め）とは",
-                    title_en: "The Art of Divine Light",
-                    sub: "Tekazashi",
-                  },
-                  {
-                    num: "03",
-                    id: "principles",
-                    title_ja: "3つの安心と透明性",
-                    title_en: "Three Commitments",
-                    sub: "Integrity",
-                  },
-                  {
-                    num: "04",
-                    id: "journey",
-                    title_ja: "当日の体験の流れ",
-                    title_en: "First Visit Journey",
-                    sub: "Journey",
-                  },
-                  {
-                    num: "05",
-                    id: "access",
-                    title_ja: "所在地・アクセス情報",
-                    title_en: "Sanctuary Location",
-                    sub: "Location",
-                  },
-                  {
-                    num: "06",
-                    id: "faq",
-                    title_ja: "よくあるご質問",
-                    title_en: "Frequently Asked Questions",
-                    sub: "FAQ",
-                  },
-                ].map((item) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F2EDE4] active:bg-[#EAE3D9] border border-transparent hover:border-[#E5DDD2] transition-colors group cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="w-7 h-7 rounded-lg bg-[#EFE8DE] group-hover:bg-[#DE7356] group-hover:text-white transition-colors flex items-center justify-center font-mono text-[11px] font-semibold text-[#8C8276]">
-                        {item.num}
-                      </span>
-                      <div>
-                        <div className="font-serif text-xs sm:text-sm font-medium text-[#1A1816] group-hover:text-[#DE7356] transition-colors">
-                          {lang === "ja" ? item.title_ja : item.title_en}
-                        </div>
-                        <div className="text-[9px] font-mono tracking-wider text-[#8C8276] uppercase">
-                          {item.num} / {item.sub}
-                        </div>
-                      </div>
+            {/* Scrollable Links Area */}
+            <nav aria-label={t.nav.menuNavLabel} className="flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-1.5">
+              {t.nav.items.map((item) => (
+                <a
+                  key={item.num}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToTarget(item.href);
+                  }}
+                  className="flex items-center justify-between px-3 py-3 rounded-2xl hover:bg-[#F4EFEA] border border-transparent hover:border-[#E5E0D8] transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="w-7 h-7 rounded-lg bg-[#EFEAE1] text-[#6C655E] font-mono text-xs font-semibold flex items-center justify-center">
+                      {item.num}
+                    </span>
+                    <div>
+                      <p className="font-serif text-sm font-semibold text-[#1A1816]">{item.label}</p>
+                      <p className="text-[10px] tracking-[0.14em] text-[#8E867D]">{item.enSub}</p>
                     </div>
-                    <Icons.ArrowRight className="w-3.5 h-3.5 text-[#A89F94] group-hover:text-[#DE7356] group-hover:translate-x-1 transition-all" />
-                  </a>
-                ))}
-              </div>
+                  </div>
+                  <span className="text-[#8E867D]" aria-hidden="true">→</span>
+                </a>
+              ))}
+            </nav>
 
-              {/* Direct Tap to Contact & Info */}
-              <div className="pt-2 border-t border-[#EAE3D9] space-y-2">
-                <div className="grid grid-cols-2 gap-2 text-center text-xs font-mono text-[#6C645A]">
-                  <a
-                    href="tel:+16268615069"
-                    className="p-2 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
-                    <span>(626) 861-5069</span>
-                  </a>
-                  <a
-                    href="mailto:losangeles@worlddivinelight.org"
-                    className="p-2 rounded-xl bg-white border border-[#E5DDD2] hover:border-[#DE7356] hover:text-[#DE7356] transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <Icons.Mail className="w-3.5 h-3.5 text-[#DE7356]" />
-                    <span>Email</span>
-                  </a>
-                </div>
-                <div className="text-[10px] font-mono text-[#8C8276] text-center pt-1">
-                  Monterey Park, CA ｜ 501(c)(3) Nonprofit
-                </div>
+            {/* Pinned Drawer Footer: Language Switch + Reserve Button Never Clipped */}
+            <div className="shrink-0 p-5 border-t border-[#E5E0D8] bg-[#FAF6F0] space-y-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.16em] text-[#6C655E] mb-2">
+                  {t.nav.languageLabel}
+                </p>
+                {renderLangSwitch(true)}
               </div>
-            </div>
-
-            {/* 3. Pinned Bottom Action Footer: ALWAYS VISIBLE & REACHABLE WITHOUT SCROLLING */}
-            <div
-              className="shrink-0 p-4 border-t border-[#EAE3D9] bg-[#F4EFEA] space-y-3 shadow-lg"
-              style={{
-                paddingBottom: "max(1rem, env(safe-area-inset-bottom, 1rem))",
-              }}
-            >
-              {/* Language Switcher */}
-              <div className="flex items-center justify-between bg-white px-3 py-1.5 rounded-xl border border-[#DDD4C7] shadow-xs">
-                <span className="text-[11px] font-mono text-[#8C8276] uppercase font-medium">
-                  {lang === "ja" ? "表示言語" : "Language"}
-                </span>
-                <div className="flex items-center border border-[#DDD4C7] rounded-full p-0.5 bg-[#F2EDE4]">
-                  <button
-                    type="button"
-                    onClick={() => setLang("ja")}
-                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
-                      lang === "ja" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
-                    }`}
-                  >
-                    日本語
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLang("en")}
-                    className={`px-3 py-1 rounded-full text-xs font-mono font-medium transition-all cursor-pointer ${
-                      lang === "en" ? "bg-[#1A1816] text-[#FBF9F5] shadow-xs" : "text-[#7C756B]"
-                    }`}
-                  >
-                    English
-                  </button>
-                </div>
-              </div>
-
-              {/* Main Booking CTA */}
               <button
                 type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setSubmitStatus("idle");
-                  setIsModalOpen(true);
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-[#DE7356] hover:bg-[#C86348] active:bg-[#B9553A] text-white py-3.5 px-4 rounded-full font-mono text-xs uppercase tracking-widest shadow-md active:scale-[0.99] transition-all cursor-pointer"
+                onClick={() => scrollToTarget("#booking")}
+                className="w-full py-3.5 px-5 rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white font-semibold text-sm shadow-retro-btn transition-colors cursor-pointer"
               >
-                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Session"}</span>
-                <Icons.ArrowRight className="w-4 h-4" />
+                {t.nav.cta}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ====================================================================
-          SECTION 01: HERO / FIRST VIEW
-          Aesthetic: kanazawa-c.co.jp + atami-sanga.jp (Stillness & Vast Landscape)
-          ==================================================================== */}
-      <section className="relative min-h-[92vh] sm:min-h-screen flex items-end justify-start overflow-hidden bg-[#121110]">
-        
-        {/* Full Landscape Visual with atmospheric layering */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=85"
-            alt="Sanctuary Landscape - Morning light breaking over quiet ridges"
-            fill
-            priority
-            className="object-cover object-center scale-102 transition-transform duration-1000 ease-out brightness-[0.78] contrast-[1.08]"
+      <main id="main-content">
+        {/* SECTION 01: YOSEMITE MISTY HERO (Preserving prod/main atmosphere) */}
+        <section
+          id="hero"
+          className="relative min-h-[82vh] sm:min-h-[86vh] flex items-end pb-16 sm:pb-24 pt-24 overflow-hidden bg-[#1A1816]"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=85"
+            alt="Serene misty mountain valley illuminated by quiet morning light"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121110] via-[#121110]/40 to-black/30"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(18,17,16,0.6)_100%)]"></div>
-        </div>
-
-        {/* Editorial Frame Hairline Overlay */}
-        <div className="absolute inset-4 sm:inset-8 border border-white/10 pointer-events-none z-10 hidden sm:block"></div>
-
-        {/* Content Container */}
-        <div className="relative z-20 max-w-7xl w-full mx-auto px-6 sm:px-12 pb-16 sm:pb-24 pt-32">
-          
-          {/* Badge & Monospace Meta */}
-          <div className="reveal-up flex flex-wrap items-center gap-3 mb-6 sm:mb-8 text-white/80 font-mono text-xs tracking-wider">
-            <span className="px-3 py-1 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm">
-              Monterey Park, CA
-            </span>
-            <span className="hidden sm:inline-block text-white/40">/</span>
-            <span className="text-white/70">
-              {lang === "ja" ? "米国政府公認 501(c)(3) 非営利法人" : "US 501(c)(3) Nonprofit Organization"}
-            </span>
-          </div>
-
-          {/* Main Hero Typography */}
-          <div className="max-w-4xl space-y-4 sm:space-y-6">
-            <h1 className="reveal-up stagger-1 text-4xl sm:text-6xl md:text-7xl font-serif font-light text-white tracking-tight leading-[1.16]" style={{ textWrap: "balance" }}>
-              {lang === "ja" ? (
-                <>
-                  <span className="block text-sm sm:text-base font-mono tracking-widest text-[#E3A387] mb-3 uppercase font-normal">
-                    Los Angeles Divine Light Center
-                  </span>
-                  <span className="inline-block">神の大愛の光に包まれ、</span>
-                  <br className="hidden sm:inline" />
-                  <span className="inline-block">本来の澄んだ自分へ。</span>
-                </>
-              ) : (
-                <>
-                  <span className="block text-sm sm:text-base font-mono tracking-widest text-[#E3A387] mb-3 uppercase font-normal">
-                    Los Angeles Divine Light Center
-                  </span>
-                  Wrapped in the Radiant Light
-                  <br />
-                  <span className="italic font-light text-[#E8E2D7]">of God’s Boundless Love.</span>
-                </>
-              )}
-            </h1>
-
-            {/* Hairline Divider */}
-            <div className="reveal-up stagger-1 w-16 h-px bg-[#DE7356]"></div>
-
-            {/* Subcopy */}
-            <p className="reveal-up stagger-2 max-w-2xl text-base sm:text-lg text-[#D6CFBE] font-light leading-[1.9] sm:leading-[2.1] tracking-wide" style={{ textWrap: "pretty" }}>
-              {lang === "ja" ? (
-                <>
-                  <span className="inline-block">ロサンゼルスの日常で、</span>
-                  <span className="inline-block">知らず知らずのうちに重なる心身の疲れ。</span>
-                  <br className="hidden sm:inline" />
-                  <span className="inline-block">言葉や考えをいったん休め、</span>
-                  <span className="inline-block">静かに身を委ねてみる。</span>
-                  <br className="hidden sm:inline" />
-                  <span className="inline-block">天から注がれる神様の大愛の光（手かざし）が、</span>
-                  <span className="inline-block">心の奥の曇りをそっと溶かし、</span>
-                  <span className="inline-block">本来の穏やかな命の輝きを呼び覚まします。</span>
-                </>
-              ) : (
-                <>
-                  Beyond the constant rush of the city lies a space to pause. Experience Tekazashi—the gentle Art of Divine Light. Not a mere human technique, but the boundless love of God descending as pure, radiant light to dissolve inner burdens and restore your peaceful, unburdened self.
-                </>
-              )}
-            </p>
-
-            {/* CTA Group */}
-            <div className="reveal-up stagger-3 pt-4 sm:pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <button
-                onClick={() => {
-                  setSubmitStatus("idle");
-                  setIsModalOpen(true);
-                }}
-                className="inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-8 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-xl hover:translate-y-[-1px] cursor-pointer"
-              >
-                <span>{lang === "ja" ? "体験セッションを予約する" : "Reserve a Divine Light Session"}</span>
-                <Icons.ArrowRight className="w-4 h-4" />
-              </button>
-
-              <a
-                href="#dilemma"
-                className="inline-flex items-center justify-center gap-2 border border-white/20 hover:border-white/40 text-white/90 hover:text-white px-6 py-4 rounded-full font-mono text-xs uppercase tracking-widest transition-colors backdrop-blur-xs"
-              >
-                <span>{lang === "ja" ? "手かざしの本質を知る" : "Discover the Principle"}</span>
-                <Icons.ArrowRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Bottom Indicators */}
-          <div className="reveal-up stagger-4 mt-16 sm:mt-24 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-white/50 tracking-wider">
-            <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[#DE7356]"></span>
-              <span>100% NON-PROFIT 501(C)(3) ｜ PURELY DONATION-BASED</span>
-            </div>
-            <a href="#dilemma" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors">
-              <span>( Scroll Down ↓ )</span>
-            </a>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 02: THE MODERN DILEMMA / EMPATHY
-          Aesthetic: atami-sanga.jp (Dark-to-Light Sanctuary & Clean Window Frame)
-          - Frame coordinates caption removed as requested
-          ==================================================================== */}
-      <section id="dilemma" className="relative py-28 sm:py-36 bg-[#1A1816] text-[#F4EFEA] overflow-hidden">
-        
-        {/* Subtle Background Texture */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#F4EFEA_1px,transparent_1px)] [background-size:24px_24px]"></div>
-
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
-          
-          {/* Section Header */}
-          <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#35302A]">
-            <div>
-              <div className="text-xs font-mono tracking-wider text-[#DE7356] mb-3">
-                {lang === "ja" ? "01 ｜ 静寂への回帰" : "01 ｜ A Quiet Pause"}
-              </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-light tracking-tight leading-snug max-w-3xl" style={{ textWrap: "balance" }}>
-                {lang === "ja" ? (
-                  <>
-                    <span className="inline-block">情報とスピードに満ちた街で、</span>
-                    <br className="hidden sm:inline" />
-                    <span className="inline-block">なぜ心は愛と静けさを求めるのか。</span>
-                  </>
-                ) : (
-                  "In a World of Constant Movement, Where Does the Soul Find Rest?"
-                )}
-              </h2>
-            </div>
-            <div className="text-xs font-mono text-[#A89F94] tracking-wider">
-              MONTEREY PARK, CALIFORNIA
-            </div>
-          </div>
-
-          {/* Grid Layout: Framed Sanctuary Nature View */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-center pt-14">
-            
-            {/* Left: Window Frame Photography */}
-            <div className="reveal-up stagger-1 lg:col-span-5 order-2 lg:order-1">
-              <div className="relative rounded-2xl overflow-hidden border border-[#3E3832] bg-[#121110] p-3 sm:p-4 shadow-2xl group img-zoom-reveal">
-                <div className="relative aspect-[4/5] rounded-xl overflow-hidden">
-                  <Image
-                    src="/assets/la_palm_trees.jpg"
-                    alt="Quiet sunlight through tree canopy in Los Angeles"
-                    fill
-                    className="object-cover object-center group-hover:scale-103 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Thoughtful Typography and Analysis */}
-            <div className="reveal-up stagger-2 lg:col-span-7 order-1 lg:order-2 space-y-6 sm:space-y-8">
-              
-              <div className="space-y-6 text-base sm:text-lg text-[#C8BFB2] leading-[1.9] sm:leading-[2.1] font-light">
-                {lang === "ja" ? (
-                  <>
-                    <p className="text-xl sm:text-2xl text-[#F4EFEA] font-serif leading-snug" style={{ textWrap: "pretty" }}>
-                      フリーウェイの車列、絶え間なく鳴る通知、<br className="hidden sm:inline" />
-                      常に成果を求められ続ける日々。
-                    </p>
-                    <p style={{ textWrap: "pretty" }}>
-                      便利で豊かな暮らしのただ中にありながら、私たちはどこかで拭いきれない深い重さや疲れを抱えています。それは単なる肉体の疲労ではなく、日々の摩擦や思考のノイズに追われ、魂の奥にある本来の静けさから離れてしまっているからかもしれません。
-                    </p>
-                    <p style={{ textWrap: "pretty" }}>
-                      人は、テクニックや言葉の慰めだけでは、心の奥の渇きを癒やすことはできません。今私たちに必要なのは、何かを足すことではなく、ただすべてを包み込む神の大愛のみ光に浸り、本来の澄んだ自分へと還る時間です。
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xl sm:text-2xl text-[#F4EFEA] font-serif leading-snug">
-                      Surrounded by endless highways, digital alerts, and constant demands, we carry an unshakeable inner fatigue.
-                    </p>
-                    <p>
-                      It is more than physical exhaustion—it is the subtle weight of disconnect from natural stillness and the origin of love. Just as water settles when undisturbed, your spirit requires a sacred pause to clarify, breathe, and return to the unconditional love from which we came.
-                    </p>
-                    <p>
-                      We do not need more stimuli; we need the quiet space to let go and rest in the boundless light of God&apos;s love.
-                    </p>
-                  </>
-                )}
-              </div>
-
-              {/* Data points */}
-              <div className="reveal-up stagger-3 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#35302A] text-xs font-mono">
-                <div className="space-y-1">
-                  <div className="text-[#877E73]">Practice</div>
-                  <div className="text-[#F4EFEA] font-medium">Tekazashi (Divine Light)</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-[#877E73]">Environment</div>
-                  <div className="text-[#F4EFEA] font-medium">Total Quietude</div>
-                </div>
-                <div className="space-y-1 col-span-2 sm:col-span-1">
-                  <div className="text-[#877E73]">Objective</div>
-                  <div className="text-[#DE7356] font-medium">Spiritual Harmony</div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 03: THE PRACTICE / OKIYOME
-          - The Art of Divine Light (Tekazashi)
-          ==================================================================== */}
-      <section id="practice" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          
-          {/* Eyebrow and Section Heading */}
-          <div className="reveal-up max-w-3xl mb-14">
-            <span className="text-xs font-mono text-[#964731] block mb-2 tracking-wider">
-              {lang === "ja" ? "02 ｜ 手かざしの本質" : "02 ｜ The Practice"}
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4" style={{ textWrap: "balance" }}>
-              {lang === "ja" ? (
-                <>
-                  <span className="inline-block">神の大愛が「光」となって、</span>
-                  <br className="hidden sm:inline" />
-                  <span className="text-[#964731] font-normal inline-block">魂の奥底の曇りを静かにほどく。</span>
-                </>
-              ) : (
-                <>
-                  The Art of Divine Light.
-                  <br />
-                  <span className="text-[#964731] font-normal italic">Pure Divine Love Descending as Radiant Light.</span>
-                </>
-              )}
-            </h2>
-            <div className="w-12 h-px bg-[#DE7356]"></div>
-          </div>
-
-          {/* Grid Layout: Visual on Left, Practice Architecture on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
-            {/* Visual Card */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="reveal-up stagger-1 relative aspect-[4/3] sm:aspect-square rounded-2xl overflow-hidden bg-[#EFE8DF] shadow-md border border-[#E2DAD0] img-zoom-reveal">
-                <Image
-                  src="/assets/okiyome_session.jpg"
-                  alt="Minimalist meditation space with gentle natural light during Okiyome"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-white/40 text-xs font-mono text-[#4A433A]">
-                  <span className="font-semibold block text-[#1A1816]">The Sacred Space</span>
-                  Clean, quiet, free from external disruptions.
-                </div>
-              </div>
-
-              {/* Distinction Statement */}
-              <div className="reveal-up stagger-2 p-6 rounded-2xl bg-[#F4EFEA] border border-[#E5DDD2] space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono tracking-wider text-[#964731] font-semibold">
-                  <Icons.ShieldCheck className="w-4 h-4 text-[#DE7356]" />
-                  <span>{lang === "ja" ? "透明性と安心のために" : "Our Ethical Distinction"}</span>
-                </div>
-                <p className="text-xs sm:text-sm text-[#665D52] leading-[1.8]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "医療行為でも、催眠術や暗示でもありません。人間が本来宿している「神の子としての澄んだ生命力」へと立ち返るための、純粋で静かなアプローチです。"
-                    : "Tekazashi is not medical treatment, nor is it hypnosis or psychological persuasion. It is a sacred, time-tested approach to awakening inner peace and divine vitality."}
-                </p>
-              </div>
-            </div>
-
-            {/* Content & Step Architecture */}
-            <div className="lg:col-span-7 space-y-8">
-              
-              <div className="reveal-up stagger-1 prose text-[#4A433A] text-base sm:text-lg leading-[1.9] sm:leading-[2.1] font-light space-y-5">
-                {lang === "ja" ? (
-                  <>
-                    <p className="text-xl font-serif text-[#1A1816] leading-snug" style={{ textWrap: "pretty" }}>
-                      「手かざし（Art of Divine Light）」は、人間が自らの念力やエネルギーを加えるものではありません。天地万物を生み出された創造主（元主大神様）の純粋な愛そのものが、目に見える現界において「聖なる光」となって天から降り注がれています。
-                    </p>
-                    <p style={{ textWrap: "pretty" }}>
-                      施術者は何かを加えるのではなく、その温かな光を無私の心で静かにお取り次ぎするパイプに過ぎません。
-                    </p>
-                    <p style={{ textWrap: "pretty" }}>
-                      椅子に深く腰掛け、そっと目を閉じる。手のひらから注がれる温かな愛の光が、魂の奥底にこびりついた想念の曇りや緊張を優しく溶かし、内側から芯まで満たされるような深い平安をもたらします。
-                    </p>
-                    <p className="text-xs sm:text-sm text-[#665D52] leading-relaxed pt-1">
-                      医療行為でも、催眠でもありません。神の大愛に包まれることで、人間が本来授かっている「神の子としての澄んだ生命力」へと立ち返るための、最も純粋で静かなアプローチです。
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xl font-serif text-[#1A1816]">
-                      Tekazashi involves no personal force and no human will. The practice is founded on the profound truth that God’s boundless love descends as radiant, purifying light.
-                    </p>
-                    <p>
-                      The practitioner serves solely as a humble, clear conduit. Seated comfortably with eyes closed, you simply receive. The gentle warmth of Divine Light dissolves the spiritual burdens of daily life, awakening the luminous peace within.
-                    </p>
-                  </>
-                )}
-              </div>
-
-              {/* 3 Pillars */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-                
-                <div className="reveal-up stagger-1 p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
-                    {lang === "ja" ? "01 ｜ 神の大愛のみ光" : "01 ｜ PURE LIGHT"}
-                  </span>
-                  <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "純粋な光のお取り次ぎ" : "Light of Divine Love"}
-                  </h3>
-                  <p className="text-xs text-[#6C645A] leading-[1.8]" style={{ textWrap: "pretty" }}>
-                    {lang === "ja"
-                      ? "人為の力ではなく、天地万物の創造主の純粋な愛の光が注がれ、心の曇りを優しく溶かします。"
-                      : "God's boundless love descends as radiant, purifying light to dissolve inner spiritual burdens."}
-                  </p>
-                </div>
-
-                <div className="reveal-up stagger-2 p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
-                    {lang === "ja" ? "02 ｜ 静寂と休息" : "02 ｜ STILLNESS"}
-                  </span>
-                  <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "言葉や思考の休息" : "Quiet Mind"}
-                  </h3>
-                  <p className="text-xs text-[#6C645A] leading-[1.8]" style={{ textWrap: "pretty" }}>
-                    {lang === "ja"
-                      ? "無理な瞑想法や呪文などは一切不要。ただ座り、そっと目を閉じて安らぎに身を委ねます。"
-                      : "No complicated meditation techniques. Simply sit, close your eyes, and rest."}
-                  </p>
-                </div>
-
-                <div className="reveal-up stagger-3 p-6 rounded-2xl bg-white border border-[#EAE3D9] shadow-xs space-y-2">
-                  <span className="text-xs font-mono text-[#DE7356] font-semibold tracking-wider">
-                    {lang === "ja" ? "03 ｜ 生命力の調律" : "03 ｜ HARMONY"}
-                  </span>
-                  <h3 className="font-serif text-base font-medium text-[#1A1816]">
-                    {lang === "ja" ? "自然生命力の調律" : "Vital Alignment"}
-                  </h3>
-                  <p className="text-xs text-[#6C645A] leading-[1.8]" style={{ textWrap: "pretty" }}>
-                    {lang === "ja"
-                      ? "心身に溜まった見えない疲労や想念の曇りを優しく浄め、本来備わる澄んだ生命力を回復させます。"
-                      : "Clears accumulated subtle burdens and spiritual clouds to awaken your inherent serene vitality."}
-                  </p>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 04: THREE COMMITMENTS TO INTEGRITY
-          ==================================================================== */}
-      <section id="principles" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          
-          <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
-            <div>
-              <span className="text-xs font-mono text-[#DE7356] block mb-2 tracking-wider">
-                {lang === "ja" ? "03 ｜ 私たちの約束" : "03 ｜ OUR PRINCIPLES"}
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight" style={{ textWrap: "balance" }}>
-                {lang === "ja"
-                  ? "心から安心してお過ごしいただくための、3つの約束。"
-                  : "Built on Sincerity and Universal Love. Three Commitments to Every Guest."}
-              </h2>
-            </div>
-            <p className="text-xs font-mono tracking-wider text-[#7C7368] max-w-xs">
-              TRANSPARENCY & PEACE OF MIND
-            </p>
-          </div>
-
-          {/* 3-Column Card Layout with 0.15s Staggered Reveal */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#DDD3C4] border border-[#DDD3C4] mt-12 rounded-2xl overflow-hidden shadow-xs">
-            
-            {/* Card 01: Purely Donation-Based */}
-            <div className="reveal-up stagger-1 bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
-                  <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">01</span>
-                  <span className="text-[10px] font-mono tracking-wider px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
-                    DONATION-BASED
-                  </span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
-                  {lang === "ja" ? "完全な自発性（ドネーション制）" : "Purely Donation-Based"}
-                </h3>
-                <p className="text-sm text-[#5D554B] leading-[1.9]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "神の大愛に基づく実践だからこそ、営利目的の定額請求や義務的な支払いは一切ありません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）のみで運営されています。"
-                    : "Rooted in Divine Love, there are no commercial demands, fixed fees, or obligatory charges. All practices are sustained purely through voluntary contributions (donations) based on your personal gratitude."}
-                </p>
-              </div>
-              <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
-                <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                <span>{lang === "ja" ? "完全ドネーション制 ｜ 物品販売・強制請求一切なし" : "Purely donation-based ｜ Zero sales or fees"}</span>
-              </div>
-            </div>
-
-            {/* Card 02 */}
-            <div className="reveal-up stagger-2 bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
-                  <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">02</span>
-                  <span className="text-[10px] font-mono tracking-wider px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
-                    OPEN SANCTUARY
-                  </span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
-                  {lang === "ja" ? "信仰の自由・入会勧誘の完全排除" : "Absolute Freedom of Belief"}
-                </h3>
-                <p className="text-sm text-[#5D554B] leading-[1.9]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "神の大愛は、人種や信条、既存の宗教の垣根を越えて、すべての人に等しく注がれています。特定の教義への改宗を求めることは一切なく、どなたにも開かれた場です。"
-                    : "God's boundless love descends equally on all people regardless of race, background, or religious creed. We never solicit membership or demand conversion. Our sanctuary is open to all."}
-                </p>
-              </div>
-              <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
-                <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                <span>{lang === "ja" ? "勧誘・入会への圧力ゼロ" : "No conversion, no proselytizing"}</span>
-              </div>
-            </div>
-
-            {/* Card 03 */}
-            <div className="reveal-up stagger-3 bg-[#FBF9F5] p-8 sm:p-10 flex flex-col justify-between hover:bg-white transition-colors duration-300">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-4">
-                  <span className="text-4xl sm:text-5xl font-mono font-light text-[#1A1816]">03</span>
-                  <span className="text-[10px] font-mono tracking-wider px-2 py-1 bg-[#F2EDE4] rounded text-[#7C7368]">
-                    LEGAL STATUS
-                  </span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-serif text-[#1A1816] font-medium leading-snug">
-                  {lang === "ja" ? "米国政府公認 501(c)(3) 非営利法人" : "Recognized 501(c)(3) Nonprofit"}
-                </h3>
-                <p className="text-sm text-[#5D554B] leading-[1.9]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "World Divine Light Organization は、米国政府に認められた非営利団体です。見返りを求めない真心のボランティアスタッフによって、誠実に維持されています。"
-                    : "World Divine Light Organization is an officially recognized US 501(c)(3) non-profit entity, maintained with sincerity and dedication by selfless volunteer staff."}
-                </p>
-              </div>
-              <div className="pt-8 text-xs font-mono text-[#8C8377] flex items-center gap-2">
-                <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                <span>{lang === "ja" ? "非営利性・公共性の厳格な保持" : "Strict adherence to nonprofit governance"}</span>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 05: THE WALKTHROUGH (当日の流れ - 55-Minute Journey)
-          ==================================================================== */}
-      <section id="journey" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          
-          <div className="reveal-up max-w-3xl mb-16">
-            <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
-              {lang === "ja" ? "04 ｜ 当日の流れ" : "04 ｜ First Visit Journey"}
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight leading-tight mb-4" style={{ textWrap: "balance" }}>
-              {lang === "ja" ? "静寂と大愛へ至る、55分間の流れ。" : "A Thoughtful 55-Minute Journey."}
-            </h2>
-            <p className="text-sm sm:text-base text-[#6B6358] font-light leading-relaxed" style={{ textWrap: "pretty" }}>
-              {lang === "ja" ? (
-                <>
-                  <span className="inline-block">初めての方でも安心してお過ごしいただけるよう、</span>
-                  <span className="inline-block">当日の流れをご案内します。</span>
-                  <br className="hidden sm:inline" />
-                  <span className="inline-block">合計約55分、心と体を静かに休めるための時間です。</span>
-                </>
-              ) : (
-                "To ensure complete comfort before your visit, here is how a typical session unfolds across 55 serene minutes."
-              )}
-            </p>
-          </div>
-
-          {/* Interactive Steps Grid with 0.15s Staggered Reveal */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            
-            {/* Step 01 */}
-            <div
-              onClick={() => setActiveStep(0)}
-              className={`reveal-up stagger-1 p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
-                activeStep === 0
-                  ? "bg-white border-[#DE7356] shadow-md scale-[1.01]"
-                  : "bg-[#F7F3EC] border-[#E8E0D5] hover:bg-white"
-              }`}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-xs font-mono text-[#8C8276]">
-                  <span className="px-2.5 py-1 rounded bg-[#EFE8DE] text-[#1A1816] font-semibold">STEP 01</span>
-                  <span>{lang === "ja" ? "約10分" : "Approx. 10 Min"}</span>
-                </div>
-                <h3 className="text-xl font-serif text-[#1A1816] font-medium">
-                  {lang === "ja" ? "お出迎えと静かなご案内" : "Warm Welcome & Orientation"}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "スタッフが静かに笑顔でお迎えします。お浄めの趣旨を簡潔にお伝えし、心落ち着く静穏な部屋へとご案内します。"
-                    : "A gentle greeting in a peaceful setting. We explain the simple process so you can feel completely at ease."}
-                </p>
-              </div>
-              <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※服装：普段着の手ぶらでお越しいただけます" : "Casual comfortable attire"}
-              </div>
-            </div>
-
-            {/* Step 02 */}
-            <div
-              onClick={() => setActiveStep(1)}
-              className={`reveal-up stagger-2 p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
-                activeStep === 1
-                  ? "bg-white border-[#DE7356] shadow-md scale-[1.01]"
-                  : "bg-[#F7F3EC] border-[#E8E0D5] hover:bg-white"
-              }`}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-xs font-mono text-[#8C8276]">
-                  <span className="px-2.5 py-1 rounded bg-[#DE7356] text-white font-semibold">STEP 02 (CORE)</span>
-                  <span>{lang === "ja" ? "約30分" : "Approx. 30 Min"}</span>
-                </div>
-                <h3 className="text-xl font-serif text-[#1A1816] font-medium">
-                  {lang === "ja" ? "光のセッション（手かざし）" : "The Divine Light Session"}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "椅子に腰掛け、目を閉じてリラックスしてください。天から降り注ぐ神の大愛のみ光を静かにお取り次ぎします。途中で眠ってしまっても差し支えありません。"
-                    : "Sit comfortably and close your eyes. Experience 30 minutes of deep quietude as the radiant light of God’s love is gently channeled over you."}
-                </p>
-              </div>
-              <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※神の大愛に身を委ねる静寂の時間" : "Channeled with God's Boundless Love"}
-              </div>
-            </div>
-
-            {/* Step 03 */}
-            <div
-              onClick={() => setActiveStep(2)}
-              className={`reveal-up stagger-3 p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between ${
-                activeStep === 2
-                  ? "bg-white border-[#DE7356] shadow-md scale-[1.01]"
-                  : "bg-[#F7F3EC] border-[#E8E0D5] hover:bg-white"
-              }`}
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-xs font-mono text-[#8C8276]">
-                  <span className="px-2.5 py-1 rounded bg-[#EFE8DE] text-[#1A1816] font-semibold">STEP 03</span>
-                  <span>{lang === "ja" ? "約15分" : "Approx. 15 Min"}</span>
-                </div>
-                <h3 className="text-xl font-serif text-[#1A1816] font-medium">
-                  {lang === "ja" ? "温かいお茶と余白の時間" : "Warm Tea & Reflection"}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#5C544A] leading-[1.85]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "セッション後には温かいお茶をご用意しています。感じたことをお話しいただくことも、ただ静かに余韻を味わうことも自由です。"
-                    : "Enjoy a cup of warm tea. Ask any questions freely, or simply savor the lingering peace before re-entering your day."}
-                </p>
-              </div>
-              <div className="mt-8 pt-4 border-t border-[#EAE3D9] text-[11px] font-mono text-[#8C8276]">
-                {lang === "ja" ? "※次回予約の催促や勧誘は一切ありません" : "Zero pressure for follow-ups"}
-              </div>
-            </div>
-
-          </div>
-
-          <div className="reveal-up stagger-4 mt-12 text-center">
-            <button
-              onClick={() => {
-                setSubmitStatus("idle");
-                setIsModalOpen(true);
-              }}
-              className="inline-flex items-center gap-2 text-xs font-mono tracking-wider text-[#1A1816] hover:text-[#DE7356] border-b border-current pb-1 transition-colors cursor-pointer"
-            >
-              <span>{lang === "ja" ? "この流れでセッションを予約する" : "Schedule this 55-minute session"}</span>
-              <Icons.ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 06: WORDS FROM THE CENTER (迎える人の声)
-          - Staff Host: Kevin
-          ==================================================================== */}
-      <section className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9] relative overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6 sm:px-12">
-          
-          <div className="reveal-up relative bg-[#FBF9F5] rounded-3xl border border-[#E2DAD0] p-8 sm:p-14 shadow-sm">
-            
-            {/* Header Badge */}
-            <div className="flex items-center justify-between border-b border-[#EAE3D9] pb-6 mb-8">
-              <span className="text-xs font-mono tracking-wider text-[#DE7356]">
-                {lang === "ja" ? "05 ｜ 迎える人の声" : "05 ｜ Words from the Center"}
-              </span>
-              <span className="text-xs font-mono text-[#8A8174]">Staff Host: Kevin</span>
-            </div>
-
-            {/* Letter Content */}
-            <div className="space-y-6 text-base sm:text-lg text-[#3A342D] leading-[1.9] sm:leading-[2.1] font-light" style={{ textWrap: "pretty" }}>
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#1A1816] font-normal leading-snug" style={{ textWrap: "balance" }}>
-                {lang === "ja"
-                  ? "止まり木のように、静かに羽を休められる場所として。"
-                  : "A Gentle Haven in the Metropolis."}
-              </h3>
-              
-              <div className="w-10 h-px bg-[#DE7356]"></div>
-
-              {lang === "ja" ? (
-                <>
-                  <p>
-                    ロサンゼルスで懸命に日々を過ごしていると、知らず知らずのうちに呼吸が浅くなり、自分の心の静けさや温もりを見失ってしまうことがあります。
-                  </p>
-                  <p>
-                    私たちが大切にしているのは、何かを教え込んだり説得することではありません。神様の大愛のみ光に包まれて、誰もが「本来の自分」に戻り、安心して魂を休められる場所をお守りすることです。
-                  </p>
-                  <p>
-                    特別な準備も、気負いも要りません。静かな安らぎが必要なときは、いつでも扉を開けてください。
-                  </p>
-                  <p className="text-sm font-mono text-[#8C8276] pt-2">
-                    — スタッフ：Kevin
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p>
-                    Living in the vibrant pace of Los Angeles, it is easy to feel overwhelmed and disconnected from inner quietude.
-                  </p>
-                  <p>
-                    Our center does not seek to lecture or persuade. We simply offer a peaceful sanctuary where you can rest, wrapped in the boundless radiant love of God.
-                  </p>
-                  <p>
-                    Whenever you feel the need to pause and breathe, our doors are open.
-                  </p>
-                  <p className="text-xs font-mono text-[#8C8276] pt-2">
-                    — Kevin, Staff Host
-                  </p>
-                </>
-              )}
-            </div>
-
-            {/* Signature Area: Kevin */}
-            <div className="mt-10 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-[#D5CCC0] shadow-sm shrink-0 bg-[#EFE8DF] img-zoom-reveal">
-                  <Image
-                    src="/assets/staff_host.jpg"
-                    alt="Kevin, Staff Host"
-                    fill
-                    className="object-cover object-top"
-                  />
-                </div>
-                <div>
-                  <div className="text-base font-semibold text-[#1A1816]">Kevin</div>
-                  <div className="text-xs font-mono text-[#7A7266]">Staff Host ｜ Los Angeles Divine Light Center</div>
-                  <div className="text-[11px] font-mono text-[#DE7356] mt-0.5">Monterey Park, California</div>
-                </div>
-              </div>
-              <div className="text-xs font-mono text-[#7A7266] uppercase tracking-wider">
-                Monterey Park, California
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 07: INFORMATION & VISITING GUIDELINES
-          - Email: losangeles@worlddivinelight.org
-          ==================================================================== */}
-      <section id="access" className="py-28 sm:py-36 bg-[#FBF9F5] border-b border-[#EAE3D9]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          
-          <div className="reveal-up flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#DCD3C5]">
-            <div>
-              <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
-                {lang === "ja" ? "06 ｜ 所在地・開館時間" : "06 ｜ Center Location & Hours"}
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight" style={{ textWrap: "balance" }}>
-                {lang === "ja" ? "所在地と開館時間" : "Center Location & Visiting Hours"}
-              </h2>
-            </div>
-            <div className="text-xs font-mono text-[#7C7368] uppercase tracking-wider">
-              MONTEREY PARK, CA 91754
-            </div>
-          </div>
-
-          {/* Hairline Data Snapshot Grid */}
-          <div className="reveal-up stagger-1 mt-12 border border-[#D5CCC0] rounded-2xl overflow-hidden bg-white shadow-xs">
-            
-            {/* Top Bar */}
-            <div className="p-6 sm:p-8 bg-[#FAF6F0] border-b border-[#D5CCC0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-xs font-mono tracking-wider uppercase text-[#DE7356] block mb-1">
-                  OFFICIAL BRANCH
-                </span>
-                <h3 className="text-xl sm:text-2xl font-serif font-medium text-[#1A1816]">
-                  {lang === "ja" ? "ロサンゼルス道場" : "Los Angeles Divine Light Center"}
-                </h3>
-                <p className="text-xs font-mono text-[#665D52] mt-1">
-                  World Divine Light Organization ｜ US Recognized 501(c)(3)
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <a
-                  href="https://maps.google.com/?q=809+S+Atlantic+Blvd,+Monterey+Park,+CA+91754"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#D5CCC0] bg-white text-xs font-mono uppercase tracking-wider text-[#1A1816] hover:bg-[#1A1816] hover:text-white transition-colors"
-                >
-                  <span>Google Maps</span>
-                  <Icons.ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-
-            {/* Spec Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#EAE3D9]">
-              
-              {/* Box 1: Address */}
-              <div className="reveal-up stagger-1 p-6 sm:p-8 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
-                  <Icons.MapPin className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>{lang === "ja" ? "所在地" : "Address"}</span>
-                </div>
-                <div className="text-sm font-medium text-[#1A1816] space-y-1">
-                  <div>809 S Atlantic Blvd, #378</div>
-                  <div>Monterey Park, CA 91754</div>
-                  <div className="text-xs text-[#7C7368] font-normal pt-1">
-                    {lang === "ja" ? "敷地内無料駐車場完備" : "Free on-site plaza parking"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Box 2: Hours */}
-              <div className="reveal-up stagger-2 p-6 sm:p-8 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
-                  <Icons.Clock className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>{lang === "ja" ? "開館時間" : "Hours"}</span>
-                </div>
-                <div className="text-sm font-medium text-[#1A1816] space-y-1">
-                  <div className="flex justify-between">
-                    <span>Tue – Sat:</span>
-                    <span className="font-mono">10:00 – 18:00</span>
-                  </div>
-                  <div className="flex justify-between text-[#964731]">
-                    <span>Sunday:</span>
-                    <span className="font-mono font-semibold">9:00 – 16:00</span>
-                  </div>
-                  <div className="flex justify-between text-[#8A8174] text-xs pt-1">
-                    <span>Monday:</span>
-                    <span className="font-mono uppercase">Closed</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Box 3: Contact */}
-              <div className="reveal-up stagger-3 p-6 sm:p-8 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
-                  <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>{lang === "ja" ? "連絡先" : "Contact"}</span>
-                </div>
-                <div className="text-sm font-medium text-[#1A1816] space-y-1.5">
-                  <a href="tel:+16268615069" className="block hover:text-[#DE7356] transition-colors font-mono">
-                    +1 (626) 861-5069
-                  </a>
-                  <a href="mailto:losangeles@worlddivinelight.org" className="block text-xs text-[#665D52] hover:text-[#DE7356] transition-colors truncate font-mono">
-                    losangeles@worlddivinelight.org
-                  </a>
-                  <div className="text-[11px] text-[#7C7368] font-mono">
-                    SMS inquiries welcomed
-                  </div>
-                </div>
-              </div>
-
-              {/* Box 4: Attire */}
-              <div className="reveal-up stagger-4 p-6 sm:p-8 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#7C7368]">
-                  <Icons.Check className="w-3.5 h-3.5 text-[#DE7356]" />
-                  <span>{lang === "ja" ? "ご来訪の準備" : "Attire & Entry"}</span>
-                </div>
-                <p className="text-xs text-[#5D554B] leading-relaxed" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "カジュアルな普段着でお越しください。室内では靴を脱いでいただきますので、清潔な靴下をご着用ください。"
-                    : "Casual everyday attire. Please wear clean socks, as shoes are removed upon entering the sanctuary."}
-                </p>
-              </div>
-
-            </div>
-
-            {/* Policy Banner */}
-            <div className="reveal-up stagger-2 p-6 sm:p-8 bg-[#1A1816] text-[#FBF9F5] border-t border-[#D5CCC0] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div className="space-y-2 max-w-3xl">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#DE7356] tracking-wider">
-                  <span className="w-2 h-2 rounded-full bg-[#DE7356] animate-pulse"></span>
-                  <span>{lang === "ja" ? "ご来訪に関する重要なお願い" : "Visiting Policy — Advance Reservation"}</span>
-                </div>
-                <p className="text-sm sm:text-base font-light text-[#E0D7CC] leading-[1.85]" style={{ textWrap: "pretty" }}>
-                  {lang === "ja"
-                    ? "当センターでは、訪れるすべての方に静かで落ち着いた環境をお届けするため、また催事等による日時の変動に対応するため、【事前予約制】とさせていただいております。ご来訪の際は、あらかじめお問い合わせ・ご予約をお願いいたします。"
-                    : "To maintain a quiet, sanctuary-grade atmosphere and accommodate occasional schedule adjustments for ceremonies, all visits are by advance appointment only. Please contact us prior to visiting."}
-                </p>
-              </div>
-              <button
-                onClick={() => {
-                  setSubmitStatus("idle");
-                  setIsModalOpen(true);
-                }}
-                className="shrink-0 bg-[#DE7356] hover:bg-[#C86348] text-white text-xs font-mono uppercase tracking-widest px-6 py-3.5 rounded-full transition-colors cursor-pointer"
-              >
-                {lang === "ja" ? "事前予約フォームへ" : "Book Advance Appointment"}
-              </button>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 08: FREQUENTLY ASKED QUESTIONS
-          - Q1: Purely Donation-Based (No "Free" claim)
-          - Q3: Clear, respectful description of tekazashi
-          ==================================================================== */}
-      <section id="faq" className="py-28 sm:py-36 bg-[#F4EFEA] border-b border-[#EAE3D9]">
-        <div className="max-w-4xl mx-auto px-6 sm:px-12">
-          
-          <div className="reveal-up text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-mono tracking-wider text-[#DE7356] block mb-3">
-              {lang === "ja" ? "07 ｜ よくあるご質問" : "07 ｜ Frequently Asked Questions"}
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-light text-[#1A1816] tracking-tight mb-4" style={{ textWrap: "balance" }}>
-              {lang === "ja" ? "よくあるご質問" : "Frequently Asked Questions"}
-            </h2>
-            <p className="text-xs font-mono text-[#736A5E] tracking-wider">
-              CLEAR & HONEST ANSWERS TO COMMON INQUIRIES
-            </p>
-          </div>
-
-          {/* Accordion Container */}
-          <div className="space-y-4">
-            {[
-              {
-                q_ja: "料金やドネーションはどのようになっていますか？",
-                a_ja: "当センターは定額の料金設定や義務的な請求は一切ございません。すべてご自身の感謝と自発的なお気持ちによる御奉納（ドネーション）によって支えられております。物品の販売や無理な支払いを求めることは一切ございません。",
-                q_en: "How do fees and donations work?",
-                a_en: "There are no fixed fees or obligatory charges. All sessions and activities are purely donation-based, supported by heartfelt voluntary contributions with zero obligation.",
-              },
-              {
-                q_ja: "特定の宗教を信じていなくても参加できますか？",
-                a_ja: "はい。どのような宗教・信条をお持ちの方でも、あるいは無宗教の方でも、分け隔てなく歓迎いたします。教義の押し付けや改宗の要求は一切ありません。",
-                q_en: "Do I need a specific religious background?",
-                a_en: "Not at all. People of all faiths and life philosophies are warmly welcomed.",
-              },
-              {
-                q_ja: "セッション中はどのようなことをしますか？",
-                a_ja: "椅子に腰掛けて静かに目を閉じ、リラックスしてお過ごしいただきます。施術者が静かに手かざし（神の大愛のみ光をお取り次ぎ）を行います。強い指圧やマッサージなどは一切ございません。",
-                q_en: "What should I expect during the session?",
-                a_en: "You simply sit comfortably in a chair with eyes closed and rest while the practitioner quietly channels the Art of Divine Light. There is no vigorous manipulation or deep pressure massage.",
-              },
-              {
-                q_ja: "予約なしで当日伺うことはできますか？",
-                a_ja: "落ち着いた静謐な空間を保つため、また行事等により開館時間が変更となる場合があるため、必ず事前のご予約をお願いしております。お電話・SMSまたは予約フォームよりご連絡ください。",
-                q_en: "Can I walk in without an appointment?",
-                a_en: "Because our hours may adjust for community events and to ensure private quietude, advance reservations are required.",
-              },
-            ].map((faq, idx) => (
-              <div
-                key={idx}
-                className={`reveal-up stagger-${(idx % 4) + 1} bg-white rounded-2xl border border-[#DDD3C4] overflow-hidden transition-colors`}
-              >
-                <button
-                  type="button"
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full p-6 sm:p-7 flex items-center justify-between gap-4 text-left cursor-pointer focus:outline-none"
-                  aria-expanded={openFaq === idx}
-                >
-                  <span className="font-serif text-lg sm:text-xl font-normal text-[#1A1816]">
-                    {lang === "ja" ? faq.q_ja : faq.q_en}
-                  </span>
-                  <span className="shrink-0 w-8 h-8 rounded-full bg-[#F4EFEA] flex items-center justify-center text-[#1A1816] transition-transform duration-200">
-                    {openFaq === idx ? <Icons.Minus className="w-4 h-4" /> : <Icons.Plus className="w-4 h-4" />}
-                  </span>
-                </button>
-                {openFaq === idx && (
-                  <div className="px-6 sm:px-7 pb-6 sm:pb-7 text-sm sm:text-base text-[#5D554B] leading-[1.85] border-t border-[#F2ECE2] pt-4 font-light" style={{ textWrap: "pretty" }}>
-                    {lang === "ja" ? faq.a_ja : faq.a_en}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="reveal-up stagger-3 mt-12 text-center text-xs font-mono text-[#8C8377]">
-            {lang === "ja"
-              ? "その他ご不明な点はお気軽にお電話（+1 626-861-5069）またはご予約時にお尋ねください。"
-              : "Have other questions? Feel free to call +1 (626) 861-5069 or leave a note with your reservation."}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 09: BOTTOM CTA (CLOSING)
-          ==================================================================== */}
-      <section className="relative py-32 sm:py-44 bg-[#121110] text-white overflow-hidden">
-        
-        {/* Atmospheric Landscape */}
-        <div className="absolute inset-0 opacity-40">
-          <Image
-            src="/assets/ocean_light.jpg"
-            alt="Quiet evening ocean horizon with soft warm glow"
-            fill
-            className="object-cover object-center"
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-t from-[#1A1816]/90 via-[#1A1816]/50 to-[#1A1816]/75"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121110] via-[#121110]/80 to-black/60"></div>
-        </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 text-center space-y-8">
-          
-          <span className="reveal-up inline-block text-xs font-mono tracking-wider text-[#DE7356] px-4 py-1.5 rounded-full border border-[#DE7356]/30 bg-black/40 backdrop-blur-md">
-            {lang === "ja" ? "体験セッションのご案内" : "Introductory Session"}
-          </span>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="max-w-3xl">
+              <p className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.16em] uppercase text-[#E8C594] bg-white/10 backdrop-blur-xs border border-white/15 px-3.5 py-1.5 rounded-full mb-6">
+                {t.hero.badge}
+              </p>
 
-          <h2 className="reveal-up stagger-1 text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-tight leading-[1.2] max-w-3xl mx-auto text-[#FAF6F0]" style={{ textWrap: "balance" }}>
-            {lang === "ja" ? (
-              <>
-                <span className="inline-block">神の大愛の光に包まれ、</span>
-                <br className="hidden sm:inline" />
-                <span className="inline-block">本来の澄みわたるあなたへ。</span>
-              </>
-            ) : (
-              <>
-                Wrapped in Divine Love.
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-[#FBF9F5] leading-[1.12] tracking-tight mb-6">
+                {t.hero.headlineLine1}
                 <br />
-                <span className="italic font-light text-[#E0D7CC]">Step Into the Light.</span>
-              </>
-            )}
-          </h2>
+                <span className="text-[#F3DFC1]">{t.hero.headlineLine2}</span>
+              </h1>
 
-          <p className="reveal-up stagger-2 max-w-2xl mx-auto text-base sm:text-lg text-[#C8BFB2] font-light leading-[1.9] sm:leading-[2.1]" style={{ textWrap: "pretty" }}>
-            {lang === "ja" ? (
-              <>
-                <span className="inline-block">都会の速度から一歩身を引き、</span>
-                <span className="inline-block">心と魂に純粋な静寂と愛の温もりを届ける。</span>
-                <br className="hidden sm:inline" />
-                <span className="inline-block">静かな空間とお席を整えてお待ちしております。</span>
-              </>
-            ) : (
-              "Take a quiet step away from the urban noise. A sanctuary of peace and boundless divine love awaits you in Monterey Park."
-            )}
-          </p>
+              <p className="text-base sm:text-lg text-[#E6E0D6] leading-relaxed mb-8 max-w-2xl">
+                {t.hero.subheadline}
+              </p>
 
-          <div className="reveal-up stagger-3 pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => {
-                setSubmitStatus("idle");
-                setIsModalOpen(true);
-              }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#DE7356] hover:bg-[#C86348] text-white px-9 py-4 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 shadow-xl cursor-pointer"
-            >
-              <span>{lang === "ja" ? "体験セッションを予約する" : "Book Your Session"}</span>
-              <Icons.ArrowRight className="w-4 h-4" />
-            </button>
-
-            <a
-              href="tel:+16268615069"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-white/20 hover:border-white/50 text-white/90 px-7 py-4 rounded-full font-mono text-xs uppercase tracking-wider transition-colors backdrop-blur-sm"
-            >
-              <Icons.Phone className="w-3.5 h-3.5 text-[#DE7356]" />
-              <span>{lang === "ja" ? "事前お問い合わせ（通話・SMS）: +1 (626) 861-5069" : "Direct Call / SMS: +1 (626) 861-5069"}</span>
-            </a>
-          </div>
-
-          <div className="reveal-up stagger-4 pt-12 text-xs font-mono text-white/40 tracking-wider">
-            MONTEREY PARK, CALIFORNIA ｜ ADVANCE APPOINTMENT ONLY
-          </div>
-
-        </div>
-      </section>
-
-      {/* ====================================================================
-          SECTION 10: FOOTER
-          ==================================================================== */}
-      <footer className="bg-[#0E0D0C] text-[#8C8377] py-16 px-6 sm:px-12 border-t border-[#23201C]">
-        <div className="max-w-7xl mx-auto space-y-12">
-          
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-[#23201C]">
-            
-            {/* Col 1: Identity */}
-            <div className="md:col-span-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <Image
-                  src="/assets/wdl_logo.png"
-                  alt="World Divine Light"
-                  width={130}
-                  height={40}
-                  className="h-8 w-auto object-contain brightness-0 invert opacity-90 block"
-                />
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs font-medium text-white/90">
-                  World Divine Light Organization — Los Angeles Divine Light Center
-                </p>
-                <p className="text-xs text-[#7A7266] leading-relaxed max-w-md">
-                  A US Government-Recognized 501(c)(3) Nonprofit Spiritual Organization dedicated to spiritual harmony and inner peace through the Art of Divine Light (Tekazashi).
-                </p>
-              </div>
-            </div>
-
-            {/* Col 2: Navigation Links */}
-            <div className="md:col-span-3 space-y-3 font-mono text-xs uppercase tracking-wider">
-              <span className="text-white block font-medium">Quick Directory</span>
-              <ul className="space-y-2 text-[#7A7266]">
-                <li><a href="#dilemma" className="hover:text-white transition-colors">01 / The Dilemma</a></li>
-                <li><a href="#practice" className="hover:text-white transition-colors">02 / Tekazashi</a></li>
-                <li><a href="#principles" className="hover:text-white transition-colors">03 / Integrity</a></li>
-                <li><a href="#journey" className="hover:text-white transition-colors">04 / Journey</a></li>
-                <li><a href="#access" className="hover:text-white transition-colors">05 / Location</a></li>
-                <li><a href="#faq" className="hover:text-white transition-colors">06 / FAQ</a></li>
-              </ul>
-            </div>
-
-            {/* Col 3: Direct Contacts & Hours */}
-            <div className="md:col-span-4 space-y-3 font-mono text-xs">
-              <span className="text-white block uppercase tracking-wider font-medium">Visiting Address & Hours</span>
-              <div className="text-[#8C8377] leading-relaxed">
-                <div>809 S Atlantic Blvd, #378</div>
-                <div>Monterey Park, CA 91754</div>
-                <div className="mt-2 text-white/80">Tue–Sat 10:00 AM – 6:00 PM</div>
-                <div className="text-white/80">Sun 9:00 AM – 4:00 PM (Closed Mon)</div>
-                <div className="mt-2 text-white">Direct: +1 (626) 861-5069</div>
-                <div>Email: losangeles@worlddivinelight.org</div>
-              </div>
-            </div>
-
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-[#665E55]">
-            <div>
-              © 2026 World Divine Light Organization. All rights reserved.
-            </div>
-            <div className="flex items-center gap-6">
-              <span>501(c)(3) Nonprofit Entity</span>
-              <span>Purely Donation-Based</span>
-            </div>
-          </div>
-
-        </div>
-      </footer>
-
-      {/* ====================================================================
-          INTERACTIVE RESERVATION MODAL / DIALOG
-          ==================================================================== */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg bg-[#FBF9F5] rounded-3xl border border-[#DDD3C4] shadow-2xl p-6 sm:p-8 overflow-hidden max-h-[92vh] overflow-y-auto">
-            
-            {/* Close Button */}
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-full text-[#7C7368] hover:text-[#1A1816] hover:bg-[#F2ECE2] transition-colors cursor-pointer"
-              aria-label="Close reservation modal"
-            >
-              <Icons.X className="w-5 h-5" />
-            </button>
-
-            {submitStatus === "success" ? (
-              /* Success State */
-              <div className="text-center py-8 space-y-4">
-                <div className="w-14 h-14 rounded-full bg-[#DE7356]/15 text-[#DE7356] flex items-center justify-center mx-auto">
-                  <Icons.Check className="w-7 h-7" />
-                </div>
-                <h3 className="text-2xl font-serif font-medium text-[#1A1816]">
-                  {lang === "ja" ? "ご予約リクエストを受け付けました" : "Reservation Request Received"}
-                </h3>
-                <p className="text-sm text-[#5D554B] leading-relaxed max-w-sm mx-auto">
-                  {lang === "ja"
-                    ? "お問い合わせありがとうございます。当センターのスタッフ（Kevin）より、確認のEメールまたはSMSをご連絡いたします。"
-                    : "Thank you for reaching out. A staff host will confirm your appointment via email or SMS shortly."}
-                </p>
-                <div className="p-4 rounded-xl bg-[#F4EFEA] border border-[#E5DDD2] text-xs font-mono text-[#7C7368] text-left space-y-1">
-                  <div><strong>Guest:</strong> {formData.fullName}</div>
-                  <div><strong>Date / Time:</strong> {formData.preferredDate || "Selected Day"} — {formData.preferredTime}</div>
-                  <div><strong>Location:</strong> 809 S Atlantic Blvd, #378, Monterey Park</div>
-                </div>
+              <div className="flex flex-wrap items-center gap-3.5 mb-8">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="mt-4 inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#1A1816] text-white text-xs font-mono uppercase tracking-widest hover:bg-[#DE7356] transition-colors cursor-pointer"
+                  onClick={() => scrollToTarget("#principle")}
+                  className="inline-flex items-center justify-center rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white font-semibold text-sm sm:text-base px-6 sm:px-7 py-3.5 shadow-retro-btn transition-colors cursor-pointer"
                 >
-                  {lang === "ja" ? "閉じる" : "Close"}
+                  {t.hero.primaryCta}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToTarget("#booking")}
+                  className="inline-flex items-center justify-center rounded-full bg-white/12 hover:bg-white/20 text-[#FBF9F5] border border-white/30 backdrop-blur-xs font-semibold text-sm sm:text-base px-6 sm:px-7 py-3.5 transition-colors cursor-pointer"
+                >
+                  {t.hero.secondaryCta}
                 </button>
               </div>
-            ) : (
-              /* Booking Form */
-              <form onSubmit={handleBookingSubmit} className="space-y-4">
-                
-                <div className="border-b border-[#EAE3D9] pb-4">
-                  <span className="text-[10px] font-mono tracking-widest uppercase text-[#DE7356] block mb-1">
-                    SANCTUARY APPOINTMENT
-                  </span>
-                  <h3 className="text-2xl font-serif font-medium text-[#1A1816]">
-                    {lang === "ja" ? "体験セッションの予約" : "Book Your Session"}
-                  </h3>
-                  <p className="text-xs text-[#7C7368] mt-1">
-                    {lang === "ja"
-                      ? "完全事前予約制 ｜ 約55分の静寂と神の大愛に包まれるひととき（ドネーション制）"
-                      : "By advance appointment ｜ Approx. 55 minutes of quietude & Divine Light (Donation-based)"}
-                  </p>
+
+              <p className="text-xs sm:text-sm text-[#CFC8BE] tracking-wide">
+                {t.hero.facts}
+              </p>
+            </div>
+          </div>
+
+          <div
+            aria-hidden="true"
+            className="hidden sm:flex absolute bottom-6 right-8 z-10 items-center gap-2 text-[10px] tracking-[0.24em] text-[#D8D1C7]"
+          >
+            <span>{t.hero.scrollCue}</span>
+            <span className="w-8 h-px bg-[#D8D1C7]/60" />
+          </div>
+        </section>
+
+        {/* SECTION 02: DILEMMA (Dark #1A1816 w/ la_palm_trees.jpg) */}
+        <section id="dilemma" className="bg-[#1A1816] text-[#FBF9F5] py-20 sm:py-28 border-t border-white/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+              <div className="lg:col-span-6 space-y-6 reveal-up">
+                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#E8C594]">
+                  {t.dilemma.eyebrow}
+                </p>
+                <h2 className="font-serif text-3xl sm:text-4xl font-bold leading-snug text-[#FBF9F5]">
+                  {t.dilemma.title}
+                </h2>
+                <p className="text-sm sm:text-base text-[#D3CCC2] leading-relaxed">
+                  {t.dilemma.p1}
+                </p>
+                <p className="text-sm sm:text-base text-[#D3CCC2] leading-relaxed">
+                  {t.dilemma.p2}
+                </p>
+
+                <div className="pt-2 space-y-3.5">
+                  {t.dilemma.points.map((pt, i) => (
+                    <div
+                      key={i}
+                      className={`p-4 rounded-2xl bg-white/[0.04] border border-white/10 reveal-up stagger-${i + 1}`}
+                    >
+                      <p className="font-serif text-sm font-semibold text-[#F3DFC1] mb-1">
+                        {pt.label}
+                      </p>
+                      <p className="text-xs sm:text-sm text-[#C7BFB5] leading-relaxed">
+                        {pt.text}
+                      </p>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
-                {submitStatus === "error" && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-                    {lang === "ja"
-                      ? "送信中にエラーが発生しました。お手数ですが、お電話（+1 626-861-5069）にて直接お問い合わせください。"
-                      : "Submission error. Please call or text +1 (626) 861-5069 directly."}
-                  </div>
-                )}
-
-                {/* Form Fields */}
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <label className="block font-mono uppercase tracking-wider text-[#665E54] mb-1">
-                      {lang === "ja" ? "お名前 *" : "Full Name *"}
-                    </label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      required
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      placeholder={lang === "ja" ? "山田 太郎 / Taro Yamada" : "Jane Doe"}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#D5CCC0] bg-white text-sm focus:outline-none focus:border-[#DE7356]"
+              <div className="lg:col-span-6 reveal-up stagger-2">
+                <figure className="space-y-3">
+                  <div className="rounded-3xl overflow-hidden border border-white/15 img-zoom-reveal shadow-2xl">
+                    <img
+                      src="/assets/la_palm_trees.jpg"
+                      alt="Palm trees under clear Los Angeles light near Monterey Park"
+                      className="w-full h-[380px] sm:h-[460px] object-cover"
                     />
                   </div>
+                  <figcaption className="text-xs text-[#A89F95] text-right">
+                    {t.dilemma.caption}
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-mono uppercase tracking-wider text-[#665E54] mb-1">
-                        {lang === "ja" ? "Eメール *" : "Email Address *"}
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="you@domain.com"
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#D5CCC0] bg-white text-sm focus:outline-none focus:border-[#DE7356]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-mono uppercase tracking-wider text-[#665E54] mb-1">
-                        {lang === "ja" ? "お電話番号 *" : "Phone / SMS *"}
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="+1 (626) 000-0000"
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#D5CCC0] bg-white text-sm focus:outline-none focus:border-[#DE7356]"
-                      />
-                    </div>
+        {/* SECTION 03: SPIRIT PRIMARY DIAGRAM (#principle - Hero CTA Target) */}
+        <section id="principle" className="bg-[#FAF6F0] py-20 sm:py-28 border-b border-[#E5E0D8]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto text-center mb-12 reveal-up">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25] mb-3">
+                {t.principleSection.eyebrow}
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] mb-4">
+                {t.principleSection.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5C554F] leading-relaxed">
+                {t.principleSection.subtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+              <div className="lg:col-span-7 reveal-up stagger-1">
+                <figure className="rounded-3xl bg-white border border-[#E5E0D8] p-3 sm:p-5 shadow-retro">
+                  <div className="rounded-2xl overflow-hidden bg-[#FAF6F0]">
+                    <img
+                      src="/assets/spirit_primary_diagram.jpg"
+                      alt={t.principleSection.diagramAlt}
+                      className="w-full h-auto object-contain"
+                    />
                   </div>
+                  <figcaption className="pt-3 px-2 text-xs text-[#6C655E] leading-relaxed text-center">
+                    {t.principleSection.diagramCaption}
+                  </figcaption>
+                </figure>
+              </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-mono uppercase tracking-wider text-[#665E54] mb-1">
-                        {lang === "ja" ? "ご希望日 *" : "Preferred Date *"}
-                      </label>
-                      <input
-                        type="date"
-                        name="preferredDate"
-                        required
-                        value={formData.preferredDate}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-xl border border-[#D5CCC0] bg-white text-sm focus:outline-none focus:border-[#DE7356]"
-                      />
+              <div className="lg:col-span-5 space-y-4">
+                {t.principleSection.stages.map((stage, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-2xl bg-white border border-[#E5E0D8] p-5 sm:p-6 shadow-retro reveal-up stagger-${i + 1}`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#9A5B25]">
+                        {stage.step}
+                      </span>
+                      <span className="text-xs font-mono text-[#6C655E]">{stage.role}</span>
                     </div>
-                    <div>
-                      <label className="block font-mono uppercase tracking-wider text-[#665E54] mb-1">
-                        {lang === "ja" ? "ご希望時間 *" : "Preferred Time *"}
-                      </label>
-                      <select
-                        name="preferredTime"
-                        value={formData.preferredTime}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#D5CCC0] bg-white text-sm focus:outline-none focus:border-[#DE7356]"
-                      >
-                        <option value="10:30 AM">10:30 AM</option>
-                        <option value="11:30 AM">11:30 AM</option>
-                        <option value="1:30 PM">1:30 PM</option>
-                        <option value="3:00 PM">3:00 PM</option>
-                        <option value="4:30 PM">4:30 PM</option>
-                      </select>
+                    <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-1.5">
+                      {stage.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed">
+                      {stage.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 04: THE PRACTICE (#practice) */}
+        <section id="practice" className="bg-[#FBF9F5] py-20 sm:py-28">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+              <div className="lg:col-span-6 space-y-6 reveal-up">
+                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25]">
+                  {t.practice.eyebrow}
+                </p>
+                <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] leading-snug">
+                  {t.practice.title}
+                </h2>
+                <p className="text-sm sm:text-base text-[#5C554F] leading-relaxed">
+                  {t.practice.p1}
+                </p>
+                <p className="text-sm sm:text-base text-[#5C554F] leading-relaxed">
+                  {t.practice.p2}
+                </p>
+
+                <div className="rounded-2xl bg-[#FAF6F0] border border-[#E5E0D8] p-5 space-y-2">
+                  <p className="font-serif text-sm font-bold text-[#1A1816]">
+                    {t.practice.noteTitle}
+                  </p>
+                  <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed">
+                    {t.practice.noteBody}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                  {t.practice.pillars.map((pillar, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-2xl bg-white border border-[#E5E0D8] p-4 shadow-retro"
+                    >
+                      <h3 className="font-serif text-sm font-bold text-[#1A1816] mb-1.5">
+                        {pillar.title}
+                      </h3>
+                      <p className="text-xs text-[#5C554F] leading-relaxed">{pillar.desc}</p>
                     </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="lg:col-span-6 space-y-6 reveal-up stagger-2">
+                <div className="rounded-3xl overflow-hidden border border-[#E5E0D8] bg-white shadow-retro img-zoom-reveal">
+                  <img
+                    src="/assets/okiyome_session.jpg"
+                    alt={t.practice.sessionPhotoAlt}
+                    className="w-full h-64 sm:h-72 object-cover"
+                  />
+                </div>
+                <figure className="rounded-3xl bg-white border border-[#E5E0D8] p-3 sm:p-4 shadow-retro">
+                  <div className="rounded-2xl overflow-hidden bg-[#FAF6F0]">
+                    <img
+                      src="/assets/okiyome_session_diagram.jpg"
+                      alt={t.practice.diagramAlt}
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                  <figcaption className="pt-2.5 px-2 text-xs text-[#6C655E] leading-relaxed">
+                    {t.practice.diagramCaption}
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 05: THREE TRANSPARENT COMMITMENTS (#principles - #F4EFEA Hairline Grid) */}
+        <section id="principles" className="bg-[#F4EFEA] border-y border-[#E5E0D8] py-20 sm:py-28">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mb-12 reveal-up">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25] mb-3">
+                {t.commitments.eyebrow}
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] mb-4">
+                {t.commitments.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5C554F] leading-relaxed">
+                {t.commitments.subtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 border border-[#D8D0C4] rounded-3xl overflow-hidden bg-[#FBF9F5] shadow-retro">
+              {t.commitments.cards.map((card, idx) => (
+                <div
+                  key={card.num}
+                  className={`p-7 sm:p-8 flex flex-col justify-between reveal-up stagger-${idx + 1} ${
+                    idx < 2 ? "border-b md:border-b-0 md:border-r border-[#E5E0D8]" : ""
+                  }`}
+                >
+                  <div>
+                    <p className="font-mono text-2xl font-bold text-[#DE7356] mb-4">
+                      {card.num}
+                    </p>
+                    <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6C655E] mb-2">
+                      {card.subtitle}
+                    </p>
+                    <h3 className="font-serif text-xl font-bold text-[#1A1816] mb-3">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed">
+                      {card.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 06: FIRST 55 MINUTES JOURNEY (#journey — Note Step 1 has NO photo) */}
+        <section id="journey" className="bg-[#FBF9F5] py-20 sm:py-28">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mb-12 reveal-up">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25] mb-3">
+                {t.journey.eyebrow}
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] mb-4">
+                {t.journey.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5C554F] leading-relaxed">
+                {t.journey.subtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {t.journey.steps.map((step, idx) => {
+                const isActive = activeStepIndex === idx;
+                return (
+                  <div
+                    key={step.stepNum}
+                    onClick={() => setActiveStepIndex(idx)}
+                    className={`rounded-3xl p-6 sm:p-7 border transition-all cursor-pointer reveal-up stagger-${idx + 1} ${
+                      isActive
+                        ? "bg-white border-[#DE7356] shadow-retro-hover"
+                        : "bg-[#FAF6F0] border-[#E5E0D8] hover:bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#1A1816] text-[#FBF9F5] font-mono text-xs font-semibold">
+                        {step.stepNum}
+                      </span>
+                      <span className="text-[11px] font-mono font-semibold text-[#9A5B25] bg-[#FBF5EB] px-2.5 py-1 rounded-full border border-[#E8DEC8]">
+                        {step.duration}
+                      </span>
+                    </div>
+
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1A1816] mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs font-medium text-[#6C655E] mb-3">{step.shortDesc}</p>
+                    <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed mb-4">
+                      {step.fullDesc}
+                    </p>
+                    <p className="text-[11px] text-[#5B8266] bg-[#EBF2ED] border border-[#D4E4D8] rounded-xl px-3.5 py-2.5 leading-relaxed">
+                      {step.reassurance}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 07: WORDS FROM THE CENTER (Kevin Portrait) */}
+        <section className="bg-[#FAF6F0] border-y border-[#E5E0D8] py-20 sm:py-24">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 reveal-up">
+            <div className="rounded-3xl bg-white border border-[#E5E0D8] p-7 sm:p-12 shadow-retro grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+              <div className="md:col-span-4 flex flex-col items-center text-center">
+                <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-[#FAF6F0] shadow-md mb-4">
+                  <img
+                    src="/assets/staff_host.jpg"
+                    alt={t.hostMessage.signatureName}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="font-serif font-bold text-base text-[#1A1816]">
+                  {t.hostMessage.signatureName}
+                </p>
+                <p className="text-xs text-[#6C655E] mt-1">{t.hostMessage.signatureRole}</p>
+              </div>
+
+              <div className="md:col-span-8 space-y-4">
+                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25]">
+                  {t.hostMessage.eyebrow}
+                </p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1A1816] leading-snug">
+                  {t.hostMessage.title}
+                </h2>
+                <blockquote className="font-serif italic text-base sm:text-lg text-[#5C554F] border-l-2 border-[#DE7356] pl-4 py-1">
+                  {t.hostMessage.quote}
+                </blockquote>
+                <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed">{t.hostMessage.body1}</p>
+                <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed">{t.hostMessage.body2}</p>
+                <p className="text-xs sm:text-sm text-[#5C554F] leading-relaxed">{t.hostMessage.body3}</p>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => scrollToTarget("#booking")}
+                    className="inline-flex items-center justify-center rounded-full bg-[#1A1816] hover:bg-[#322E2A] text-[#FBF9F5] text-xs sm:text-sm font-semibold px-6 py-3 transition-colors cursor-pointer"
+                  >
+                    {t.hostMessage.cta}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 08: ACCESS & PRACTICAL DETAILS (#access) */}
+        <section id="access" className="bg-[#FBF9F5] py-20 sm:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mb-10 reveal-up">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25] mb-3">
+                {t.access.eyebrow}
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816]">
+                {t.access.title}
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+              {t.access.rows.map((row, idx) => {
+                const Icon = idx === 0 ? MapPin : idx === 1 ? Clock : idx === 2 ? Car : Phone;
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-2xl bg-white border border-[#E5E0D8] p-5 shadow-retro reveal-up stagger-${idx + 1}`}
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#FAF6F0] border border-[#E5E0D8] flex items-center justify-center text-[#9A5B25] mb-3">
+                      <Icon className="w-4 h-4" aria-hidden="true" />
+                    </div>
+                    <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6C655E] mb-1">
+                      {row.label}
+                    </p>
+                    <p className="font-serif text-sm font-bold text-[#1A1816] mb-1.5 leading-snug">
+                      {row.value}
+                    </p>
+                    {row.sub && (
+                      <p className="text-xs text-[#5C554F] leading-relaxed">{row.sub}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="rounded-3xl bg-[#1A1816] text-[#FBF9F5] p-7 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 reveal-up">
+              <div className="space-y-2 max-w-2xl">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#F3DFC1]">
+                  {t.access.bannerTitle}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#D3CCC2] leading-relaxed">
+                  {t.access.bannerDesc}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollToTarget("#booking")}
+                className="shrink-0 rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white text-sm font-semibold px-6 py-3.5 shadow-retro-btn transition-colors cursor-pointer"
+              >
+                {t.access.bannerCta}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 09: EMBEDDED INLINE RESERVATION FORM (#booking) */}
+        <section id="booking" className="bg-[#FAF6F0] border-y border-[#E5E0D8] py-20 sm:py-28">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10 reveal-up">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25] mb-3">
+                {t.booking.eyebrow}
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] mb-4">
+                {t.booking.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5C554F] leading-relaxed max-w-2xl mx-auto">
+                {t.booking.subtitle}
+              </p>
+            </div>
+
+            {/* Honest Phone & Language Coordination Banner */}
+            <div className="rounded-2xl bg-[#FBF5EB] border border-[#E5D3B3] p-4 sm:p-5 mb-8 flex items-start gap-3.5 reveal-up">
+              <AlertCircle className="w-5 h-5 text-[#9A5B25] shrink-0 mt-0.5" aria-hidden="true" />
+              <div className="text-xs sm:text-sm text-[#3F3833] leading-relaxed">
+                <p className="font-semibold text-[#1A1816] mb-1">{t.booking.phoneNoteTitle}</p>
+                <p>{t.booking.phoneNoteBody}</p>
+              </div>
+            </div>
+
+            {submitStatus === "success" ? (
+              <div className="rounded-3xl bg-white border border-[#5B8266]/40 p-8 sm:p-10 text-center shadow-retro space-y-4">
+                <div className="w-12 h-12 rounded-full bg-[#EBF2ED] text-[#5B8266] flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-6 h-6" aria-hidden="true" />
+                </div>
+                <h3 className="font-serif text-2xl font-bold text-[#1A1816]">
+                  {t.booking.form.successTitle}
+                </h3>
+                <p className="text-sm text-[#5C554F] max-w-lg mx-auto leading-relaxed">
+                  {t.booking.form.successBody}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSubmitStatus("idle")}
+                  className="inline-flex items-center justify-center rounded-full border border-[#E5E0D8] px-5 py-2.5 text-xs font-semibold text-[#1A1816] hover:bg-[#FAF6F0] cursor-pointer"
+                >
+                  {t.booking.form.successReset}
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleBookingSubmit}
+                noValidate
+                className="rounded-3xl bg-white border border-[#E5E0D8] p-6 sm:p-10 shadow-retro space-y-6"
+              >
+                {submitStatus === "error" && submitMessage && (
+                  <div
+                    role="alert"
+                    className="rounded-2xl bg-[#FEF2F2] border border-[#FECACA] p-4 text-xs sm:text-sm text-[#991B1B]"
+                  >
+                    {submitMessage}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="fullName" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                      {t.booking.form.fullName} *
+                    </label>
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      required
+                      minLength={2}
+                      value={formValues.fullName}
+                      onChange={(e) => setFormValues((s) => ({ ...s, fullName: e.target.value }))}
+                      placeholder={t.booking.form.fullNamePlaceholder}
+                      aria-invalid={Boolean(fieldErrors.fullName)}
+                      aria-describedby={fieldErrors.fullName ? "fullName-error" : undefined}
+                      className={`booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816] ${
+                        fieldErrors.fullName ? "user-invalid-fallback" : ""
+                      }`}
+                    />
+                    {fieldErrors.fullName && (
+                      <p id="fullName-error" className="text-xs text-[#B91C1C] mt-1">
+                        {fieldErrors.fullName[0]}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block font-mono uppercase tracking-wider text-[#665E54] mb-1">
-                      {lang === "ja" ? "ご要望・事前のお問い合わせ（任意）" : "Notes or Questions (Optional)"}
+                    <label htmlFor="email" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                      {t.booking.form.email} *
                     </label>
-                    <textarea
-                      name="notes"
-                      rows={2}
-                      value={formData.notes}
-                      onChange={handleInputChange}
-                      placeholder={lang === "ja" ? "気になる点やご質問があればご記入ください" : "Let us know if you have any questions"}
-                      className="w-full px-4 py-2 rounded-xl border border-[#D5CCC0] bg-white text-sm focus:outline-none focus:border-[#DE7356]"
-                    ></textarea>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={formValues.email}
+                      onChange={(e) => setFormValues((s) => ({ ...s, email: e.target.value }))}
+                      placeholder={t.booking.form.emailPlaceholder}
+                      aria-invalid={Boolean(fieldErrors.email)}
+                      aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                      className={`booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816] ${
+                        fieldErrors.email ? "user-invalid-fallback" : ""
+                      }`}
+                    />
+                    {fieldErrors.email && (
+                      <p id="email-error" className="text-xs text-[#B91C1C] mt-1">
+                        {fieldErrors.email[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="phone" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                      {t.booking.form.phone} *
+                    </label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      required
+                      value={formValues.phone}
+                      onChange={(e) => setFormValues((s) => ({ ...s, phone: e.target.value }))}
+                      placeholder={t.booking.form.phonePlaceholder}
+                      aria-invalid={Boolean(fieldErrors.phone)}
+                      aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+                      className={`booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816] ${
+                        fieldErrors.phone ? "user-invalid-fallback" : ""
+                      }`}
+                    />
+                    {fieldErrors.phone && (
+                      <p id="phone-error" className="text-xs text-[#B91C1C] mt-1">
+                        {fieldErrors.phone[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="preferredDate" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                      {t.booking.form.preferredDate} *
+                    </label>
+                    <input
+                      id="preferredDate"
+                      name="preferredDate"
+                      type="date"
+                      required
+                      min={todayIso || undefined}
+                      value={formValues.preferredDate}
+                      onChange={(e) => setFormValues((s) => ({ ...s, preferredDate: e.target.value }))}
+                      aria-invalid={Boolean(fieldErrors.preferredDate)}
+                      aria-describedby={fieldErrors.preferredDate ? "preferredDate-error" : undefined}
+                      className={`booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816] ${
+                        fieldErrors.preferredDate ? "user-invalid-fallback" : ""
+                      }`}
+                    />
+                    {fieldErrors.preferredDate && (
+                      <p id="preferredDate-error" className="text-xs text-[#B91C1C] mt-1">
+                        {fieldErrors.preferredDate[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="preferredTime" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                      {t.booking.form.preferredTime} *
+                    </label>
+                    <select
+                      id="preferredTime"
+                      name="preferredTime"
+                      value={effectivePreferredTime}
+                      onChange={(e) => setFormValues((s) => ({ ...s, preferredTime: e.target.value }))}
+                      className="booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816]"
+                    >
+                      {t.booking.form.timeOptions.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="preferredLanguage" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                      {t.booking.form.preferredLanguage} *
+                    </label>
+                    <select
+                      id="preferredLanguage"
+                      name="preferredLanguage"
+                      value={effectivePreferredLanguage}
+                      onChange={(e) => {
+                        setLanguageTouched(true);
+                        setFormValues((s) => ({
+                          ...s,
+                          preferredLanguage: e.target.value as "English" | "Japanese" | "Chinese" | "Spanish",
+                        }));
+                      }}
+                      className="booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816]"
+                    >
+                      {t.booking.form.languageOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-[11px] text-[#6C655E] mt-1">{t.booking.form.languageHint}</p>
                   </div>
                 </div>
 
-                <div className="pt-2">
+                {/* Practitioner Gender Preference — Visible Radio Buttons (Modern Web Guidance) */}
+                <fieldset className="space-y-2">
+                  <legend className="text-xs font-semibold text-[#1A1816]">
+                    {t.booking.form.practitionerPreference}
+                  </legend>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    {t.booking.form.practitionerOptions.map((opt) => {
+                      const checked = formValues.practitionerPreference === opt.value;
+                      return (
+                        <label
+                          key={opt.value}
+                          className={`flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-xs sm:text-sm cursor-pointer transition-colors ${
+                            checked
+                              ? "border-[#DE7356] bg-[#FDE8DF]/40 text-[#1A1816] font-semibold"
+                              : "border-[#D8D0C4] bg-[#FBF9F5] text-[#5C554F] hover:bg-white"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="practitionerPreference"
+                            value={opt.value}
+                            checked={checked}
+                            onChange={() =>
+                              setFormValues((s) => ({
+                                ...s,
+                                practitionerPreference: opt.value,
+                              }))
+                            }
+                            className="accent-[#DE7356]"
+                          />
+                          <span>{opt.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+
+                <div>
+                  <label htmlFor="notes" className="block text-xs font-semibold text-[#1A1816] mb-1.5">
+                    {t.booking.form.notes}
+                  </label>
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    rows={3}
+                    value={formValues.notes}
+                    onChange={(e) => setFormValues((s) => ({ ...s, notes: e.target.value }))}
+                    placeholder={t.booking.form.notesPlaceholder}
+                    className="booking-field-control w-full rounded-xl border border-[#D8D0C4] bg-[#FBF9F5] px-4 py-2.5 text-sm text-[#1A1816]"
+                  />
+                </div>
+
+                {/* Unchecked-by-default TCPA SMS & Weekly Schedule Consent */}
+                <div>
+                  <label className="flex items-start gap-3 text-xs text-[#5C554F] leading-relaxed cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="smsConsent"
+                      checked={formValues.smsConsent}
+                      onChange={(e) => setFormValues((s) => ({ ...s, smsConsent: e.target.checked }))}
+                      aria-invalid={Boolean(fieldErrors.smsConsent)}
+                      className="mt-0.5 w-4 h-4 accent-[#DE7356] shrink-0"
+                    />
+                    <span>
+                      {t.booking.form.smsConsentPrefix}
+                      <Link href="/privacy" className="underline text-[#9A5B25] hover:text-[#1A1816]">
+                        {t.booking.form.smsConsentPrivacyLink}
+                      </Link>
+                      {t.booking.form.smsConsentSuffix}
+                    </span>
+                  </label>
+                  {fieldErrors.smsConsent && (
+                    <p className="text-xs text-[#B91C1C] mt-1">{fieldErrors.smsConsent[0]}</p>
+                  )}
+                </div>
+
+                <div className="pt-2 space-y-3">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3.5 rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white text-xs font-mono uppercase tracking-widest transition-colors shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                    disabled={submitStatus === "submitting"}
+                    className="w-full py-4 px-6 rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white font-semibold text-sm sm:text-base shadow-retro-btn transition-colors cursor-pointer"
                   >
-                    <span>
-                      {isSubmitting
-                        ? (lang === "ja" ? "送信中..." : "Submitting...")
-                        : (lang === "ja" ? "体験セッションを予約する" : "Submit Reservation Request")}
-                    </span>
-                    <Icons.ArrowRight className="w-4 h-4" />
+                    {submitStatus === "submitting" ? t.booking.form.submitting : t.booking.form.submit}
                   </button>
+                  <p className="text-[11px] text-[#6C655E] leading-relaxed flex items-start gap-2">
+                    <ShieldCheck className="w-4 h-4 shrink-0 text-[#5B8266] mt-0.5" aria-hidden="true" />
+                    <span>{t.booking.form.medicalNotice}</span>
+                  </p>
                 </div>
-
-                <div className="text-[11px] text-[#7C7368] text-center leading-relaxed">
-                  {lang === "ja"
-                    ? "お電話・SMSでのお問い合わせも直接承っております（+1 626-861-5069）。完全なドネーション制であり、無理な勧誘や請求は一切ございません。"
-                    : "Direct SMS/call inquiries are always welcome (+1 626-861-5069). Purely donation-based with zero obligations."}
-                </div>
-
               </form>
             )}
+          </div>
+        </section>
 
+        {/* SECTION 10: 12-ITEM NATIVE <details> FAQ ACCORDION (#faq) */}
+        <section id="faq" className="bg-[#FBF9F5] py-20 sm:py-28">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 reveal-up">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#9A5B25] mb-3">
+                {t.faq.eyebrow}
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] mb-3">
+                {t.faq.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5C554F]">{t.faq.subtitle}</p>
+            </div>
+
+            <div className="space-y-3">
+              {t.faq.items.map((item, idx) => (
+                <details
+                  key={idx}
+                  className="faq-item group rounded-2xl bg-white border border-[#E5E0D8] px-5 sm:px-6 py-4 shadow-retro"
+                >
+                  {/* No heading element inside <summary> per ARIA/Modern Web Guidance */}
+                  <summary className="flex items-center justify-between gap-4 cursor-pointer font-serif text-sm sm:text-base font-bold text-[#1A1816]">
+                    <span className="flex items-start gap-3">
+                      <span className="font-mono text-xs text-[#9A5B25] mt-1 shrink-0">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span>{item.q}</span>
+                    </span>
+                    <ChevronDown
+                      className="faq-chevron w-4 h-4 text-[#6C655E] shrink-0"
+                      aria-hidden="true"
+                    />
+                  </summary>
+                  <div className="pt-3 pl-7 text-xs sm:text-sm text-[#5C554F] leading-relaxed border-t border-[#F0EAE0] mt-3">
+                    {item.a}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 11: CLOSING DARK OCEAN CTA (Preserving ocean_light.jpg) */}
+        <section className="relative py-24 sm:py-32 bg-[#1A1816] text-[#FBF9F5] overflow-hidden">
+          <img
+            src="/assets/ocean_light.jpg"
+            alt="Quiet Pacific ocean horizon at dusk"
+            className="absolute inset-0 w-full h-full object-cover opacity-55"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-b from-[#1A1816]/75 via-[#1A1816]/65 to-[#1A1816]/85"
+          />
+
+          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center space-y-6 reveal-up">
+            <p className="text-xs font-semibold tracking-[0.22em] uppercase text-[#E8C594]">
+              {t.closing.eyebrow}
+            </p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold leading-tight text-[#FBF9F5]">
+              {t.closing.title}
+            </h2>
+            <p className="text-xs sm:text-sm text-[#D8D1C7] tracking-wide">
+              {t.closing.subtitle}
+            </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => scrollToTarget("#booking")}
+                className="inline-flex items-center justify-center rounded-full bg-[#DE7356] hover:bg-[#C86348] text-white font-semibold text-sm sm:text-base px-8 py-4 shadow-retro-btn transition-colors cursor-pointer"
+              >
+                {t.closing.cta}
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* DARK EDITORIAL FOOTER (#0E0D0C) */}
+      <footer className="bg-[#0E0D0C] text-[#D3CCC2] pt-16 pb-12 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+            <div className="md:col-span-5 space-y-4">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/assets/wdl_logo.png"
+                  alt="World Divine Light"
+                  className="h-7 w-auto brightness-0 invert"
+                />
+                <span className="font-serif text-base font-semibold text-[#FBF9F5]">
+                  {t.nav.centerName}
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-[#A89F95] leading-relaxed max-w-md">
+                {t.footer.centerDesc}
+              </p>
+            </div>
+
+            <div className="md:col-span-3">
+              <p className="text-xs font-semibold tracking-[0.16em] uppercase text-[#E8C594] mb-4">
+                {t.footer.navHeading}
+              </p>
+              <nav aria-label="Footer Navigation" className="space-y-2">
+                {t.nav.items.map((item) => (
+                  <a
+                    key={item.num}
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToTarget(item.href);
+                    }}
+                    className="block text-xs text-[#C7BFB5] hover:text-[#FBF9F5] transition-colors"
+                  >
+                    {item.num} · {item.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            <div className="md:col-span-4 space-y-2.5 text-xs text-[#C7BFB5]">
+              <p className="text-xs font-semibold tracking-[0.16em] uppercase text-[#E8C594] mb-3">
+                {t.footer.accessHeading}
+              </p>
+              <p className="text-[#FBF9F5] font-medium">
+                809 S Atlantic Blvd, Suite #378, Monterey Park, CA 91754
+              </p>
+              <p>{t.footer.hoursSummary}</p>
+              <p className="pt-1">
+                <a href="tel:+16268615069" className="text-[#F3DFC1] hover:underline font-medium">
+                  {t.footer.phoneLabel}
+                </a>
+                <span className="block text-[11px] text-[#9E958B] mt-0.5">
+                  {t.footer.phoneLangNote}
+                </span>
+              </p>
+              <p>
+                <a
+                  href="mailto:losangeles@worlddivinelight.org"
+                  className="inline-flex items-center gap-1.5 text-[#F3DFC1] hover:underline"
+                >
+                  <Mail className="w-3.5 h-3.5" aria-hidden="true" />
+                  losangeles@worlddivinelight.org
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* Permanent Legal & Medical Notice (CA BPC § 2063 / SB 577) */}
+          <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 text-[11px] text-[#A89F95] leading-relaxed space-y-1.5">
+            <p className="font-semibold text-[#E6E0D6]">{t.footer.disclaimerTitle}</p>
+            <p>{t.footer.disclaimerBody}</p>
+          </div>
+
+          <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#8E867D]">
+            <p>{t.footer.copyright}</p>
+            <div className="flex items-center gap-5">
+              <Link href="/privacy" className="hover:text-[#FBF9F5] underline">
+                {t.footer.privacyLink}
+              </Link>
+              <Link href="/accessibility" className="hover:text-[#FBF9F5] underline">
+                {t.footer.accessibilityLink}
+              </Link>
+            </div>
           </div>
         </div>
-      )}
-
-      </div>
-    </SmoothScroll>
+      </footer>
+    </div>
   );
 }

@@ -85,10 +85,20 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       threshold: 0.12,
     });
 
-    const revealElements = document.querySelectorAll(".reveal-up, .img-zoom-reveal");
-    revealElements.forEach((el) => observer.observe(el));
+    const observeAll = () => {
+      const revealElements = document.querySelectorAll(".reveal-up:not(.is-revealed), .img-zoom-reveal:not(.is-revealed)");
+      revealElements.forEach((el) => observer.observe(el));
+    };
+
+    observeAll();
+
+    const mutationObserver = new MutationObserver(() => {
+      observeAll();
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      mutationObserver.disconnect();
       observer.disconnect();
     };
   }, []);
