@@ -11,7 +11,7 @@ export const GOOGLE_ADS_ID =
   process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-853490942";
 
 export const GOOGLE_ADS_LABEL =
-  process.env.NEXT_PUBLIC_GOOGLE_ADS_LABEL || "rYqNCMjM_vYZEN7b_5YD";
+  process.env.NEXT_PUBLIC_GOOGLE_ADS_LABEL || "9QrACOzDsvocEP75_JYD";
 
 export const CONVERSION_LABELS = {
   form_submit: GOOGLE_ADS_LABEL,
